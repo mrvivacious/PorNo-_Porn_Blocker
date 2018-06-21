@@ -5,7 +5,7 @@ Welcome! This is meant to provide a free and public algorithm for porn detection
 <ul>
 <li>
 Speed improvements! For example, a program meant to block porn on the internet shouldn't let any part of the site visited
-load before the assesment of the site is complete.
+load before the assessment of the site is complete -- it's important to have an assessment faster than the speed of pageload, hence the importance of speed improvements.
 </li>
 
 <li>

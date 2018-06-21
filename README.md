@@ -13,6 +13,10 @@ Expanding the list of porn sites hardcoded in the file!
 </li>
 
 <li>
+Making this repo more "formally open source-y and proper"
+</li>
+
+<li>
 Others to be determined later!
 </li>
 

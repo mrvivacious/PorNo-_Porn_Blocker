@@ -7,6 +7,15 @@
 //  not hardcoded in the file -- any other type of DB can be used, Chrome is just
 //  an example
 
+// FUNCTION LIST:
+// isBannedURL - Compares URL to porn links hardcoded
+// isBannedSavedLinks - Compares URL to porn links saved in storage
+// checkURL - Helper function that handles URL evaluation
+// evaluateWords - Counts adult-y words in the url (top-tier NLP, thank you thank you)
+// checkWithIBM - Passes URL to IBM XFORCE API for a more formal evaluation of the URL's nature
+// store - Save the URL determined to be pornographic by IBM to storage (dynamic capture)
+// porNo - Response behavior for when the site visited is pornographic
+
 // Sorry for the long lists, code begins around line 11600
 
 // List of porn domains followed by list of adult-y keywords

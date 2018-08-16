@@ -11715,11 +11715,13 @@ function isBannedSavedLinks(linksFromStorage) {
   let url = window.location.href;
   url = url.toLowerCase();
 
-  // O(n) worst case feels bad but whO(l)esome porn-checker feels good
-  for (let i = 0; i < linksFromStorage.length; i++) {
-    if (url.includes(linksFromStorage[i].toLowerCase())) {
-      // GTFOOOO
-      return true;
+  if (!url.includes('fightthenewdrug') && !url.includes('github') ) {
+    // O(n) worst case feels bad but whO(l)esome porn-checker feels good
+    for (let i = 0; i < linksFromStorage.length; i++) {
+      if (url.includes(linksFromStorage[i].toLowerCase())) {
+        // GTFOOOO
+        return true;
+      }
     }
   }
 
@@ -11736,12 +11738,14 @@ function isBannedURL() {
   let url = window.location.href;
   url = url.toLowerCase();
 
-  // O(n) worst case feels bad but whO(l)esome porn-checker feels good
-  // $$$$$ B R U T E  F O R C E $$$$$
-  for (let i = 0; i < bannedLinks.length; i++) {
-    if (url.includes(bannedLinks[i].toLowerCase())) {
-      // GTFOOOO
-      return true;
+  if (!url.includes('fightthenewdrug') && !url.includes('github') ) {
+    // O(n) worst case feels bad but whO(l)esome porn-checker feels good
+    // $$$$$ B R U T E  F O R C E $$$$$
+    for (let i = 0; i < bannedLinks.length; i++) {
+      if (url.includes(bannedLinks[i].toLowerCase())) {
+        // GTFOOOO
+        return true;
+      }
     }
   }
 

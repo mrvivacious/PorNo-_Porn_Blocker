@@ -20,8 +20,6 @@
 // pornMap and bannedWordsList are found in lists.js to help make this file more readable
 // Please ensure those structures are copied over correctly ~
 
-// List of porn domains followed by list of adult-y keywords
-
 // ROUTE LOCALSTORAGE (Contains links saved in storage )
 chrome.storage.local.get("linksInStorage", function(returnValue) {
   let savedLinks = returnValue.linksInStorage;

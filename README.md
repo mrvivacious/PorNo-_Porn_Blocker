@@ -2,6 +2,8 @@
 Welcome! This is meant to provide a free and public algorithm for porn detection.
 <br>
 <a href="https://chrome.google.com/webstore/detail/porno-beta/fkhfpbfakkjpkhnonhelnnbohblaeooj" target="_blank">Test the algorithm</a>.
+
+<a href="https://play.google.com/store/apps/details?id=us.mrvivacio.porno">Try out the Android app</a>.
 <br>
 ### Some ideas for contributing:
 <ul>

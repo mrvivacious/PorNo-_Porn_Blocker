@@ -16,7 +16,7 @@ def main():
     pathKeywords = "lists/Keywords/"
     pathUrls = "lists/Urls/"
 
-    # print(urls.read())
+    outputFile = open("testFile.txt", "w")
 
     ctr = 0
     for c in "0123456789abcdefghijklmnopqrstuvwxyz":
@@ -25,17 +25,14 @@ def main():
         urls = open(name, "r")
 
         for url in urls:
+            outputFile.write(url)
             ctr += 1
-
 
 
     print(ctr)
 
-    # for url in urls:
-    #     ctr += 1
-    #
-    # print(ctr)
-
+    # a = append, w = [over]write
+    outputFile.close()
 
 
 if (__name__ == "__main__"):

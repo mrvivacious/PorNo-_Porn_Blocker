@@ -19,20 +19,22 @@ def main():
     # print(urls.read())
 
     ctr = 0
-    for c in "0123456789abcdefghijklmmopqrstuvwxyz":
-        # urls = open(pathUrls + c + ".txt", "r")
+    for c in "0123456789abcdefghijklmnopqrstuvwxyz":
         name = pathUrls + c + ".txt"
         print(name)
+        urls = open(name, "r")
+
+        for url in urls:
+            ctr += 1
 
 
 
-
+    print(ctr)
 
     # for url in urls:
     #     ctr += 1
     #
     # print(ctr)
-
 
 
 

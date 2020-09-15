@@ -3,37 +3,56 @@
 def main():
     # UNTIL MACHINE LEARNING MODEL,
     #  THIS WILL HELP RENEW OUR LISTS
-    # Open URL dir
-    # dict for URL
-    # string for resulting list
-    # For file in 0..Z.txt
-    # Add url to dict, build string, concat to string
-    # write to file
 
-    # Do same thing with banned keywords
-    print("Hello!")
+    DEV = "testFile.txt"
+    PROD = "lists.js"
 
-    pathKeywords = "lists/Keywords/"
-    pathUrls = "lists/Urls/"
+    PATH_URLS = "lists/Urls/"
+    PATH_KEYWORDS = "lists/Keywords/"
 
-    outputFile = open("testFile.txt", "w")
+    # w = [over]write, a = append
+    outputFile = open(PROD, "w")
 
-    ctr = 0
+    header = "// PorNo!\n"
+    header += "// lists.js\n"
+    header += "// Thank you:\n"
+    header += "// https://github.com/ninjayoto/PornList/blob/master/PornList.txt\n"
+    header += "// https://github.com/Bon-Appetit/porn-domains/blob/master/domains.txt\n"
+    header += "// https://pastebin.com/gpHmA8X5\n"
+    header += "// Alexa web ranking service for that good 7-day free trial\n"
+    header += "// People who've triggered PorNo!'s capture system\n"
+    header += "\n"
+
+    outputFile.write(header)
+    
+    s = "let pornMap={"
     for c in "0123456789abcdefghijklmnopqrstuvwxyz":
-        name = pathUrls + c + ".txt"
-        print(name)
+        name = PATH_URLS + c + ".txt"
         urls = open(name, "r")
 
         for url in urls:
-            outputFile.write(url)
-            ctr += 1
+            urlWithoutNewLine = "\"" + url[:-1] + "\":!0"
+            s += urlWithoutNewLine + ","
 
+    s = s[:-1]
+    s += "};\n"
 
-    print(ctr)
+    outputFile.write(s)
 
-    # a = append, w = [over]write
+    s = "let bannedWordsList=["
+    for c in "abcdefghijklmnopqrstuvwxyz":
+        name = PATH_KEYWORDS + c + ".txt"
+        urls = open(name, "r")
+
+        for url in urls:
+            urlWithoutNewLine = "\"" + url[:-1] + "\""
+            s += urlWithoutNewLine + ","
+
+    s = s[:-1]
+    s += "];\n"
+
+    outputFile.write(s)
     outputFile.close()
-
 
 if (__name__ == "__main__"):
     main()

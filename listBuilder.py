@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ./listBuilder.py ; cat lists.js
 
 def main():
     # UNTIL MACHINE LEARNING MODEL,
@@ -14,7 +15,7 @@ def main():
     outputFile = open(PROD, "w")
 
     header = "// PorNo!\n"
-    header += "// lists.js\n"
+    header += "// lists.js THIS FILE WAS GENERATED WITH listBuilder.py\n"
     header += "// Thank you:\n"
     header += "// https://github.com/ninjayoto/PornList/blob/master/PornList.txt\n"
     header += "// https://github.com/Bon-Appetit/porn-domains/blob/master/domains.txt\n"
@@ -24,7 +25,7 @@ def main():
     header += "\n"
 
     outputFile.write(header)
-    
+
     s = "let pornMap={"
     for c in "0123456789abcdefghijklmnopqrstuvwxyz":
         name = PATH_URLS + c + ".txt"

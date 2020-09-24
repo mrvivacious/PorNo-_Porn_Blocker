@@ -22,6 +22,8 @@ def main():
     header += "// https://pastebin.com/gpHmA8X5\n"
     header += "// Alexa web ranking service for that good 7-day free trial\n"
     header += "// People who've triggered PorNo!'s capture system\n"
+    header += "//\n"
+    header += "// This file looks like this because of https://stackoverflow.com/questions/36797134/\n"
     header += "\n"
 
     header += "package us.mrvivacio.porno;\n\n"
@@ -91,7 +93,7 @@ def main():
             s += urlWithoutNewLine + ","
 
         s = s[:-1]
-        s += "};\n\n"
+        s += "};\n"
         s += "\t\tfor (String domain:domains) { dict.put(domain, true); }\n"
 
         s += "\t}\n\n"

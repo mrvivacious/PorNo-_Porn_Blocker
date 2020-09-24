@@ -1,5 +1,5 @@
 // PorNo!
-// lists.java THIS FILE WAS GENERATED WITH java.py
+// Domains.java THIS FILE WAS GENERATED WITH java.py
 // Thank you:
 // https://github.com/ninjayoto/PornList/blob/master/PornList.txt
 // https://github.com/Bon-Appetit/porn-domains/blob/master/domains.txt

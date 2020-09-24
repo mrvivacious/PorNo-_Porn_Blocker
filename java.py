@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ./listBuilder.py ; cat lists.js
+# ./java.py ; cat Domains.java
 
 def main():
     # UNTIL MACHINE LEARNING MODEL,
@@ -15,7 +15,7 @@ def main():
     outputFile = open(PROD, "w")
 
     header = "// PorNo!\n"
-    header += "// lists.java THIS FILE WAS GENERATED WITH java.py\n"
+    header += "// Domains.java THIS FILE WAS GENERATED WITH java.py\n"
     header += "// Thank you:\n"
     header += "// https://github.com/ninjayoto/PornList/blob/master/PornList.txt\n"
     header += "// https://github.com/Bon-Appetit/porn-domains/blob/master/domains.txt\n"

@@ -11,9 +11,13 @@ Welcome! This is meant to provide a free and public algorithm for porn detection
 ### Vivek's to-dos that'll happen at some point and you're just gonna have to wait, ok?
 ✅ (Sept 15 2020) Add a Python build script to take the data in lists/ and generate a .js file 
 <br>
-o Modify the Python build script to build .java files + check for duplicate entries + don't forget about urls in database
+✅ (Sept 24 2020) Add a Python build script to generate a Domains.java file (only has URLs) 
 <br>
-o Add a way for users to add sites on the fly / suggest sites that shouldn't be banned without sending an email
+o Script to check for duplicate entries (housekeeping)
+<br>
+o Add the urls from database (via a script too ???? 👀)
+<br>
+o Add a way for users to add sites on the fly via internal form or somethin / suggest sites that shouldn't be banned without sending an email
 <br>
 o The many number of 18+ subbreddits
 <br>
@@ -68,6 +72,7 @@ Thank you!
 
 ### Misc
 `$ ./listBuilder.py # Output in lists.js`
+`$ ./java.py # Output in Domains.java`
 
 <br>
 

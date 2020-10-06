@@ -1,4 +1,9 @@
 # porNo_open_source
+
+<h3 align="center"> Special thanks to family, friends, users, and anyone I've spoken to about PorNo! 💛 </h3>
+
+<br>
+
 Welcome! This is meant to provide a free and public algorithm for porn detection.
 <br>
 <br>

@@ -1,4 +1,4 @@
-# porNo_open_source
+# PorNo! Porn Blocker
 
 <h3 align="center"> Special thanks to family, friends, users, and anyone I've spoken to about PorNo! 💛 </h3>
 

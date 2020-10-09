@@ -1,0 +1,326 @@
+<!-- PorNo! -->
+<!-- Popup menu -->
+<!-- @author Vivek Bhookya -->
+
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+
+<head>
+  <title>PorNo!'s Popup</title>
+  <!-- /////////// CSS ////////// -->
+  <style type="text/css">
+    body {
+      display: block;
+      margin: 10px;
+      background: #FFFAFA;
+      /* white-space: nowrap; */
+    }
+
+    h1 {
+      font-size: 20px;
+    }
+
+    p {
+        font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    	font-size: 15px;
+    	font-style: normal;
+    	font-variant: normal;
+        margin: 0px;
+        padding: 5px;
+    }
+
+    #container {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      width: 400px;
+    }
+
+    /* https://www.w3schools.com/howto/howto_css_vertical_menu.asp */
+    .vertical-menu {
+    width: 100%; /* Set a width if you like */
+    }
+
+    .vertical-menu a {
+        display: block; /* Make the links appear below each other */
+        padding: 12px; /* Add some padding */
+    }
+
+  /*//////////////////////////////////////////////////////////////////////////////////////////
+  /* Include the padding and border in an element's total width and height */
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Remove margins and padding from the list */
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Style the list items */
+  ul li {
+    cursor: pointer;
+    position: relative;
+    padding: 12px 40px 12px 12px;
+    list-style-type: none;
+    background: inherit;
+    font-size: 17px;
+    transition: 0.2s;
+    word-break: break-all;
+    color: #FF82AB;
+
+    /* make the list items unselectable/unhighlightable */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Darker background-color on hover */
+  ul li:hover {
+    background: #FF82AB;
+    color: blanchedAlmond;
+    title: "Visit here?";
+  }
+
+  /* Style the "Add" button */
+  .addBtn {
+    /* padding: 10px; */
+    /* float: left; */
+    background-color:blanchedAlmond;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.7s;
+  }
+
+  .addBtn:hover {
+    background-color: #FF82AB;
+    color: blanchedAlmond;
+  }
+
+  /* Style the "EMERGENCY" button */
+  .emergency {
+    /* padding: 10px; */
+    /* float: left; */
+    background-color: pink;
+    color: red;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.4s;
+  }
+
+  .emergency:hover {
+    background-color: red;
+    color: white;
+  }
+
+  /* Style the close button */
+  .delete {
+    position: absolute;
+    float: right;
+    color: #f44336;
+
+    right: 0;
+    top: 0;
+    padding: 12px 16px 12px 16px;
+  }
+
+  .delete:hover {
+    /* background-color: #f44336; */
+    color: white;
+  }
+
+  a:link {
+    color: pink;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+  }
+
+    a:visited {
+      color: pink;
+      background-color: transparent;
+      text-decoration: none;
+      outline: none;
+    }
+
+    a:hover {
+      color: DeepPink;
+      background-color: transparent;
+      outline: none;
+      /*text-decoration: underline;*/
+    }
+
+    span {
+      font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+      font-size: 14px;
+    }
+
+      /* Style the input */
+      input {
+        border: none;
+        width: 95%;
+        padding: 10px;
+        margin: 10px;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        float: left;
+        font-size: 16px;
+        /* outline-style: solid; */
+        outline-width: 1px;
+        outline-color: black;
+      }
+
+    #setIncognito {
+      color: red;
+      text-decoration: underline;
+    }
+
+    #setIncognito:hover {
+      color: maroon;
+      cursor: pointer;
+    }
+
+    #INPUT_url {
+      background: inherit;
+    }
+
+    #INPUT_name {
+      background: inherit;
+    }
+
+</style>
+<!-- /////////// CSS ////////// -->
+
+  <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+    -->
+ <script src="jquery.min.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-firestore.js"></script>
+ <script src="MagicalMessages.js"></script>
+ <script src="lists.js"></script>
+ <script src="linkManager.js"></script>
+ <!-- Adding the following breaks the popup's interactivity -->
+ <!-- <script src="porNo.js"></script> -->
+
+
+</head>
+
+<body>
+  <h1>
+    <em><a href="user_manual/welcome.html" target="_blank">PorNo!</a>
+    <br>
+    <a href="https://play.google.com/store/apps/details?id=us.mrvivacio.porno" style="font-size:16px;" target="_blank">
+      Now on Android!</a></em>
+  </h1>
+
+  <div id="container">
+
+    <!-- <p id="setIncognito" style="color:black; font-size:16px; margin-top:0px">Welcome!
+       Please copy paste this link into your browser:
+      <br>
+      <br><span style="color:red">chrome://extensions/?id=bihbgimpgkjigipgnaghomdcjddpidli</span>
+      <br>
+      <br>
+      and select "Allow in incognito" so that we can get started! Thank you!</p> -->
+
+    <div id="vertical-menu" class="vertical-menu">
+      <input id="emergency" class="emergency" style="outline: none; margin-bottom:20px;" type="submit" value="EMERGENCY">
+
+      <p id="setIncognito">Tip: Enabling "Allow in incognito" for PorNo! gives
+        you the best possible experience!
+      </p>
+      <p>Let's say no to porno, together!</p>
+      <!-- <hr>
+      <p id="message">Cycle Magical Messages</p> -->
+      <hr>
+      <p>Your wholesome outlets:
+      </p>
+
+      <ul id="websites">
+        <!-- Websites added will be found here when inspecting the popup -->
+      </ul>
+      <!-- <br> -->
+      <p id="ERROR_MSG" style="color:red; font-size:16px; margin-top:10px"></p>
+
+      <!-- Input field for link -->
+      <p><em>URL:</em></p>
+      <input style="color:black;" type="text" id="INPUT_url" placeholder="Your favorite websites!">
+      <!-- Input field for name -->
+      <p><em>Name:</em></p>
+      <input style="color:black;" type="text" id="INPUT_name" placeholder="Name this link?">
+
+      <!-- Add button -->
+      <input id="submit" class="addBtn" style="outline: none; margin-bottom:20px;" type="submit" value="Add!">
+      <br>
+
+      <!-- extra info -->
+
+      <span style="margin-top:30px; margin-bottom:0px; border-width:0px;" title="How to use PorNo!">
+        <a href="user_manual/help.html" target="_blank"><em>How to use PorNo!</em>
+        </a>
+      </span>
+
+      <span style="margin-top:0px; margin-bottom:0px; border-width:0px;" title="More resources!">
+        <a href="user_manual/welcome.html" target="_blank"><em>More resources!</em></a>
+      </span>
+
+      <span style="margin-top:0px; margin-bottom:0px; border-width:0px;" title="Send an email?">
+        <a href="mailto:jvnnvt@gmail.com?Subject=PorNo!" target="_blank"><em>Something wrong? Let me know!</em></a>
+      </span>
+
+      <span style="margin-top:0px; margin-bottom:0px; border-width:0px;" title="Algorithm source code">
+        <a href="https://github.com/mrvivacious/porNo_open_source" target="_blank"><em>View/improve the porNo algorithm</em></a>
+      </span>
+
+           <!-- or <a href="https://github.com/mrvivacious/PorNo-_public" target="_blank">PorNo! itself -->
+
+
+      <span style="margin-top:0px; margin-bottom:0px; border-width:0px;" title="Privacy policy">
+       <a href="https://github.com/mrvivacious/PRIVACY_POLICY/blob/master/PorNo_privacy_policy.txt" target="_blank"><em>View the privacy policy</em></a>
+      </span>
+
+      <span style="margin-top:0px; margin-bottom:0px; border-width:0px;" title="Developer logs">
+        <a href="https://mrvivacious.github.io/dev/dev_PorNo.html" target="_blank"><em>PorNo! developer logs</em></a>
+      </span>
+
+      <!-- TODO: Add closing message here "thanks for using pls rate etc" + add charityware       <span style="color:DeepPink;" title="Leave a review"> <a href="https://chrome.google.com/webstore/detail/porno-beta/fkhfpbfakkjpkhnonhelnnbohblaeooj" target="_blank"><em>
+        <span style="color:DeepPink; font-size:16px;">&hearts;</span>
+          PorNo!? Leave a review!</em></a>
+      </span>
+-->
+
+      <hr>
+        <span><em>More projects:</em></span>
+        <!-- <br> -->
+        <span><a href='https://chrome.google.com/webstore/detail/likefree/hejgbghjhjiilikhjinpbooockoiipek' target="_blank">
+        <span style="color:red; font-size:16px;">&hearts;</span> LikeFree</a></span>
+
+        <span><a href='https://chrome.google.com/webstore/detail/speeddial/aofiljppiempffphbeadcofapjcekeim' target="_blank">
+        <span style="color:springgreen; font-size:16px;">&hearts;</span> SpeedDial</a></span>
+      <hr>
+
+      <span style="color:DeepPink;"><em>Thank you for your support
+        <span style="color:DeepPink; font-size:20px;">&hearts;</span></em>
+      </span>
+      <br>
+    </div>
+    <!-- End of vertical-menu -->
+
+  </div>
+  <!-- Close container -->
+</body>
+
+</html>

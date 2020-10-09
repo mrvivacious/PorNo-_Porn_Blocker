@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>PorNo!</title>
+  <link rel="icon" src="icons/porNo_icon.png">
+  <style type="text/css">
+  body {
+  /* background-color: blanchedAlmond; */
+  /* background: #FFFAFA; */
+  background: white;
+  }
+
+  p {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  /* line-height: 20px; */
+  }
+
+  h3 {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-size: 28px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: pink;
+  }
+
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    /* border-top: 1px solid black; */
+    border-top: 1px solid DeepPink;
+    margin: 0em 0;
+    padding: 0;
+  }
+
+  a:link {
+    color: pink;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+  }
+
+    a:visited {
+      color: pink;
+      background-color: transparent;
+      text-decoration: none;
+      outline: none;
+    }
+
+    a:hover {
+      color: DeepPink;
+      background-color: transparent;
+      outline: none;
+      /*text-decoration: underline;*/
+    }
+
+  #w {
+    font-size: 45px;
+    margin-left: 25px;
+    /* color: brown; */
+    color: DeepPink;
+  }
+
+  #containerthirds {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  }
+  #left {
+    width: 33%;
+    margin-right: 20px;
+  }
+  #mid {
+    width: 33%;
+    margin-right: 20px;
+  }
+  #right {
+    width: 33%;
+  }
+
+  </style>
+  <script src="jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-firestore.js"></script>
+  <script src="linkManager.js"></script>
+</head>
+
+<body>
+  <p align="center" style="font-size:40px;">Porno. It's not for you. It's not for me.
+    <br><br>
+  <!-- <span align="center" style="font-size:100px; margin-bottom:50px;"><em><a href="porNo.html">PorNo!</a></em></span></p> -->
+  <img src="../promo/marquee.png" style="height: 80%; width: 100%; object-fit: contain">
+
+  <p align="center">Welcome to <em>PorNo!</em>, a porn-blocker, excess
+    sexual-energy converter, and what is aiming to be the last counter-measure
+    anyone will need to overcome porn (of course, we still have a lot of work to do).
+  </p>
+
+  <p align="center" style="font-size: 40px; color:DeepPink;">PORN ADDICTION HOTLINE: 1-877-958-8308</p>
+  <p align="center" style="font-size: 40px; color:DeepPink;">NATIONAL (USA) DRUG HOTLINE: 1-888-633-3239</p>
+
+  <p align="center" style="font-size: 60px; color:DeepPink;"><a href="https://play.google.com/store/apps/details?id=us.mrvivacio.porno" target="_blank">ANDROID APP</a></p>
+  <p align="center" style="font-size: 40px; color:DeepPink;"><a href="https://fightthenewdrug.org/overview/" target="_blank">fightthenewdrug.com</a></p>
+  <p align="center" style="font-size: 40px; color:DeepPink;"><a href="https://www.reddit.com/r/NoFap/" target="_blank">Reddit group that fights porn and masturbation (r/NoFap)</a></p>
+  <p align="center" style="font-size: 40px; color:DeepPink;"><a href="http://virtual-addiction.com/online-pornography-test/" target="_blank">Am I addicted to porn? quiz</a></p>
+  <p align="center" style="font-size: 40px; color:DeepPink;"><a href="https://elevatedrecovery.org/porn-addiction-quiz/" target="_blank">Another quiz</a></p>
+
+
+  <p align="center" style="color:DeepPink;">I COLLECT DATA.</p>
+  <p align="center"><em>PorNo!</em> isn't a full porn-blocker yet. It has a lot of links saved as adult sites,
+    but it doesn't have every porn site saved. Thus, some porn sites will bypass the algorithm.
+  <br>If you visit an adult website that bypasses my algorithm and <em>PorNo!</em> figures out that the site you're on is pornographic,
+     it <em>collects the url, nothing else, and saves to url to my database of porn links</em>.
+     <br>No sensitive data is collected. No personal information, no date of access...nothing. Only the url of the website.
+  </p>
+
+  <p align="center" style="color:DeepPink;">YOU CAN HELP</p>
+  <p align="center">Please <a href="mailto:jvnnvt@gmail.com?Subject=PorNo!" target="_top">email me</a> all the porn sites you know. I will add them to the database.
+  <br>With your help, we will make <em>PorNo!</em> better at detecting porn sites when it should. Thank you!</p>
+
+  <hr>
+  <div id="containerthirds">
+    <div id="left" align="center">
+    <a href="porNo.html">
+      <h3>About</h3>
+      <hr>
+    </a>
+    </div>
+
+    <div id="mid" align="center">
+    <a href="help.html">
+      <h3>How to use</h3>
+      <hr>
+    </a>
+    </div>
+
+    <div id="right" align="center">
+    <a href="thoughts.html">
+      <h3>My thoughts</h3>
+      <hr>
+    </a>
+    </div>
+  </div>
+
+  <!-- <p align="center">Porno. It's not for you. It's not for me. Por-No! -->
+  </p>
+  <!-- WHY -->
+
+  <p align="center" style="font-size:18px;">Found a problem with <em>PorNo!</em>? Found some websites that bypassed
+    the algorithm? Feel like sharing how you've benefited from <em>PorNo!</em>, and everything else? Send me an email at
+    <br><a href="mailto:jvnnvt@gmail.com?Subject=PorNo!" target="_top">jvnnvt@gmail.com</a>
+    <br>Any and all mail is appreciated ^_^ .
+  </p>
+  <!-- <p align="center"><b>______</b></p> -->
+  <p align="center" style="font-size:18px;"><em>Thank you for using </em>PorNo!<em>!</em>
+    <br>Vivek Bhookya
+    <br>
+  </p>
+
+</body>
+
+</html>

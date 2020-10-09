@@ -1,0 +1,36 @@
+
+IN PROGRESS::
+
+TODO::
+o Respond to emails lmfaooo
+o Users should be able to submit URLs to a block list from within the app
+o User should be able to submit requests for safe list within the app (rn, users email me)
+o A donation button to groups that fight sexual exploitation would be super sick
+o A donation button to PorNo! would be nice but idk if i wanna make money off of someone's addiction
+o Switch to BSL in case I add some kind of financial model to PorNo! (someone has reuploaded another
+ Chrome extension of mine, which is so bullshit, and also super flattering, but only the users should
+ profit off of my work)
+o iOS strategy: Safari extension, import that to iPhone somehow....idk.........
+o Some kind of build script where you add ur API keys into an .env and $ build
+ can build a zip of the Chrome Extension with the keys and an updated manifest.json
+o Integrate the IBM x force api to "detect" suspicious sites without user or dev intervention
+o Integrate some custom method to "flag" suspicious sites for me to review later (ie. if the webpage
+ contains a lotttt of porn-y words, flag the page BUT DON'T BLOCK...what if the site is about
+ fighting addiction and gets blocked on accident? For example)
+o Support Samsung Internet on mobile...and whatever other browsers people use on mobile
+o Translations for other languages because people have left feedback that English isn't their language
+o A work schedule? With deadlines...would be dope and can help with developer focus
+o Bring android app into open source repository as well to keep all code under one repo
+o Clean up the code
+o Mobile optimizations cuz holy f Android is hard to speed up (speaking of Android, Android Go?)
+o Accessibility, we should look into, also I have no idea what or how accessibility relates to this app
+o Have fun and share our adventures with our friends!
+
+
+PorNo! right now is a porn-blocker that recognizes porn sites with an internal list.
+What if PorNo! could figure out if a site is pornographic on-the-fly? :D :D
+
+DONE::
+√ Generators for lists.js and Domains.java (what about the banned vocab for Java?)
+√ Make a done.txt to track tasks
+√ Brought Chrome Extension code into the open source repository

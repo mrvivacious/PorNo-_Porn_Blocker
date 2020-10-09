@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>PorNo!</title>
+  <link rel="icon" src="icons/porNo.png">
+  <style type="text/css">
+  body {
+  background-color: white;
+  /* background: #FFFAFA; */
+  }
+
+  p {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  /* line-height: 20px; */
+  }
+
+  h3 {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-size: 28px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: pink;
+  }
+
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    /* border-top: 1px solid black; */
+    border-top: 1px solid DeepPink;
+    margin: 0em 0;
+    padding: 0;
+  }
+
+  a:link {
+    color: pink;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+  }
+
+    a:visited {
+      color: pink;
+      background-color: transparent;
+      text-decoration: none;
+      outline: none;
+    }
+
+    a:hover {
+      color: DeepPink;
+      background-color: transparent;
+      outline: none;
+      /*text-decoration: underline;*/
+    }
+
+  #w {
+    font-size: 45px;
+    margin-left: 25px;
+    /* color: brown; */
+    color: DeepPink;
+  }
+
+  #containerthirds {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  }
+  #left {
+    width: 33%;
+    margin-right: 20px;
+  }
+  #mid {
+    width: 33%;
+    margin-right: 20px;
+  }
+  #right {
+    width: 33%;
+  }
+
+  #containerPost {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  }
+  #leftPost {
+    width: 20%;
+    margin-right: 20px;
+  }
+  #middlePost {
+    width: 60%;
+    margin-right: 20px;
+  }
+  #rightPost {
+    width: 20%;
+  }
+
+  </style>
+  <script src="jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-firestore.js"></script>
+  <script src="MagicalMessages.js"></script>
+  <script src="linkManager.js"></script>
+</head>
+
+<body>
+  <img src="../promo/marquee.png" style="height: 80%; width: 100%; object-fit: contain">
+  <!-- <p align="center" style="font-size:100px; margin-bottom:50px;"><em><a href="welcome.html">PorNo!</a></em></p> -->
+  <h3 align="center" style="color:black;"><a href="welcome.html">About <em>PorNo!</em></a></h3>
+  <hr>
+  <div id="containerthirds">
+    <div id="left" align="center">
+    <a href="porNo.html">
+      <h3>About</h3>
+      <hr>
+    </a>
+    </div>
+
+    <div id="mid" align="center">
+    <a href="help.html">
+      <h3>How to use</h3>
+      <hr>
+    </a>
+    </div>
+
+    <div id="right" align="center">
+    <a href="thoughts.html">
+      <h3>My thoughts</h3>
+      <hr>
+    </a>
+    </div>
+  </div>
+
+  <div id="containerPost">
+    <div id="leftPost"></div>
+
+    <!-- PAGE CONTENT -->
+      <div id="middlePost">
+        <h3 align="center">Why does <em>PorNo!</em> exist?</h3>
+          <p align="center">
+            One spring day of 2018, I just finished watching porn and then began listening to music.
+            The pleasure I felt from my music was far greater and more deeply connected
+            to myself than what I felt from watching porn, and I wondered why.
+            <br>As I am unhappy with my porn use, I thought of how convenient it would be
+            if a porn-blocker existed that redirected me from porn to sites that made me feel
+            much more pleasure, such as my music.
+            <br>I realized that I could create such a porn-blocker.
+            <br>That was when <em>PorNo!</em> began.
+          </p>
+          <hr>
+
+          <h3 align="center">What does <em>PorNo!</em> do and how?</h3>
+            <p align="center">
+              My experience with porn-blockers I've tried is as follows:
+              <br>I visit a porn site, and
+              <br>My browser shows me either a parental controls page, or a
+              <br>Blank white screen.
+              <br>
+              <br>
+              There were several problems I found with these blockers. One problem
+               was that my sexual energy was still remaining, even if my computer
+               stopped loading the sites. Several times I found myself removing the porn-blockers
+               I installed to satisfy the persistent urges.
+              <br>Another problem was that the blockers would sometimes flag sites that weren't
+               adult in nature and content, but may have used questionable language in the webpage.
+               This frustrated my general browsing experience.
+              </p>
+              <p align="center">The idea of converting unwanted sexual energy into productive,
+                more-fulfilling actions is <em>PorNo!</em>. Instead of having to deal with
+                this unwanted sexual energy, blank website, and easily-uninstallable blocker,
+                we can "distract" ourselves from our temptations with sources of motivation,
+                fulfilling, positive, forward-moving, inspiring....etc outlets!
+                <br>This took care of the first problem.
+              </p>
+              <p align="center">For the second problem, <em>PorNo!</em> uses a database of websites
+                 that have been (at the time of testing) checked to contain adult-content, and the algorithm
+                 only adds sites to the database that test true for containing pornographic content.
+                 <br>This way, we don't flag any non-pornographic sites as porn, interrupting the browsing experience,
+                 and we convert any unwanted or excess sexual energy into that which makes us, us.
+            </p>
+            <hr>
+
+          <h3 align="center">What is the <em>PorNo!</em> algorithm?</h3>
+            <p align="center">
+              This is how <em>PorNo!</em> works, aka "my homemade porn detection algorithm."
+              <br> I share my "secret" because I believe this
+              is the best idea of addressing porn and sexual energy that I've seen yet.
+              Considering this, if anyone sees my algorithm and comes up with something better,
+              I want that person to go and produce it, because the real beneficiaries of this product
+              are the people of this planet.
+              <br>
+              <br>Every time a user visits a website, we grab the name of that website through its url.
+              <br>First, we check if the name matches any porn names collected and stored inside the app.
+               If we have a match, this website is porn, and we redirect the user to a site randomly selected
+               from the user's saved links.
+              <br>Additionally, we collect the latest links from <em>PorNo!</em>'s database and check against those as well.
+               If we have a match, we begin the redirect process. Otherwise, if we don't have a match with the latest links,
+               we use <em>natural language processing</em> to calculate the pornographic factor of the current webpage
+               (aka we count the number of adult words in the url). If we achieve our set threshold, we then activate
+               an api request of this website's domain name with the
+                <a href="https://api.xforce.ibmcloud.com/doc/#URL_get_url_url" target="_blank">IBM XFORCE URL lookup api</a>.
+               <br>If the api returns true for pornographic detection, we redirect the user and save the domain of the site to the
+               database. Now, every user who has the most updated version of <em>PorNo!</em> will also gain the link just
+               saved to their version of the app -- these are realtime updates and saves me a tonnnn of time when pushing out
+               new updates. I will one day produce a more in-depth explanation of this process, complete with pictures.
+            </p>
+
+          <hr>
+          <h3 align="center">Goals of <em>PorNo!</em></h3>
+            <p align="center">
+              <em>PorNo!</em> still has a ways to go before it can become an absolute
+              solution to countering porn.
+              <br>
+              <br>Faster. Sometimes, parts of an adult side will load before the redirect activates. This happens when we wait
+              for IBM to respond with our api request.
+               Any adult content seen will reward the human mind with dopamine of the wrong nature.
+                The faster the implementation of the algorithm and the more links saved in the database,
+                the less time is allowed for a porn site to load and the closer we get to dissolving porn's effects and control
+                in our minds and lives.
+              <br>Larger database. The more links saved to the database, the more links added to the source code of <em>PorNo!</em>, and
+              that results in near-zero time for the algorithm to activate.
+              <br>
+              <br>Complete dissolution of the porn industry. This goal is more ambitious and the chances of accomplishing
+              it through one tiny Chrome extension are quite slim. Nonetheless, <em>PorNo!</em> is a small step towards this
+              long path, and I hope that my work can inspire another to knock down another
+              domino in the series of dominos that need to fall to accomplish the fall of the porn industry.
+            </p>
+
+
+            <!-- <hr> -->
+      </div>
+      <!-- END OF PAGE CONTENT -->
+    <div id="rightPost"></div>
+  </div>
+
+    <hr>
+    <p align="center" style="font-size:18px;"><em>Thank you for using </em>PorNo!<em>!</em>
+      <br>Vivek Bhookya
+      <br>
+    </p>
+  <!-- <p align="center"><b>______</b></p> -->
+</body>
+
+</html>

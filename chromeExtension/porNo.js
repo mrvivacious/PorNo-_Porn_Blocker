@@ -10,10 +10,11 @@
 //  This would help with adding links dynamically without releasing an update. storage.local.get takes too long
 //  to retrieve values, contrary to what I believed....
 
-var links = [];
-var size = -1;
-var counter = 0;
-var defaultLink = 'https://github.com/mrvivacious/porNo_open_source';
+let links = [];
+let size = -1;
+let counter = 0;
+let safeSearch = '&safe=active';
+let defaultLink = 'https://github.com/mrvivacious/PorNo-_Porn_Blocker';
 // 'https://fiftyshadesoflove.org/#connection'
 
 // Let's go
@@ -22,16 +23,22 @@ main();
 // Function main()
 // Evaluates current site for ban status
 function main() {
+  let location = window.location;
+
+  if (isUnsafeGoogleSearch(location)) {
+    window.location.href = location + safeSearch;
+    return;
+  }
 
     // ROUTE LOCALSTORAGE ( [ideally is] MOST UP TO DATE )
     chrome.storage.local.get("realtimeBannedLinks", function(returnValue) {
       let firebaseLinks = returnValue.realtimeBannedLinks;
-      let hostname = window.location.hostname;
+      let hostname = location.hostname;
 
 
       // console.log(firebaseLinks);
       // If the url is a porn site, PorNo!
-      if (isBannedFirebase(firebaseLinks) && window.location.hostname !== 'console.firebase.google.com' && window.location.hostname !== 'www.google.com') {
+      if (isBannedFirebase(firebaseLinks) && location.hostname !== 'console.firebase.google.com' && location.hostname !== 'www.google.com') {
         if (  hostname.includes('google') ||
               hostname.includes('gmail')  ||
               hostname.includes('youtube') ||
@@ -295,13 +302,13 @@ function checkWithIBM() {
     // This allows us to delay website load by just a teeny bit (hopefully teeny) enough
     //  to get to PorNo! if needed
     // Thank you, http://youmightnotneedjquery.com/#json
-    var request = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
     request.open('GET', api, false);
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        var data = JSON.parse(request.responseText);
+        let data = JSON.parse(request.responseText);
         if(data.result.cats.Pornography) {
           window.stop();
           PorNo();
@@ -320,4 +327,8 @@ function checkWithIBM() {
     };
     request.send();
   }
+}
+
+function isUnsafeGoogleSearch() {
+  return location.href.includes('google.com/search?') && !location.href.includes(safeSearch)
 }

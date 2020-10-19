@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
 
-  "name": "DEV::PorNo! porn blocker (Beta)",
+  "name": "DEV:0013:PorNo! Porn Blocker (Beta)",
   "description": "Beat porn once and for all. Redirect your temptations to wholesome and healthy outlets.",
-  "version": "0.0.1.1",
-  "author": "Vivek Bhookya | https://github.com/mrvivacious/porNo_open_source",
+  "version": "0.0.1.2",
+  "author": "Vivek Bhookya | https://github.com/mrvivacious/PorNo-_Porn_Blocker",
 
   "browser_action": {
     "default_icon": "icons/heart_PorNo.png",

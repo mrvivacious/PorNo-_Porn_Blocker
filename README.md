@@ -32,7 +32,7 @@ o Update the Chrome extension and clean up the code
 <br>
 o Update the Android app and CLEAN up the code
 <br>
-o Cry
+✅ (Nov 3 2020) Cry
 <br>
 o Therapy
 <br>

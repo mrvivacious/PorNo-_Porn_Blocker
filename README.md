@@ -36,6 +36,41 @@
 
 ## Contents
 who what where when why how
+
 mention problem with finding urls
+
 installation / deployment details
+
 link to store urls
+
+add a gif for web and a gif for android
+
+
+## Why?
+- motivation
+
+## How to use
+- Download, deploy, visit a porn site, add a redirect site, visit a porn site.
+- Chrome
+  - blahblah
+- Android
+  - blah blah
+
+## Installation
+- talk about downloading from store andd downloding via github for custom testing
+
+## Features
+- 
+
+## Edit the URL lists
+
+## Filing issues / contributing
+
+## Todo
+
+## Contact me
+
+<hr>
+
+## Milestones
+

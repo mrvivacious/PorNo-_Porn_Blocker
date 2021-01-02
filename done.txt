@@ -3,6 +3,9 @@ IN PROGRESS::
 
 TODO::
 o Respond to emails lmfaooo
+o Issue template
+o Whitelist?? 
+o Make subreddit for easier communication...
 o Users should be able to submit URLs to a block list from within the app
 o User should be able to submit requests for safe list within the app (rn, users email me)
 o A donation button to groups that fight sexual exploitation would be super sick

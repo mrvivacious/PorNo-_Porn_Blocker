@@ -6,15 +6,33 @@
     <h3 align="center">PorNo! redirects users from porn to positive, fulfilling websites, instead of the standard "page blocked / blank screen" response<h3>
 </p>
 
+<p align="center">
+    <a href="https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp" target="_blank">
+        <img src="/chromeWebStoreIcon.png">
+    </a>
+</p>
 
+<p align="center">
+    <a href="https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp" target="_blank">
+        <img src="/chromeWebStoreIcon.png">
+    </a>
+</p>
+
+
+<!--
 <h5 align="center">
     <em>Special thanks to family, friends, users, and anyone I've spoken to about PorNo! 💛 </em>
 </h5>
+-->
 
+
+
+<!--
 [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/0-percent-optimized.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-for-android.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://forthebadge.com)
+-->
 
 ## Contents
 who what where when why how

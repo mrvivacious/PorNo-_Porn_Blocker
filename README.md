@@ -1,7 +1,7 @@
-![PorNo! banner](https://mrvivacious.github.io/pictures/banners/porNo_text.png)
+<!-- ![PorNo! banner](https://mrvivacious.github.io/pictures/banners/porNo_text.png) -->
 
 <p align="center">
-    <!-- <img src="/hert_PorNo.png" width="150"> -->
+    <img src="/heart_PorNo.png" width="150">
     <h1 align="center">PorNo! Porn Blocker</h1>
 </p>
 

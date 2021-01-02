@@ -6,15 +6,15 @@
     <h3 align="center">PorNo! redirects users from porn to positive, fulfilling websites, instead of the standard "page blocked / blank screen" response<h3>
 </p>
 
-<p align="center">
+<p align="left">
     <a href="https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp" target="_blank">
         <img src="/chromeWebStoreIcon.png">
     </a>
 </p>
 
-<p align="center">
-    <a href="https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp" target="_blank">
-        <img src="/chromeWebStoreIcon.png">
+<p align="left">
+    <a href='https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' target="_blank">
+      <img width="220" alt='Get PorNo! Porn Blocker on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/>
     </a>
 </p>
 

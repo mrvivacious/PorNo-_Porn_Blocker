@@ -40,8 +40,6 @@ mention problem with finding urls
 
 [Installation](https://github.com/mrvivacious/PorNo-_Porn_Blocker#installation)
 
-link to store urls
-
 add a gif for web and a gif for android
 
 ## Why?

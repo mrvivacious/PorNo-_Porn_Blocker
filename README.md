@@ -57,14 +57,12 @@ add a gif for web and a gif for android
   - blah blah
 
 ## Installation
-- talk about downloading from store andd downloding via github for custom testing
-
 ### Release builds:
-> #### Chrome Extension
-> Click [this](https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp) or click the "Available in the Chrome Web Store" > button at the top of the README
+#### Chrome Extension
+Click [this](https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp) or click the "Available in the Chrome Web Store" > button at the top of the README
 
-> #### Android App
-> Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1) or click the "Get it on Google Play" button at the top of the README
+#### Android App
+Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1) or click the "Get it on Google Play" button at the top of the README
 
 ### Developmental builds:
 > #### Chrome Extension

@@ -26,7 +26,6 @@
 -->
 
 
-
 <!--
 [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/0-percent-optimized.svg)](https://forthebadge.com)
@@ -39,7 +38,7 @@ who what where when why how, goals of project (last porn blocker ever rawr)
 
 mention problem with finding urls
 
-installation / deployment details
+[Installation](https://github.com/mrvivacious/PorNo-_Porn_Blocker#installation)
 
 link to store urls
 

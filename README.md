@@ -45,7 +45,6 @@ link to store urls
 
 add a gif for web and a gif for android
 
-
 ## Why?
 - motivation
 
@@ -59,13 +58,13 @@ add a gif for web and a gif for android
 ## Installation
 ### Release builds:
 #### Chrome Extension
-Click [this](https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp) or click the "Available in the Chrome Web Store" > button at the top of the README
+> 1. Click [this](https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp) or click the "Available in the Chrome Web Store" button at the top of the README
 
 #### Android App
-Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1) or click the "Get it on Google Play" button at the top of the README
+> 1. Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1) or click the "Get it on Google Play" button at the top of the README
 
 ### Developmental builds:
-> #### Chrome Extension
+#### Chrome Extension
 > 1. Clone this repo to an easy-to-find place on your computer. For example, this bash command clones the repo to a folder called porNo in your Desktop:
 
 ```
@@ -77,7 +76,7 @@ Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pc
 > 5. Navigate to the folder you cloned PorNo and double-click the `chromeExtension` folder
 > 6. If successful, give yourself a pat on the back.
 
-> #### Android App:
+#### Android App:
 > 1. Clone this repo to an easy-to-find place on your computer. For example, this bash command clones the repo to a folder called porNo in your Desktop:
 
 ```

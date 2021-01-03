@@ -38,7 +38,7 @@ who what where when why how, goals of project (last porn blocker ever rawr)
 
 mention problem with finding urls
 
-[Installation](https://github.com/mrvivacious/PorNo-_Porn_Blocker#installation)
+[Installation](#installation)
 
 add a gif for web and a gif for android
 
@@ -52,7 +52,7 @@ add a gif for web and a gif for android
 - Android
   - blah blah
 
-## Installation
+## [Installation](#contents)
 ### Release builds:
 #### Chrome Extension
 > Click [this](https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp) or click the "Available in the Chrome Web Store" button at the top of the README

@@ -35,7 +35,7 @@
 -->
 
 ## Contents
-who what where when why how
+who what where when why how, goals of project (last porn blocker ever rawr)
 
 mention problem with finding urls
 
@@ -58,6 +58,37 @@ add a gif for web and a gif for android
 
 ## Installation
 - talk about downloading from store andd downloding via github for custom testing
+
+### Release builds:
+> #### Chrome Extension
+> Click [this](https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp) or click the "Available in the Chrome Web Store" > button at the top of the README
+
+> #### Android App
+> Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1) or click the "Get it on Google Play" button at the top of the README
+
+### Developmental builds:
+> #### Chrome Extension
+> 1. Clone this repo to an easy-to-find place on your computer. For example, this bash command clones the repo to a folder called porNo in your Desktop:
+
+```
+ cd Desktop && git clone https://github.com/mrvivacious/PorNo-_Porn_Blocker.git porNo
+```
+> 2. Enter `chrome://extensions/` in the Google Chrome omnibox / search bar
+> 3. Turn on `Developer mode` in the top right corner of the window
+> 4. Click `Load unpacked` in the top left corner of the window
+> 5. Navigate to the folder you cloned PorNo and double-click the `chromeExtension` folder
+> 6. If successful, give yourself a pat on the back.
+
+> #### Android App:
+> 1. Clone this repo to an easy-to-find place on your computer. For example, this bash command clones the repo to a folder called porNo in your Desktop:
+
+```
+ cd Desktop && git clone https://github.com/mrvivacious/PorNo_Android.git porNo
+```
+> 2. Open the project in Android Studio
+> 3. Read [this](https://developer.android.com/training/basics/firstapp/running-app)
+
+**Note: I don't have a magic CI/CD pipeline at the moment where y'all can recieve the latest changes to the repositories so just make sure you `git pull` regularly thx**
 
 ## Features
 - 

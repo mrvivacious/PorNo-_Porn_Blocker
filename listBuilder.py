@@ -54,6 +54,7 @@ def main():
 
     outputFile.write(s)
     outputFile.close()
+    print("Now run cp lists.js chromeExtension/lists.js")
 
 if (__name__ == "__main__"):
     main()

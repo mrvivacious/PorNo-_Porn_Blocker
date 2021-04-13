@@ -82,7 +82,6 @@ function main() {
         PorNo();
       }
     }
-
 }
 
 // If our local route fails, the database route will still be checked.
@@ -329,6 +328,6 @@ function checkWithIBM() {
   }
 }
 
-function isUnsafeGoogleSearch() {
+function isUnsafeGoogleSearch(location) {
   return location.href.includes('google.com/search?') && !location.href.includes(safeSearch)
 }

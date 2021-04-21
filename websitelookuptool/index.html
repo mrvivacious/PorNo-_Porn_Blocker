@@ -22,7 +22,7 @@
                 }
                 for (var i = 0; i < str.length; i++) {
                     var thisChar = str.charAt(i);
-                    if (!(/[a-zA-Z]/).test(thisChar) && thisChar !== '.' && thisChar !== '-') {
+                    if (!((/[a-zA-Z]/).test(thisChar)) && thisChar !== '.' && thisChar !== '-') {
                         alert("invalid url");
                         return 0;
                     }

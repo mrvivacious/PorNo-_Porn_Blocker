@@ -78,7 +78,7 @@ function main() {
           ) {
               return;
             }
-      else {
+      else { // todo: if url contains 'reddit', regex the url (check with pathname or smth)
         PorNo();
       }
     }
@@ -268,7 +268,7 @@ function isBannedURL() {
   // 8 to account for sites with extended intros (ie. boards.4chan)
   // This evaluates to false for a URL that looks like abcdefgh.name.com
   // Here's to hoping that there aren't too many of those URLs around
-  if (idx < 8) {
+  if (idx < 8) { // todo rethink this strategy...
     url = url.substring(idx + 1);
   }
 

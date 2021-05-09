@@ -24,64 +24,68 @@ main();
 // Evaluates current site for ban status
 function main() {
   let location = window.location;
+  let href = window.location.href;
 
-  if (isUnsafeGoogleSearch(location)) {
+  if (isUnsafeGoogleSearch(href)) {
     window.location.href = location + safeSearch;
     return;
   }
 
-    // ROUTE LOCALSTORAGE ( [ideally is] MOST UP TO DATE )
-    chrome.storage.local.get("realtimeBannedLinks", function(returnValue) {
-      let firebaseLinks = returnValue.realtimeBannedLinks;
-      let hostname = location.hostname;
+  // ROUTE LOCALSTORAGE ( [ideally is] MOST UP TO DATE )
+  chrome.storage.local.get("realtimeBannedLinks", function(returnValue) {
+    let firebaseLinks = returnValue.realtimeBannedLinks;
+    let hostname = location.hostname;
 
-
-      // console.log(firebaseLinks);
-      // If the url is a porn site, PorNo!
-      if (isBannedFirebase(firebaseLinks) && location.hostname !== 'console.firebase.google.com' && location.hostname !== 'www.google.com') {
-        if (  hostname.includes('google') ||
-              hostname.includes('gmail')  ||
-              hostname.includes('youtube') ||
-              hostname.includes('amazon') ||
-              hostname.includes('instagram') ||
-              hostname.includes('is.muni.cs') ||
-              hostname.includes('virtual-addiction')
-            ) {
-                return;
-              }
-        else {
-          PorNo();
-        }
-      }
-      // Else, if the url has four or more "banned words",
-      //  check the url's category through the IBM XFORCE API
-      // Four because there are four inner planets in our solar system
-      // jk I don't have a better system for checking these links faster than the page
-      //  can load
-      else {
-        checkURL();
-      }
-    });
-
-    // ROUTE HARDCODED ( FASTER but does not contain latest links )
+    // console.log(firebaseLinks);
     // If the url is a porn site, PorNo!
-    if (isBannedURL() && window.location.hostname !== 'console.firebase.google.com' && window.location.hostname !== 'www.google.com') {
-      let hostname = window.location.hostname;
-
-      if (  hostname.includes('google') ||
-            hostname.includes('gmail')  ||
-            hostname.includes('youtube') ||
-            hostname.includes('amazon') ||
-            hostname.includes('instagram') ||
-            hostname.includes('is.muni.cs') ||
-            hostname.includes('virtual-addiction')
-          ) {
-              return;
-            }
-      else { // todo: if url contains 'reddit', regex the url (check with pathname or smth)
+    if (isBannedFirebase(firebaseLinks) &&
+      location.hostname !== 'console.firebase.google.com' &&
+      location.hostname !== 'www.google.com') {
+      if (hostname.includes('google') ||
+        hostname.includes('gmail') ||
+        hostname.includes('youtube') ||
+        hostname.includes('amazon') ||
+        hostname.includes('instagram') ||
+        hostname.includes('is.muni.cs') ||
+        hostname.includes('virtual-addiction')
+      ) {
+        return;
+      }
+      else {
         PorNo();
       }
     }
+    // Else, if the url has four or more "banned words",
+    //  check the url's category through the IBM XFORCE API
+    // Four because there are four inner planets in our solar system
+    // jk I don't have a better system for checking these links faster than the page
+    //  can load
+    else {
+      // checkURL(); commented out because this function is empty atm
+    }
+  });
+
+  // ROUTE HARDCODED ( FASTER but does not contain latest links )
+  // If the url is a porn site, PorNo!
+  if (isBannedURL() &&
+    window.location.hostname !== 'console.firebase.google.com' &&
+    window.location.hostname !== 'www.google.com') {
+    let hostname = window.location.hostname;
+
+    if (hostname.includes('google') ||
+      hostname.includes('gmail') ||
+      hostname.includes('youtube') ||
+      hostname.includes('amazon') ||
+      hostname.includes('instagram') ||
+      hostname.includes('is.muni.cs') ||
+      hostname.includes('virtual-addiction')
+    ) {
+      return;
+    }
+    else { // todo: if url contains 'reddit', regex the url (check with pathname or smth)
+      PorNo();
+    }
+  }
 }
 
 // If our local route fails, the database route will still be checked.
@@ -89,8 +93,7 @@ function main() {
 // If the database route fails, then we check our url to see if we need to call
 //  the IBM api
 function checkURL() {
-  // RIPPPPP IBMMMMMMMM
-  // if (evaluateWords()) {
+  // if (evaluateWords()) { // rip ibm
   //   checkWithIBM();
   // }
   // checkTitle();
@@ -113,12 +116,13 @@ function PorNo() {
     // If urls[0] is undefined (aka nothing exists in storage), open
     //  the default link
     if (urls[0] !== undefined) {
-        // Iterate through the urls array
-        //  and add the urls to our links list to select from
-        for (let i = 0; urls[i] !== undefined; i++) {
-          links.push(urls[i]);
-        }
-        openLink();
+      // Iterate through the urls array
+      //  and add the urls to our links list to select from
+      for (let i = 0; urls[i] !== undefined; i++) {
+        links.push(urls[i]);
+      }
+
+      openLink();
     }
     else {
       // When your wholesome list is empty, redirect to quality education
@@ -175,9 +179,9 @@ function evaluateWords() {
 
 // Function checkTitle()
 // Evaluates the title of the current page for porn clues
-// Usually a better indicator than the URL (less false positives)
+// NOT a better indicator than the URL (don't use!)
 function checkTitle() {
-  $(document).ready(function () {
+  $(document).ready(function() {
     let title = document.title.toLowerCase();
     let ctr = 0;
 
@@ -204,14 +208,22 @@ function store(url) {
   }
 
   // Begin database process
-  chrome.storage.local.set({[url]: url}, function() {});
+  chrome.storage.local.set(
+    {
+      [url]: url
+    }, function() {}
+  );
 
   // Meanwhile, update local storage list
   chrome.storage.local.get("realtimeBannedLinks", function(returnValue) {
     let urls = returnValue.realtimeBannedLinks;
     urls.push(url);
 
-    chrome.storage.local.set({realtimeBannedLinks:urls}, function() {});
+    chrome.storage.local.set(
+      {
+        realtimeBannedLinks: urls
+      }, function() {}
+    );
   });
 }
 
@@ -244,12 +256,11 @@ function isBannedFirebase(linksFromFirebase) {
   let url = window.location.href.toLowerCase();
 
   // fightthenewdrug was flagged...let's avoid that
-  if (linksFromFirebase && !url.includes('fightthenewdrug') && !url.includes('github') ) {
+  if (linksFromFirebase && !url.includes('fightthenewdrug') && !url.includes('github')) {
     // O(n) worst case feels bad but whO(l)esome porn-checker feels good
     for (let i = 0; linksFromFirebase[i]; i++) {
       if (url.includes(linksFromFirebase[i].toLowerCase())) {
-        // GTFOOOO
-        return true;
+        return true; // gtfo
       }
     }
   }
@@ -261,7 +272,6 @@ function isBannedFirebase(linksFromFirebase) {
 function isBannedURL() {
   // Header(s) removed so that we can find the correct period to substring to
   //  in order to collect only the domain name
-
   let url = window.location.hostname.toLowerCase();
   let idx = url.indexOf('.');
 
@@ -273,7 +283,7 @@ function isBannedURL() {
   }
 
   // O(1) and whO(l)esome
-  if (!url.includes('fightthenewdrug') && !url.includes('github') ) {
+  if (!url.includes('fightthenewdrug') && !url.includes('github')) {
     if (pornMap[url]) {
       window.stop();
       return true;
@@ -308,7 +318,7 @@ function checkWithIBM() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
         let data = JSON.parse(request.responseText);
-        if(data.result.cats.Pornography) {
+        if (data.result.cats.Pornography) {
           window.stop();
           PorNo();
           store(url);
@@ -328,6 +338,6 @@ function checkWithIBM() {
   }
 }
 
-function isUnsafeGoogleSearch(location) {
-  return location.href.includes('google.com/search?') && !location.href.includes(safeSearch)
+function isUnsafeGoogleSearch(url) {
+  return url.includes('google.com/search?') && !url.includes(safeSearch)
 }

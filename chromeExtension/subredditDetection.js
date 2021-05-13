@@ -8,6 +8,11 @@ function saveSubredditToBannedLinksList(domain) {
   let URLFormattedWithSubreddit = domain + '/r/' + splitPathname[2];
   URLFormattedWithSubreddit = URLFormattedWithSubreddit.toLowerCase();
 
+  // Today I learned there is r/undefined
+  if (URLFormattedWithSubreddit === 'reddit.com/r/undefined') {
+    return;
+  }
+
   // URL should look like "reddit.com/r/cscareerquestions[/]?"
   // alert(URLFormattedWithSubreddit);
 
@@ -22,7 +27,7 @@ window.onload = () => {
   let domain = host.split('www.')[1];
 
   if (domain === 'reddit.com') {
-    if (document.getElementsByClassName('_1wzhGvvafQFOWAyA157okr').length) {
+    if (document.getElementsByClassName('_1x9diBHPBP-hL1JiwUwJ5J').length) {
       document.firstElementChild.remove(); // window.stop() wont work (.onload LOL)
       saveSubredditToBannedLinksList(domain);
       PorNo();

@@ -24,3 +24,13 @@ Add any other context or screenshots about the feature request here.
 **As a** user, developer, ....?
 **I want** dark mode, custom banlist, etc
 **So that** using PorNo! becomes easier
+
+### Work description
+
+- [ ] Step one
+- [ ] Step two (link to code sample, if relevant)
+
+## Exit criteria
+Testing and verification of intended changes + more info
+
+Feature is released in ChrEx / Android update 

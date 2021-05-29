@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Thank you, https://stackoverflow.com/questions/17311833/how-we-can-add-menu-item-dynamically -->
+    <item
+        android:id="@+id/howTo"
+        android:title="How to use"
+        android:onClick="openAlertDialogForInstructions" />
+
+    <item
+        android:id="@+id/action_refresh"
+        android:title="Update links"
+        android:onClick="updateLinks"/>
+
+    <item
+        android:id="@+id/chrome"
+        android:title="Get for Chrome!"
+        android:onClick="openUrlForChromeExtension" />
+
+    <item
+        android:id="@+id/privacyPolicy"
+        android:title="Privacy Policy"
+        android:onClick="openUrlForPrivacyPolicy" />
+
+    <item
+        android:id="@+id/about"
+        android:title="About"
+        android:onClick="openActivityForAboutPorNo" />
+
+    <item
+        android:id="@+id/gitHub"
+        android:title="PorNo! Source Code"
+        android:onClick="openUrlForGitHub" />
+
+</menu>
+

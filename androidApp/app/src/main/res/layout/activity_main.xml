@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_msg"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="Let's say no to porno, together! \nHold to delete, touch to open ~"
+        android:textColor="@android:color/black"
+        android:background="@color/colorAccent"
+        android:gravity="center_horizontal" />
+
+    <!-- Thank you, https://stackoverflow.com/questions/19115332/android-draw-a-horizontal-line-between-views/39160995 -->
+    <!-- This is an <hr>, essentially -->
+    <View
+        android:id="@+id/hi"
+        android:paddingBottom="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:layout_below="@+id/tv_msg"/>
+
+    <TextView
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_outlets"
+        android:layout_below="@+id/hi"
+        android:text="Your wholesome outlets:"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:textColor="@android:color/black"
+        android:background="@color/colorAccent"/>
+
+    <ListView
+        android:id="@+id/lv_Items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_url"
+        android:layout_below="@+id/tv_outlets"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="false"
+        android:background="@color/colorAccent" />
+
+    <!-- ET for URL, ET for Name, Add button -->
+
+    <TextView
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_url"
+        android:text="URL:"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:layout_above="@id/et_NewItem"
+        android:textColor="@android:color/black"
+        android:background="@color/colorAccent"
+        android:textStyle="italic"
+        />
+
+    <!-- https://stackoverflow.com/questions/1555109/stop-edittext-from-gaining-focus-at-activity-startup -->
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_NewItem"
+        android:layout_above="@+id/tv_name"
+        android:hint="URL?"
+        android:textAlignment="center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorAccent"
+        android:textCursorDrawable="@null"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_name"
+        android:text="Name:"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:layout_above="@id/et_NewItem2"
+        android:textColor="@android:color/black"
+        android:background="@color/colorAccent"
+        android:textStyle="italic"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_NewItem2"
+        android:layout_above="@+id/btn_AddItem"
+        android:hint="Name this link?"
+        android:textAlignment="center"
+        android:paddingBottom="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorAccent"
+        android:textCursorDrawable="@null"
+        android:gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Item"
+        android:id="@+id/btn_AddItem"
+        android:layout_above="@id/btn_Emergency"
+        android:onClick="onAddItemButtonPress"
+        android:background="@color/colorPrimary"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="Emergency"
+        android:id="@+id/btn_Emergency"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:onClick="onEmergencyButtonPress"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_red_dark"
+        />
+
+</RelativeLayout>

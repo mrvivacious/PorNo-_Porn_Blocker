@@ -74,13 +74,10 @@ Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pc
 6. If successful, give yourself a pat on the back.
 
 #### Android App:
-1. Clone this repo to an easy-to-find place on your computer. For example, this bash command clones the repo to a folder called porNo in your Desktop:
-
-```
- cd Desktop && git clone https://github.com/mrvivacious/PorNo_Android.git porNo
-```
-2. Open the project in Android Studio
+1. Same as above
+2. Open `androidApp/` in Android Studio
 3. Read [this](https://developer.android.com/training/basics/firstapp/running-app)
+4. NOTE: For Firebase stuff to work, you will need a [google-services.json file](https://support.google.com/firebase/answer/7015592?hl=en#zippy=%2Cin-this-article) (and probably need to create the project, create the database, etc)
 
 **Note: I don't have a magic CI/CD pipeline at the moment where y'all can recieve the latest changes to the repositories so just make sure you `git pull` regularly thx**
 

@@ -54,7 +54,6 @@ def generateListsInJavaScript():
 
     outputFile.write(s)
     outputFile.close()
-    # print("Now run cp lists.js chromeExtension/lists.js")
 
 def generateListsInJava():
     # DEV = "testFile.txt"
@@ -141,8 +140,9 @@ def generateListsInJava():
 
     # outputFile.write(s)
     outputFile.close()
-    # print("Now run cp Domains.java androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java")
 
 if (__name__ == "__main__"):
     generateListsInJavaScript()
     generateListsInJava()
+    print("Generated file at chromeExtension/lists.js")
+    print("Generated file at androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java")

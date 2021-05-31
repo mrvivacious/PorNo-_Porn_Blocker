@@ -46,6 +46,7 @@ add a gif for web and a gif for android
 - motivation
 
 ## How to use
+- See [Installation](#installation) for updating the lists
 - Download, deploy, visit a porn site, add a redirect site, visit a porn site.
 - Chrome
   - blahblah
@@ -53,6 +54,11 @@ add a gif for web and a gif for android
   - blah blah
 
 ## [Installation](#contents)
+### Updating the lists
+If you've modified `lists/`, apply your changes with `./generateLists.py` or `python generateLists.py` in a terminal   
+    
+This command will update `chromeExtension/lists.js` and `androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java`
+    
 ### Release builds:
 #### Chrome Extension
 Click [this](https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp) or click the "Available in the Chrome Web Store" button at the top of the README

@@ -6,7 +6,7 @@ def generateListsInJavaScript():
     #  THIS WILL HELP RENEW OUR LISTS
 
     DEV = "testFile.txt"
-    PROD = "lists.js"
+    PROD = "chromeExtension/lists.js"
 
     PATH_URLS = "lists/Urls/"
     PATH_KEYWORDS = "lists/Keywords/"
@@ -54,11 +54,11 @@ def generateListsInJavaScript():
 
     outputFile.write(s)
     outputFile.close()
-    print("Now run cp lists.js chromeExtension/lists.js")
+    # print("Now run cp lists.js chromeExtension/lists.js")
 
 def generateListsInJava():
     # DEV = "testFile.txt"
-    PROD = "Domains.java"
+    PROD = "androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java"
 
     PATH_URLS = "lists/Urls/"
     PATH_KEYWORDS = "lists/Keywords/"
@@ -141,7 +141,7 @@ def generateListsInJava():
 
     # outputFile.write(s)
     outputFile.close()
-    print("Now run cp Domains.java androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java")
+    # print("Now run cp Domains.java androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java")
 
 if (__name__ == "__main__"):
     generateListsInJavaScript()

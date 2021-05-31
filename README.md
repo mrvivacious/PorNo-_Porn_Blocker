@@ -1,14 +1,14 @@
 <!-- ![PorNo! banner](https://mrvivacious.github.io/pictures/banners/porNo_text.png) -->
 
 <p align="center">
-    <img src="/heart_PorNo.png" width="150">
+    <img src="/pictures/heart_PorNo.png" width="150">
     <h1 align="center">PorNo! Porn Blocker</h1>
     <h3 align="center">PorNo! redirects users from porn to positive, fulfilling websites, instead of the standard "page blocked / blank screen" response<h3>
 </p>
 
 <p align="left">
     <a href="https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp" target="_blank">
-        <img src="/chromeWebStoreIcon.png">
+        <img src="/pictures/chromeWebStoreIcon.png">
     </a>
 </p>
 

@@ -33,4 +33,4 @@ Add any other context or screenshots about the feature request here.
 ## Exit criteria
 Testing and verification of intended changes + more info
 
-Feature is released in ChrEx / Android update 
+Feature is released in ChrEx / Android update

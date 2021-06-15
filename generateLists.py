@@ -5,7 +5,7 @@ def generateListsInJavaScript():
     # UNTIL MACHINE LEARNING MODEL,
     #  THIS WILL HELP RENEW OUR LISTS
 
-    DEV = "testFile.txt"
+    DEV = "testjs.txt"
     PROD = "chromeExtension/lists.js"
 
     PATH_URLS = "lists/Urls/"
@@ -56,7 +56,7 @@ def generateListsInJavaScript():
     outputFile.close()
 
 def generateListsInJava():
-    # DEV = "testFile.txt"
+    DEV = "testjava.txt"
     PROD = "androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java"
 
     PATH_URLS = "lists/Urls/"
@@ -82,8 +82,8 @@ def generateListsInJava():
     header += "import java.util.HashMap;\n"
     header += "import java.util.Map;\n\n"
 
-    header += "public class Domains {"
-    header += """static Map<String, Boolean> dict = new HashMap<String, Boolean>();
+    header += "public class Domains {\n"
+    header += """\tstatic Map<String, Boolean> dict = new HashMap<String, Boolean>();
     static String TAG = "!! Domains";
 
     public static Map<String, Boolean> init() {\n"""

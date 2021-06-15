@@ -272,22 +272,24 @@ function isBannedFirebase(linksFromFirebase) {
 function isBannedURL() {
   // Header(s) removed so that we can find the correct period to substring to
   //  in order to collect only the domain name
-  let url = window.location.hostname.toLowerCase();
-  let idx = url.indexOf('.');
+  let host = window.location.hostname.toLowerCase();
+  let idx = host.indexOf('.');
+  let trimmedUrl; //todo re-evaluate 4chan strategy
+
+  let href = window.location.href.toLowerCase();
+  let hrefWithPath = href.substring(href.indexOf('://') + 3, href.length);
 
   // 8 to account for sites with extended intros (ie. boards.4chan)
   // This evaluates to false for a URL that looks like abcdefgh.name.com
   // Here's to hoping that there aren't too many of those URLs around
   if (idx < 8) { // todo rethink this strategy...
-    url = url.substring(idx + 1);
+    trimmedUrl = host.substring(idx + 1);
   }
 
   // O(1) and whO(l)esome
-  if (!url.includes('fightthenewdrug') && !url.includes('github')) {
-    if (pornMap[url]) {
-      window.stop();
-      return true;
-    }
+  if (pornMap[host] || pornMap[trimmedUrl] || pornMap[hrefWithPath]) {
+    window.stop();
+    return true;
   }
 
   // Inconclusive

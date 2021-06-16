@@ -68,7 +68,7 @@ public class MyAccessibilityService extends AccessibilityService {
 
         // Chrome
         if (isChromeEvent(event)) {
-//            if (false) { // for testing the "old way" (dont use the api 16 pixel device, it doesnt have chrome lol)
+//            if (false) {} // for testing the "old way" (dont use the api 16 pixel device, it doesnt have chrome lol)
             if (deviceSdkIsAtLeast18()) {
 //                Log.d(TAG, "sdk is at least 18 :)");
                 parseNodeForURLViaAPI(event);
@@ -136,7 +136,6 @@ public class MyAccessibilityService extends AccessibilityService {
                     String text = event.getText().toString();
                     // Nothin 2 do
                     if (text == null || text.length() < 3) {
-                        // Do nothing
                     }
                     // We have some text!
                     else {
@@ -189,6 +188,12 @@ public class MyAccessibilityService extends AccessibilityService {
             AccessibilityNodeInfo omniboxView = findAccessibilityNodeInfosByViewId.get(0);
 
             String currentURL = omniboxView.getText().toString();
+            String hostNameManually = currentURL.replace("https://", "").replace("http://", "").replace("www.", "");
+            String hostNameWithoutPath = "";
+            if (hostNameManually.contains("/")) {
+                hostNameWithoutPath = hostNameManually.substring(0, hostNameManually.indexOf("/"));
+            }
+
             String host = getHostNameNew(currentURL);
 
             // todo make following lines into methods
@@ -199,8 +204,10 @@ public class MyAccessibilityService extends AccessibilityService {
             }
 
 //            Log.d(TAG, "\n\n--------------------------------\n\n");
+//            Log.d(TAG, "host : hostNameManually : currentURL = " + host + " : " + hostNameManually + " : " + currentURL);
 
-            if (porNo.isPorn(host)) {
+
+            if (porNo.isPorn(host) || porNo.isPorn(hostNameManually) || porNo.isPorn(hostNameWithoutPath)) {
                 long start = System.currentTimeMillis();
                 isFound = true;
                 Log.d(TAG, "porn site " + host + " found at " + start);
@@ -218,6 +225,10 @@ public class MyAccessibilityService extends AccessibilityService {
 
                 Log.d(TAG, "rdr = " + (System.currentTimeMillis() - start));
 //                }
+            }
+            else if (isUnsafeGoogleSearch(currentURL)) {
+                applySafeModeToUnsafeGoogleSearch(currentURL);
+                return;
             }
             else {
                 Log.d(TAG, "host : currentURL = " + host + " : " + currentURL);
@@ -312,19 +323,6 @@ public class MyAccessibilityService extends AccessibilityService {
 //            Log.d(TAG, "dfs: the URL, thru URI, is " + host);
 //            Log.d(TAG, "isFound = " + isFound);
 
-            if (isUnsafeGoogleSearch(txt)) {
-                // todo this doesnt work when:
-                // user visits google.com
-                // user searches within that search bar (doesnt throw an event we listen for atm)
-                // user can see porn sites as search results :(
-                Log.d(TAG, "redirecting to safe google search");
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://" + txt + "&safe=active"));
-                intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                return;
-            }
-
             // Is the txt a banned URL?
             if (porNo.isPorn(host)) {
                 isFound = true;
@@ -351,6 +349,14 @@ public class MyAccessibilityService extends AccessibilityService {
                 return;
 //                }
             }
+            else if (isUnsafeGoogleSearch(txt)) {
+                // todo this doesnt work when: (well, no it does seem to work)
+                // user visits google.com
+                // user searches within that search bar (doesnt throw an event we listen for atm)
+                // user can see porn sites as search results :(
+                applySafeModeToUnsafeGoogleSearch(txt);
+                return;
+            }
         }
 
         for (int i = 0 ; i < info.getChildCount(); i++) {
@@ -363,6 +369,14 @@ public class MyAccessibilityService extends AccessibilityService {
                 child.recycle();
             }
         }
+    }
+
+    private void applySafeModeToUnsafeGoogleSearch(String url) {
+        Log.d(TAG, "redirecting to safe google search");
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://" + url + "&safe=active"));
+        intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public boolean isUnsafeGoogleSearch(String url) {
@@ -430,6 +444,7 @@ public class MyAccessibilityService extends AccessibilityService {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
+            Log.d(TAG, "URISyntaxException with url = " + url);
             e.printStackTrace();
             return url;
         }
@@ -445,6 +460,5 @@ public class MyAccessibilityService extends AccessibilityService {
     }
 
     @Override
-    public void onInterrupt() {
-    }
+    public void onInterrupt() {}
 }

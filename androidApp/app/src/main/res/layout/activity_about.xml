@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,7 +25,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.889" />
+        app:layout_constraintVertical_bias="0.889"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/textView"
@@ -44,7 +45,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.053" />
+        app:layout_constraintVertical_bias="0.053"
+        android:gravity="center_horizontal" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -74,7 +76,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Running on the open-source porNo algorithm:\nhttps://github.com/mrvivacious/porNo_open_source"
+        android:text="Running on the open-source porNo algorithm:\nhttps://github.com/mrvivacious/PorNo-_Porn_Blocker"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textColorLink="@color/colorAccent"
@@ -83,7 +85,8 @@
         app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.404" />
+        app:layout_constraintVertical_bias="0.404"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/textView8"
@@ -104,7 +107,8 @@
         app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.602" />
+        app:layout_constraintVertical_bias="0.602"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/textView6"
@@ -124,7 +128,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        android:gravity="center_horizontal" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout >

@@ -2,5 +2,5 @@
 testFile.txt
 Personal/*
 chromeExtension/porNo_new.js
-
 androidApp/.idea/*
+androidApp/gradle/*

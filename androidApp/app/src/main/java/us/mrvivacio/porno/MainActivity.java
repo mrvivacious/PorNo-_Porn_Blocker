@@ -1,7 +1,6 @@
 package us.mrvivacio.porno;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,8 +37,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "dawg";
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;

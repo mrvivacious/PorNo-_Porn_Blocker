@@ -1,5 +1,6 @@
 .DS_Store
 testFile.txt
 Personal/*
-androidApp/.git_details_before_merging_android_repo/
 chromeExtension/porNo_new.js
+
+androidApp/.idea/*

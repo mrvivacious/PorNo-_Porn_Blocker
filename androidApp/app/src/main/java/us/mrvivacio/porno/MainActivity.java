@@ -100,13 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long l) {
                         // DELETE FROM SHARED PREF
                         String name = items.get(pos);
-                        deleteItem(name);
-
-                        // Remove the item within array at position
-                        items.remove(pos);
-
-                        // Refresh the adapter
-                        itemsAdapter.notifyDataSetChanged();
+                        openAlertDialogToConfirmLinkDeletion(name, pos);
 
                         // Return true consumes the long click event (marks it handled)
                         return true;
@@ -337,6 +331,36 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton("I'll go there myself", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private void openAlertDialogToConfirmLinkDeletion(String name, int index) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+
+        builder.setTitle("Delete this link?")
+                .setMessage("Name: " + name + "\nLink: " + getItem(name))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteItem(name);
+
+                        // Remove the item within array at position
+                        items.remove(index);
+
+                        // Refresh the adapter
+                        itemsAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Do nothing
                     }

@@ -11,17 +11,16 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        // Thank you, https://stackoverflow.com/questions/39052127
-        if (getActionBar() != null) {
-            getActionBar().setTitle("About PorNo!");
-            getActionBar().setDisplayHomeAsUpEnabled(true); // Add back arrow in action bar
+        // https://stackoverflow.com/questions/39052127
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("About PorNo!");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Add back arrow in action bar
         }
     }
 
-    // Thank you, https://stackoverflow.com/questions/26651602
     @Override
-    public boolean onNavigateUp() {
+    public boolean onSupportNavigateUp() {
         onBackPressed();
-        return true;
+        return super.onSupportNavigateUp();
     }
 }

@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">PorNo!</string>
+    <string name="home_screen_message">Let\'s say no to porno, together! \nHold to delete, touch to open ~</string>
+    <string name="redirection_list_header">Your wholesome outlets:</string>
+    <string name="input_url_prompt" translatable="false">URL:</string>
+    <string name="input_url_hint" translatable="false">URL?</string>
+    <string name="input_name_prompt">Name:</string>
+    <string name="input_name_hint">Name this URL?</string>
+    <string name="button_add_item">Add URL</string>
+    <string name="button_emergency">Emergency</string>
+    <string name="text_source_code">Source code:</string>
+    <string name="text_repository_url" translatable="false">https://github.com/mrvivacious/PorNo-_Porn_Blocker</string>
+    <string name="developer_name" translatable="false">Vivek Bhookya</string>
+    <string name="thank_you_message">Thank you for using PorNo!</string>
+    <string name="porn_support_hotline">PORN ADDICTION HOTLINE: 1–877–958–8308</string>
+    <string name="icon_content_description">A a yellow heart, the icon for PorNo!</string>
+    <string name="ftnd_url" translatable="false">https://fightthenewdrug.org</string>
+    <string name="email_prompt">Questions, ideas, problems? jvnnvt@gmail.com</string>
+    <string name="menu_instructions">How to use</string>
+    <string name="menu_update">Update links</string>
+    <string name="menu_chrome_extension">Get for Chrome!</string>
+    <string name="menu_privacy_policy">Privacy Policy</string>
+    <string name="menu_about_activity">About</string>
+    <string name="menu_source_code">PorNo! Source Code</string>
+    <string name="alert_instructions_title">How to use PorNo!</string>
+    <string name="alert_instructions_thank_you">Thank you</string>
+    <string name="alert_instructions_body">Add websites that inspire you and make you feel great! You can add a label or keep the name field blank to see the URL. Click on a URL to visit the site and hold on a URL to delete it. The emergency button opens all the sites.  Good luck ~</string>
+    <string name="alert_delete_title">Delete this link?</string>
+    <string name="toast_delete_link">Deleted </string>
+    <string name="toast_validate_url_spaces">No spaces in the URL, please.</string>
+    <string name="toast_validate_url_invalid">That link won\'t work, sorry.</string>
+    <string name="toast_database_off">Feature coming soon…</string>
+    <string name="alert_disabled_title">\"PorNo! is off \"</string>
+    <string name="alert_disabled_body">Go to  > Settings  > Accessibility  > Installed Services  > PorNo!  to turn on PorNo!</string>
+    <string name="alert_disabled_action">Go to Accessibility</string>
 </resources>

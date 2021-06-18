@@ -12,7 +12,7 @@
         android:id="@+id/tv_msg"
         android:textAlignment="center"
         android:padding="5dp"
-        android:text="Let's say no to porno, together! \nHold to delete, touch to open ~"
+        android:text="@string/home_screen_message"
         android:textColor="@android:color/black"
         android:background="@color/colorAccent"
         android:gravity="center_horizontal" />
@@ -29,15 +29,17 @@
 
     <TextView
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_outlets"
         android:layout_below="@+id/hi"
-        android:text="Your wholesome outlets:"
+        android:text="@string/redirection_list_header"
         android:textAlignment="viewStart"
         android:gravity="start"
         android:textColor="@android:color/black"
-        android:background="@color/colorAccent"/>
+        android:background="@color/colorAccent"
+        android:paddingStart="10dp" />
 
     <ListView
         android:id="@+id/lv_Items"
@@ -54,17 +56,18 @@
 
     <TextView
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_url"
-        android:text="URL:"
+        android:text="@string/input_url_prompt"
         android:textAlignment="viewStart"
         android:gravity="start"
         android:layout_above="@id/et_NewItem"
         android:textColor="@android:color/black"
         android:background="@color/colorAccent"
         android:textStyle="italic"
-        />
+        android:paddingStart="10dp" />
 
     <!-- https://stackoverflow.com/questions/1555109/stop-edittext-from-gaining-focus-at-activity-startup -->
     <EditText
@@ -72,7 +75,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_NewItem"
         android:layout_above="@+id/tv_name"
-        android:hint="URL?"
+        android:hint="@string/input_url_hint"
         android:textAlignment="center"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -82,24 +85,25 @@
 
     <TextView
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_name"
-        android:text="Name:"
+        android:text="@string/input_name_prompt"
         android:textAlignment="viewStart"
         android:gravity="start"
         android:layout_above="@id/et_NewItem2"
         android:textColor="@android:color/black"
         android:background="@color/colorAccent"
         android:textStyle="italic"
-        />
+        android:paddingStart="10dp" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et_NewItem2"
         android:layout_above="@+id/btn_AddItem"
-        android:hint="Name this link?"
+        android:hint="@string/input_name_hint"
         android:textAlignment="center"
         android:paddingBottom="5dp"
         android:layout_alignParentLeft="true"
@@ -111,7 +115,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Item"
+        android:text="@string/button_add_item"
         android:id="@+id/btn_AddItem"
         android:layout_above="@id/btn_Emergency"
         android:onClick="onAddItemButtonPress"
@@ -121,7 +125,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:text="Emergency"
+        android:text="@string/button_emergency"
         android:id="@+id/btn_Emergency"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"

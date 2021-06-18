@@ -4,32 +4,32 @@
     <!-- Thank you, https://stackoverflow.com/questions/17311833/how-we-can-add-menu-item-dynamically -->
     <item
         android:id="@+id/howTo"
-        android:title="How to use"
+        android:title="@string/menu_instructions"
         android:onClick="openAlertDialogForInstructions" />
 
     <item
         android:id="@+id/action_refresh"
-        android:title="Update links"
+        android:title="@string/menu_update"
         android:onClick="updateLinks"/>
 
     <item
         android:id="@+id/chrome"
-        android:title="Get for Chrome!"
+        android:title="@string/menu_chrome_extension"
         android:onClick="openUrlForChromeExtension" />
 
     <item
         android:id="@+id/privacyPolicy"
-        android:title="Privacy Policy"
+        android:title="@string/menu_privacy_policy"
         android:onClick="openUrlForPrivacyPolicy" />
 
     <item
         android:id="@+id/about"
-        android:title="About"
+        android:title="@string/menu_about_activity"
         android:onClick="openActivityForAboutPorNo" />
 
     <item
         android:id="@+id/gitHub"
-        android:title="PorNo! Source Code"
+        android:title="@string/menu_source_code"
         android:onClick="openUrlForGitHub" />
 
 </menu>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PorNo!</string>
+    <string name="home_screen_message">Vamos dizer não ao pornô, juntos! Segure para excluir, toque para abrir ~</string>
+    <string name="redirection_list_header">Seus pontos de venda saudáveis:</string>
+    <string name="input_name_prompt">Nome:</string>
+    <string name="input_name_hint">Nomeie este URL?</string>
+    <string name="button_add_item">Adicionar URL</string>
+    <string name="button_emergency">Emergência</string>
+    <string name="text_source_code">Código fonte:</string>
+    <string name="thank_you_message">Obrigado por usar o PorNo!</string>
+    <string name="icon_content_description">Um coração amarelo, o ícone do PorNo!</string>
+    <string name="email_prompt">Dúvidas, ideias, problemas? jvnnvt@gmail.com</string>
+    <string name="menu_instructions">Como usar</string>
+    <string name="menu_update">Atualizar URLs</string>
+    <string name="menu_chrome_extension">Baixe para o Chrome!</string>
+    <string name="menu_privacy_policy">Política de Privacidade</string>
+    <string name="menu_about_activity">Cerca de</string>
+    <string name="menu_source_code">PorNo! Código fonte</string>
+    <string name="alert_instructions_title">Como usar o PorNo!</string>
+    <string name="alert_instructions_thank_you">Obrigada</string>
+    <string name="alert_instructions_body">Adicione sites que o inspiram e fazem você se sentir bem! Você pode adicionar um rótulo ou manter o campo do nome em branco para ver o URL. Clique em um URL para visitar o site e segure em um URL para excluí-lo. O botão de emergência abre todos os sites. Boa sorte ~</string>
+    <string name="alert_delete_title">Excluir este URL?</string>
+    <string name="toast_delete_link">Excluído </string>
+    <string name="toast_validate_url_spaces">Sem espaços no URL, por favor.</string>
+    <string name="toast_validate_url_invalid">Esse URL não funcionará, desculpe.</string>
+    <string name="toast_database_off">Recurso em breve ...</string>
+    <string name="porn_support_hotline">LINHA DE ATENDIMENTO PARA VÍCIO DE PORNO: 1-877-958-8308</string>
+    <string name="alert_disabled_title">\"PorNo! Está desligado\"</string>
+    <string name="alert_disabled_action">Vá para Acessibilidade</string>
+    <string name="alert_disabled_body">Vá para\n> Configurações\n> Acessibilidade\n> Serviços instalados\n> PorNo! \npara ativar o PorNo!</string>
+</resources>

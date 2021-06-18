@@ -3,7 +3,6 @@ package us.mrvivacio.porno;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,14 +16,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,8 +32,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import static us.mrvivacio.porno.R.string.*;
+import static us.mrvivacio.porno.R.string.alert_instructions_title;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "dawg";
@@ -95,31 +93,25 @@ public class MainActivity extends AppCompatActivity {
     // Attaches a long click listener
     private void setupTouchListeners() {
         lvItems.setOnItemLongClickListener(
-                new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                        // DELETE FROM SHARED PREF
-                        String name = items.get(pos);
-                        openAlertDialogToConfirmLinkDeletion(name, pos);
+                (adapterView, view, pos, l) -> {
+                    // DELETE FROM SHARED PREF
+                    String name = items.get(pos);
+                    openAlertDialogToConfirmLinkDeletion(name, pos);
 
-                        // Return true consumes the long click event (marks it handled)
-                        return true;
-                    }
+                    // Return true consumes the long click event (marks it handled)
+                    return true;
                 }
         );
         // OpenURL(), essentially
         lvItems.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                        // Get the text value of the clicked item and parse the url
-                        String text = items.get(pos);
-                        String toOpen = getItem(text);
+                (adapterView, view, pos, l) -> {
+                    // Get the text value of the clicked item and parse the url
+                    String text = items.get(pos);
+                    String toOpen = getItem(text);
 
-                        if (toOpen == null) { return; } // How would this happen...?
+                    if (toOpen == null) { return; } // How would this happen...?
 
-                        openUrlInBrowser(toOpen);
-                    }
+                    openUrlInBrowser(toOpen);
                 }
         );
     }
@@ -128,31 +120,28 @@ public class MainActivity extends AppCompatActivity {
     public static void readDB() {
         // Thank you, https://firebase.google.com/docs/firestore/query-data/get-data#list_subcollections_of_a_document
         DocumentReference docRef = db.collection("links").document("realtimeBannedLinks");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists() && document.getData() != null) {
-                        String bannedLinks = document.getData().toString();
-                        bannedLinks = bannedLinks.substring(6);
-                        bannedLinks = bannedLinks.substring(0, bannedLinks.length() - 2);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists() && document.getData() != null) {
+                    String bannedLinks = document.getData().toString();
+                    bannedLinks = bannedLinks.substring(6);
+                    bannedLinks = bannedLinks.substring(0, bannedLinks.length() - 2);
 
-                        // Thank you, https://stackoverflow.com/questions/7347856/how-to-convert-a-string-into-an-arraylist
-                        ArrayList<String> banList = new ArrayList<>(Arrays.asList(bannedLinks.split(", ")));
+                    // Thank you, https://stackoverflow.com/questions/7347856/how-to-convert-a-string-into-an-arraylist
+                    ArrayList<String> banList = new ArrayList<>(Arrays.asList(bannedLinks.split(", ")));
 
-                        for (String link : banList) {
-                            realtimeBannedLinks.put(link, true);
-                        }
-
-                    } else {
-                        // TODO add analytics and report no such document
-//                        Log.d(TAG, "No such document");
+                    for (String link : banList) {
+                        realtimeBannedLinks.put(link, true);
                     }
+
                 } else {
-                    // TODO add analytics and report failed to get document
-//                    Log.d(TAG, "get failed with ", task.getException());
+                    // TODO add analytics and report no such document
+//                        Log.d(TAG, "No such document");
                 }
+            } else {
+                // TODO add analytics and report failed to get document
+//                    Log.d(TAG, "get failed with ", task.getException());
             }
         });
     }
@@ -193,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
         Utilities.removeFromFile(url);
 
-        Toast.makeText(this, key + " was deleted ~", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(toast_delete_link) + " " + key, Toast.LENGTH_LONG).show();
     }
 
     // Get keys from Shared Preferences and initialize our list
@@ -286,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
 
-        // TODO ?? this reporst as true even when accessibility hasnt been enabled yet
+        // TODO ?? this reports as true even when accessibility hasn't been enabled yet
         if (accessibilityEnabled == 1) {
             Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
             String settingValue = Settings.Secure.getString(
@@ -312,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openAlertDialogForEnablingPorNoService() {
-        // Thank you, https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android
+        // Thank you, https://stackoverflow.com/questions/2115758
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
@@ -321,20 +310,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Build the alert
-        builder.setTitle("PorNo! is off, but that's ok -- ")
-                .setMessage("Please go to \n> Settings \n> Accessibility \n> PorNo! \nto turn on PorNo!")
-                .setPositiveButton("Let's go to Accessibility", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Open accessibility screen
-                        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                        startActivity(intent);
-                    }
+        builder.setTitle(alert_disabled_title)
+                .setMessage(alert_disabled_body)
+                .setPositiveButton(R.string.alert_disabled_action, (dialog, which) -> {
+                    // Open accessibility screen
+                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    startActivity(intent);
                 })
-                .setNegativeButton("I'll go there myself", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                    }
-                })
+//                .setNegativeButton("I'll go there myself", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // Do nothing
+//                    }
+//                })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
@@ -347,23 +334,20 @@ public class MainActivity extends AppCompatActivity {
             builder = new AlertDialog.Builder(this);
         }
 
-        builder.setTitle("Delete this link?")
-                .setMessage("Name: " + name + "\nLink: " + getItem(name))
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteItem(name);
+        builder.setTitle(alert_delete_title)
+//                .setMessage("Name: " + name + "\nLink: " + getItem(name))
+                .setMessage(name + "\n" + getItem(name))
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    deleteItem(name);
 
-                        // Remove the item within array at position
-                        items.remove(index);
+                    // Remove the item within array at position
+                    items.remove(index);
 
-                        // Refresh the adapter
-                        itemsAdapter.notifyDataSetChanged();
-                    }
+                    // Refresh the adapter
+                    itemsAdapter.notifyDataSetChanged();
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                    }
+                .setNegativeButton("No", (dialog, which) -> {
+                    // Do nothing
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
@@ -397,12 +381,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Please
         if (urlText.contains(" ")) {
-            Toast.makeText(this, "No spaces in the URL, please.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, toast_validate_url_spaces, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (porNo.isPorn(getHostName(urlText))) {
-            Toast.makeText(this, "That link isn't going to work, sorry.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, toast_validate_url_invalid, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -437,16 +421,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Build the alert
-        builder.setTitle("How to use PorNo!")
-                .setMessage("Add URLs to sites that inspire you and make you feel great and PorNo! will handle the rest!" +
-                        "\nYou can name the URLs for convenience, or leave the name field blank to see the URL." +
-                        "\nClick on a URL to visit it and hold on a URL to delete it." +
-                        "\nThe emergency button opens all your saved URLs. Hopefully this will be enough to overcome any emergencies!" +
-                        "\n\nYou've got what it takes to overcome porn. Good luck ~")
-                .setPositiveButton("Got it ~", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // doNothing()
-                    }
+        builder.setTitle(alert_instructions_title)
+                .setMessage(alert_instructions_body)
+                .setPositiveButton(alert_instructions_thank_you, (dialog, which) -> {
+                    // doNothing()
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
@@ -455,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
     // Read from database, update banList, toast
     public void updateLinks(MenuItem item) {
 //        readDB();
-        Toast.makeText(this, "Feature coming soon...", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, toast_database_off, Toast.LENGTH_LONG).show();
     }
 
     public void openUrlForChromeExtension(MenuItem item) {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PorNo!</string>
+    <string name="app_name" translatable="false">PorNo!</string>
     <string name="home_screen_message">Let\'s say no to porno, together! \nHold to delete, touch to open ~</string>
     <string name="redirection_list_header">Your wholesome outlets:</string>
     <string name="input_url_prompt" translatable="false">URL:</string>
@@ -31,6 +31,7 @@
     <string name="toast_validate_url_invalid">That link won\'t work, sorry.</string>
     <string name="toast_database_off">Feature coming soon…</string>
     <string name="alert_disabled_title">\"PorNo! is off \"</string>
-    <string name="alert_disabled_body">Go to  > Settings  > Accessibility  > Installed Services  > PorNo!  to turn on PorNo!</string>
+    <string name="alert_disabled_body">Go to\n> Settings\n> Accessibility\n> Installed Services\n> PorNo!\nto turn on PorNo!</string>
     <string name="alert_disabled_action">Go to Accessibility</string>
+    <string name="action_email_me">Email me</string>
 </resources>

@@ -454,16 +454,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // sending email button
-    public void composeEmail(String addresses, String subject) {
+    public void composeEmail(String recipient, String subject) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipient});
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
+        startActivity(intent);
     }
-    public void sendEmail(View v) {
-        composeEmail("jvnnvt@gmail.com", "Android PorNo! Porn Blocker");
+
+    public void sendEmail(MenuItem item) {
+        composeEmail("jvnnvt@gmail.com", "PorNo! Porn Blocker (Android)");
     }
 }

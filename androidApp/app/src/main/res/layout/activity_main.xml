@@ -6,27 +6,18 @@
     android:focusableInTouchMode="true"
     tools:context=".MainActivity">
 
-    <!-- Thank you, https://stackoverflow.com/questions/19115332/android-draw-a-horizontal-line-between-views/39160995 -->
-    <!-- This is an <hr>, essentially -->
-
     <TextView
         android:id="@+id/tv_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:gravity="center_horizontal"
         android:padding="5dp"
-<<<<<<< HEAD
         android:text="@string/home_screen_message"
         android:textColor="@android:color/black"
-        android:background="@color/colorAccent"
         android:gravity="center_horizontal" />
-=======
-        android:text="Let's say no to porno, together! \nHold to delete, touch to open ~"
-        android:textAlignment="center"
-        android:textColor="@android:color/black" />
->>>>>>> send button done
 
+    <!-- https://stackoverflow.com/questions/19115332/-->
+    <!-- This is an <hr>, essentially -->
     <View
         android:id="@+id/hi"
         android:paddingBottom="5dp"
@@ -58,10 +49,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="false"
-        android:background="@color/colorAccent" >
-
-
-    </ListView>
+        android:background="@color/colorAccent" />
 
     <!-- ET for URL, ET for Name, Add button -->
 
@@ -143,15 +131,6 @@
         android:onClick="onEmergencyButtonPress"
         android:textColor="@android:color/white"
         android:background="@android:color/holo_red_dark"
-        />
-    <Button
-        android:id="@+id/btn_send"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:text="Send"
-        android:layout_alignParentRight="true"
-        android:onClick="sendEmail"
-
         />
 
 </RelativeLayout>

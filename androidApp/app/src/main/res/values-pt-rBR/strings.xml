@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PorNo!</string>
     <string name="home_screen_message">Vamos dizer não ao pornô, juntos! Segure para excluir, toque para abrir ~</string>
     <string name="redirection_list_header">Seus pontos de venda saudáveis:</string>
     <string name="input_name_prompt">Nome:</string>
@@ -29,4 +28,5 @@
     <string name="alert_disabled_title">\"PorNo! Está desligado\"</string>
     <string name="alert_disabled_action">Vá para Acessibilidade</string>
     <string name="alert_disabled_body">Vá para\n> Configurações\n> Acessibilidade\n> Serviços instalados\n> PorNo! \npara ativar o PorNo!</string>
+    <string name="action_email_me">Enviar e-mail me</string>
 </resources>

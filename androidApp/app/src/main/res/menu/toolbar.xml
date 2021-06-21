@@ -3,6 +3,16 @@
 
     <!-- Thank you, https://stackoverflow.com/questions/17311833/how-we-can-add-menu-item-dynamically -->
     <item
+        android:id="@+id/email"
+        android:title="@string/action_email_me"
+        android:onClick="sendEmail" />
+
+    <item
+        android:id="@+id/about"
+        android:title="@string/menu_about_activity"
+        android:onClick="openActivityForAboutPorNo" />
+
+    <item
         android:id="@+id/howTo"
         android:title="@string/menu_instructions"
         android:onClick="openAlertDialogForInstructions" />
@@ -21,11 +31,6 @@
         android:id="@+id/privacyPolicy"
         android:title="@string/menu_privacy_policy"
         android:onClick="openUrlForPrivacyPolicy" />
-
-    <item
-        android:id="@+id/about"
-        android:title="@string/menu_about_activity"
-        android:onClick="openActivityForAboutPorNo" />
 
     <item
         android:id="@+id/gitHub"

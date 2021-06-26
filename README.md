@@ -17,6 +17,12 @@
       <img width="220" alt='Get PorNo! Porn Blocker on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/>
     </a>
 </p>
+    
+<p align="left">
+    <a href='https://www.reddit.com/r/ourlastpornblocker/' target="_blank">
+      <img width="220" alt='Subreddit for PorNo!. r-slash-ourlastpornblocker' src='https://1000logos.net/wp-content/uploads/2017/05/Reddit-logo.jpg'/>
+    </a>
+</p>
 
 
 <!--
@@ -101,4 +107,4 @@ Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pc
 <hr>
 
 ## Milestones
-
+- Created subreddit (June 26)

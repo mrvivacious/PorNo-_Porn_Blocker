@@ -9,7 +9,6 @@
 
 // https://codepen.io/ArtZ91/pen/NggJBM
 
-
 // TODO:
 // CURRENTLY::
 
@@ -62,15 +61,18 @@ const STORAGE_BUCKET = "";
 const MESSAGING_SENDER_ID = "";
 
 // Opens a survey when PorNo! is deleted
-chrome.runtime.setUninstallURL('https://docs.google.com/forms/d/e/1FAIpQLSd1f_0gTaqpFPAznFzcsF_Wsb0xLv9Y0Nli-0_CG6-jG3r54Q/viewform?usp=sf_link', function() {});
+chrome.runtime.setUninstallURL(
+  "https://docs.google.com/forms/d/e/1FAIpQLSd1f_0gTaqpFPAznFzcsF_Wsb0xLv9Y0Nli-0_CG6-jG3r54Q/viewform?usp=sf_link",
+  function () {}
+);
 
 // Open welcome and how to use pages on initial download
-chrome.storage.local.get("notFirstTime", function(returnValue) {
-    if (returnValue.notFirstTime === undefined) {
-      openLink('user_manual/welcome.html');
-      openLink('user_manual/help.html'); // Replace with youtube video
-      chrome.storage.local.set({"notFirstTime": true}, function() {} );
-    }
+chrome.storage.local.get("notFirstTime", function (returnValue) {
+  if (returnValue.notFirstTime === undefined) {
+    openLink("user_manual/welcome.html");
+    openLink("user_manual/help.html"); // Replace with youtube video
+    chrome.storage.local.set({ notFirstTime: true }, function () {});
+  }
 });
 
 // MAIN
@@ -90,33 +92,36 @@ $(document).ready(function () {
 });
 
 // Allow enter key press to add links
-$(document).on("keyup", function() {
-    if (event.keyCode === 13) {
-      submit();
-    }
+$(document).on("keyup", function (event) {
+  if (event.keyCode === 13) {
+    submit();
+  }
 });
 
 // Gets the title attribute (the url) of the clicked li and sends that to openLink, which opens the url
 // Thank you https://stackoverflow.com/questions/34964039/dynamically-created-li-click-event-not-working-jquery
-$(document).on("click", "li", function() {
-    openLink(this.id);
+$(document).on("click", "li", function () {
+  openLink(this.id);
 });
 
 // Deletes the selected list item and removes it from storage
-$(document).on("click", "#delete", function(event) {
+$(document).on("click", "#delete", function (event) {
   let keyValueToRemove = this.parentElement.id;
 
   // Remove key-value from storage
   // Try-catch cause when the limits are exceeded, we receive an error message. We handle that
   //  in the catch block
   try {
-    chrome.storage.sync.remove([keyValueToRemove], function() {});
+    chrome.storage.sync.remove([keyValueToRemove], function () {});
   } catch (e) {
-    document.getElementById("ERROR_MSG").innerHTML="Too many operations...please try again later, sorry!";
+    document.getElementById("ERROR_MSG").innerHTML =
+      "Too many operations...please try again later, sorry!";
   }
 
   // Only update list when we confirm that the desired deletion has succeeded
-  if (chrome.storage.sync.get([keyValueToRemove], function() {}) === undefined) {
+  if (
+    chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
+  ) {
     this.parentElement.remove();
   }
 
@@ -126,16 +131,16 @@ $(document).on("click", "#delete", function(event) {
 });
 
 // Display little text when hovering over the links
-$(document).on('mouseover', 'li', function () {
-  $(this).attr('title', 'Click to visit ' + this.id);
+$(document).on("mouseover", "li", function () {
+  $(this).attr("title", "Click to visit " + this.id);
 });
 
-$(document).on('mouseover', '#delete', function () {
-  $(this).attr('title', 'Delete link?');
+$(document).on("mouseover", "#delete", function () {
+  $(this).attr("title", "Delete link?");
 });
 
-$(document).on('mouseover', '#emergency', function () {
-  $(this).attr('title', "It's time to PorNo!");
+$(document).on("mouseover", "#emergency", function () {
+  $(this).attr("title", "It's time to PorNo!");
 });
 
 // TODO: read this https://artoflivingretreatcenter.org/slowing-down/?utm_campaign=General%20Registrations&utm_source=hs_email&utm_medium=email&utm_content=62426973&_hsenc=p2ANqtz-9_ANH5jVXnFguLeekK5mILFORbry13zYDIh_Gx7P9Tr-2ynINpNHbCCgLnqvu0EPWPP-ZfgLCu7mKBfoTp0XLnwKWuuw&_hsmi=62426973
@@ -145,14 +150,14 @@ $(document).on('mouseover', '#emergency', function () {
 // F::::::::::::::::::::FU::::::U     U::::::UN:::::::N       N::::::N     CCC::::::::::::CT:::::::::::::::::::::TI::::::::I   OO:::::::::OO   N:::::::N       N::::::N SS:::::::::::::::S
 // F::::::::::::::::::::FU::::::U     U::::::UN::::::::N      N::::::N   CC:::::::::::::::CT:::::::::::::::::::::TI::::::::I OO:::::::::::::OO N::::::::N      N::::::NS:::::SSSSSS::::::S
 // FF::::::FFFFFFFFF::::FUU:::::U     U:::::UUN:::::::::N     N::::::N  C:::::CCCCCCCC::::CT:::::TT:::::::TT:::::TII::::::IIO:::::::OOO:::::::ON:::::::::N     N::::::NS:::::S     SSSSSSS
-  // F:::::F       FFFFFF U:::::U     U:::::U N::::::::::N    N::::::N C:::::C       CCCCCCTTTTTT  T:::::T  TTTTTT  I::::I  O::::::O   O::::::ON::::::::::N    N::::::NS:::::S
-  // F:::::F              U:::::D     D:::::U N:::::::::::N   N::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON:::::::::::N   N::::::NS:::::S
-  // F::::::FFFFFFFFFF    U:::::D     D:::::U N:::::::N::::N  N::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON:::::::N::::N  N::::::N S::::SSSS
-  // F:::::::::::::::F    U:::::D     D:::::U N::::::N N::::N N::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON::::::N N::::N N::::::N  SS::::::SSSSS
-  // F:::::::::::::::F    U:::::D     D:::::U N::::::N  N::::N:::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON::::::N  N::::N:::::::N    SSS::::::::SS
-  // F::::::FFFFFFFFFF    U:::::D     D:::::U N::::::N   N:::::::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON::::::N   N:::::::::::N       SSSSSS::::S
-  // F:::::F              U:::::D     D:::::U N::::::N    N::::::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON::::::N    N::::::::::N            S:::::S
-  // F:::::F              U::::::U   U::::::U N::::::N     N:::::::::N C:::::C       CCCCCC        T:::::T          I::::I  O::::::O   O::::::ON::::::N     N:::::::::N            S:::::S
+// F:::::F       FFFFFF U:::::U     U:::::U N::::::::::N    N::::::N C:::::C       CCCCCCTTTTTT  T:::::T  TTTTTT  I::::I  O::::::O   O::::::ON::::::::::N    N::::::NS:::::S
+// F:::::F              U:::::D     D:::::U N:::::::::::N   N::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON:::::::::::N   N::::::NS:::::S
+// F::::::FFFFFFFFFF    U:::::D     D:::::U N:::::::N::::N  N::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON:::::::N::::N  N::::::N S::::SSSS
+// F:::::::::::::::F    U:::::D     D:::::U N::::::N N::::N N::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON::::::N N::::N N::::::N  SS::::::SSSSS
+// F:::::::::::::::F    U:::::D     D:::::U N::::::N  N::::N:::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON::::::N  N::::N:::::::N    SSS::::::::SS
+// F::::::FFFFFFFFFF    U:::::D     D:::::U N::::::N   N:::::::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON::::::N   N:::::::::::N       SSSSSS::::S
+// F:::::F              U:::::D     D:::::U N::::::N    N::::::::::NC:::::C                      T:::::T          I::::I  O:::::O     O:::::ON::::::N    N::::::::::N            S:::::S
+// F:::::F              U::::::U   U::::::U N::::::N     N:::::::::N C:::::C       CCCCCC        T:::::T          I::::I  O::::::O   O::::::ON::::::N     N:::::::::N            S:::::S
 // FF:::::::FF            U:::::::UUU:::::::U N::::::N      N::::::::N  C:::::CCCCCCCC::::C      TT:::::::TT      II::::::IIO:::::::OOO:::::::ON::::::N      N::::::::NSSSSSSS     S:::::S
 // F::::::::FF             UU:::::::::::::UU  N::::::N       N:::::::N   CC:::::::::::::::C      T:::::::::T      I::::::::I OO:::::::::::::OO N::::::N       N:::::::NS::::::SSSSSS:::::S
 // F::::::::FF               UU:::::::::UU    N::::::N        N::::::N     CCC::::::::::::C      T:::::::::T      I::::::::I   OO:::::::::OO   N::::::N        N::::::NS:::::::::::::::SS
@@ -186,27 +191,28 @@ function initialize() {
   let urls;
 
   // Get all keys currently in storage
-  chrome.storage.sync.get(null, function(items) {
+  chrome.storage.sync.get(null, function (items) {
     urls = Object.keys(items);
     // console.log('Our keys: ' + urls);
 
     // If urls[0] is undefined (aka nothing exists in storage), skip
     //  initialization of the list
     if (urls[0] !== undefined) {
-        // Iterate through the urls array
-        //  and collect the names associated and add them to the list,
-        //  one at a time with initList()
-        // 4/27/18 - I encountered asynchronous programming
-        for (let i = 0; urls[i] !== undefined; i++) {
-          initList(urls[i]);
-        }
+      // Iterate through the urls array
+      //  and collect the names associated and add them to the list,
+      //  one at a time with initList()
+      // 4/27/18 - I encountered asynchronous programming
+      for (let i = 0; urls[i] !== undefined; i++) {
+        initList(urls[i]);
+      }
     }
 
     // If nothing is in storage, show this prompt
     else {
       if (document.getElementById("ERROR_MSG")) {
-        let msg = 'Nothing here yet...add something that inspires you!';
-        document.getElementById("ERROR_MSG").innerHTML = msg.fontcolor('DeepPink');
+        let msg = "Nothing here yet...add something that inspires you!";
+        document.getElementById("ERROR_MSG").innerHTML =
+          msg.fontcolor("DeepPink");
       }
     }
   });
@@ -240,36 +246,35 @@ function initialize() {
 // tl;dr Something something asynchronous something something race condition
 function initList(currentKey) {
   // Retrieve the value associated with the current key
- chrome.storage.sync.get(currentKey, function(returnValue) {
-   let url = currentKey;
+  chrome.storage.sync.get(currentKey, function (returnValue) {
+    let url = currentKey;
     // Check if this key-value pair exists
-     if (returnValue[url] !== undefined) {
-       // Pass in the url of the link and the name of the link
-       // isBanned(url, returnValue[url], 'initList');
-       if (isBanned(url, returnValue[url], 'initList')) {
-         // This key:value pair is removed from storage in isBanned()
-       }
-       else {
-         let name = returnValue[url];
-         let li = document.createElement("li");
+    if (returnValue[url] !== undefined) {
+      // Pass in the url of the link and the name of the link
+      // isBanned(url, returnValue[url], 'initList');
+      if (isBanned(url, returnValue[url], "initList")) {
+        // This key:value pair is removed from storage in isBanned()
+      } else {
+        let name = returnValue[url];
+        let li = document.createElement("li");
 
-         let t = document.createTextNode(name);
+        let t = document.createTextNode(name);
 
-         li.appendChild(t);
-         document.getElementById("websites").appendChild(li);
+        li.appendChild(t);
+        document.getElementById("websites").appendChild(li);
 
-         // ID the element we just made with its url
-         li.id = url;
+        // ID the element we just made with its url
+        li.id = url;
 
-         let span = document.createElement("SPAN");
-         let txt = document.createTextNode("\u00D7");
-         span.className = "delete";
-         span.id = "delete"
-         span.appendChild(txt);
-         li.appendChild(span);
-       }
-     }
-   });
+        let span = document.createElement("SPAN");
+        let txt = document.createTextNode("\u00D7");
+        span.className = "delete";
+        span.id = "delete";
+        span.appendChild(txt);
+        li.appendChild(span);
+      }
+    }
+  });
 }
 
 //
@@ -294,7 +299,7 @@ function initList(currentKey) {
 // Send the links we've captured and set in local storage to my database
 // I can update porNo.js accordingly with the links written
 function updateDB() {
-  chrome.storage.local.get(null, function(items) {
+  chrome.storage.local.get(null, function (items) {
     let linkNames = Object.keys(items);
     DBOperations(linkNames);
   });
@@ -315,25 +320,29 @@ function DBOperations(linkNames) {
     databaseURL: DATABASE_URL,
     projectId: PROJECT_ID,
     storageBucket: STORAGE_BUCKET,
-    messagingSenderId: MESSAGING_SENDER_ID
+    messagingSenderId: MESSAGING_SENDER_ID,
   };
   firebase.initializeApp(config);
   let db = firebase.firestore();
 
   // Silence warning and avoid app breaking
-  let settings = {/* your settings... */ timestampsInSnapshots: true};
+  let settings = { /* your settings... */ timestampsInSnapshots: true };
   db.settings(settings);
 
   let linksToAdd = [];
 
   // Add links for me to view
-  for (let currentLink = 0; linkNames[currentLink] !== undefined; currentLink++) {
+  for (
+    let currentLink = 0;
+    linkNames[currentLink] !== undefined;
+    currentLink++
+  ) {
     let val = linkNames[currentLink];
 
-    if (val !== 'realtimeBannedLinks' && val !== 'notFirstTime') {
-      db.collection('links').doc(val).set({
+    if (val !== "realtimeBannedLinks" && val !== "notFirstTime") {
+      db.collection("links").doc(val).set({
         // Adding this line will write another document ( links -> link -> link:currentLink )
-        url: val
+        url: val,
       });
       // Debugging
       // .then(function(docRef) {
@@ -348,40 +357,45 @@ function DBOperations(linkNames) {
   }
 
   // Now, update the main array
-  let allLinks = db.collection('links').doc('realtimeBannedLinks');
+  let allLinks = db.collection("links").doc("realtimeBannedLinks");
 
-  allLinks.get().then(function(doc) {
-    if (doc.exists) {
-      // Get the most up-to-date links
-      let currentLinks = doc.data().url;
+  allLinks
+    .get()
+    .then(function (doc) {
+      if (doc.exists) {
+        // Get the most up-to-date links
+        let currentLinks = doc.data().url;
 
-      // Add the links from local storage to the copy of the realtimeBannedLinks
-      // console.log('length INIT: ' + currentLinks.length);
+        // Add the links from local storage to the copy of the realtimeBannedLinks
+        // console.log('length INIT: ' + currentLinks.length);
 
-      for (let i = 0; linksToAdd[i] !== undefined; i++) {
-        currentLinks.push(linksToAdd[i]);
-        // Clear localStorage after save to free up space
-        chrome.storage.local.remove([linksToAdd[i]], function() {});
+        for (let i = 0; linksToAdd[i] !== undefined; i++) {
+          currentLinks.push(linksToAdd[i]);
+          // Clear localStorage after save to free up space
+          chrome.storage.local.remove([linksToAdd[i]], function () {});
+        }
+
+        // console.log('length FINAL: ' + currentLinks.length);
+
+        // Then, update the array of links saved in local storage and update the
+        //  realtimeBannedLinks in Firebase
+        // Do this, and you will have successfully created a method of updating
+        //  Firebase and everyone else's local storage copies of realtimeBannedLinks
+        chrome.storage.local.set(
+          { realtimeBannedLinks: currentLinks },
+          function () {}
+        );
+        db.collection("links").doc("realtimeBannedLinks").set({
+          url: currentLinks,
+        });
+      } else {
+        // doc.data() will be undefined
+        console.log("NO SUCH DOCUMENT");
       }
-
-      // console.log('length FINAL: ' + currentLinks.length);
-
-      // Then, update the array of links saved in local storage and update the
-      //  realtimeBannedLinks in Firebase
-      // Do this, and you will have successfully created a method of updating
-      //  Firebase and everyone else's local storage copies of realtimeBannedLinks
-      chrome.storage.local.set({realtimeBannedLinks: currentLinks}, function() {});
-      db.collection('links').doc('realtimeBannedLinks').set({
-        url: currentLinks
-      });
-    }
-    else {
-      // doc.data() will be undefined
-      console.log('NO SUCH DOCUMENT');
-    }
-  }).catch(function(error) {
-    console.log('ERROR UH OH:  ' + error);
-  });
+    })
+    .catch(function (error) {
+      console.log("ERROR UH OH:  " + error);
+    });
 }
 
 // Function submit()
@@ -391,26 +405,27 @@ function submit() {
   let name = document.getElementById("INPUT_name").value.trim();
 
   // Boolean flag to avoid modifiying filepath submissions
-  let isURL = (!url.includes('file://'));
+  let isURL = !url.includes("file://");
 
   // URL checks
   if (isURL) {
     // Input blank, do nothing
-    if (url === '') {
+    if (url === "") {
       // Set error message to blank
-      document.getElementById("ERROR_MSG").innerHTML="";
+      document.getElementById("ERROR_MSG").innerHTML = "";
 
       return;
     }
 
     // Any spaces, display error
-    else if (url.includes(' ')) {
-      document.getElementById("ERROR_MSG").innerHTML="Invalid format, sorry. Do not include spaces in the link.";
+    else if (url.includes(" ")) {
+      document.getElementById("ERROR_MSG").innerHTML =
+        "Invalid format, sorry. Do not include spaces in the link.";
       return;
     }
   }
 
-  isBanned(url, name, 'submit');
+  isBanned(url, name, "submit");
 }
 
 //                                                                                                                                    dddddddd
@@ -439,22 +454,22 @@ function submit() {
 // @param name The name of the url
 // @param origin The name of the function that called isBanned
 function isBanned(url, name, origin) {
-  chrome.storage.local.get("realtimeBannedLinks", function(retValue) {
+  chrome.storage.local.get("realtimeBannedLinks", function (retValue) {
     let bannedLinks = retValue.realtimeBannedLinks;
 
-  // Final test
-  if (isBannedURLRaceCondition(url, bannedLinks)) {
-    return true;
-  }
-  // Origin tag exists bcuz initList() can add list items without unnecessarily
-  //  calling storage.set calls, whereas submit() needs to create a list item along
-  //  with a storage call
-  else if (origin === 'submit') {
-    addLink(url, name);
-  }
+    // Final test
+    if (isBannedURLRaceCondition(url, bannedLinks)) {
+      return true;
+    }
+    // Origin tag exists bcuz initList() can add list items without unnecessarily
+    //  calling storage.set calls, whereas submit() needs to create a list item along
+    //  with a storage call
+    else if (origin === "submit") {
+      addLink(url, name);
+    }
 
-  // Link isn't banned ^_^
-  return false;
+    // Link isn't banned ^_^
+    return false;
   });
 }
 
@@ -470,44 +485,50 @@ function isBannedURLRaceCondition(url, bannedLinks) {
   // Let's attempt to pull out the domain name
   // Trim URL in order to use our pornMap hashmap
   let trimmedURL = lowerCase;
-  let start = trimmedURL.indexOf('.');
+  let start = trimmedURL.indexOf(".");
 
-  if (trimmedURL.includes('www.')) {
+  if (trimmedURL.includes("www.")) {
     trimmedURL = trimmedURL.substring(start + 1);
   }
   // Some URls don't have a www., so we will instead look for the http header
   // start + 2 to remove both slashes without having to double-check
-  else if (trimmedURL.includes('http')) {
-    start = trimmedURL.indexOf('/');
+  else if (trimmedURL.includes("http")) {
+    start = trimmedURL.indexOf("/");
     trimmedURL = trimmedURL.substring(start + 2);
   }
 
   // Remove everything after the domain (ie. domain.com/additional+parameters+blah)
-  if (trimmedURL.includes('/')) {
-    start = trimmedURL.indexOf('/');
-    trimmedURL = trimmedURL.substring(0, start)
+  if (trimmedURL.includes("/")) {
+    start = trimmedURL.indexOf("/");
+    trimmedURL = trimmedURL.substring(0, start);
   }
 
   // Screen for domain in that good O(1)
   if (pornMap[trimmedURL]) {
     // GTFOOOO
-    document.getElementById("ERROR_MSG").innerHTML="Sorry, that link won't work. Please try another link.";
+    document.getElementById("ERROR_MSG").innerHTML =
+      "Sorry, that link won't work. Please try another link.";
 
     // If the link is also saved in storage, remove it
-    chrome.storage.sync.remove([url], function() {});
+    chrome.storage.sync.remove([url], function () {});
     return true;
   }
 
   // Else, screen for domain in that alright O(n)
   // Compare domain name (well, and the rest of the link) with porn domains
   // O(n) worst case feels bad but wh(O)lesome porn-checker feels good
+  if (!bannedLinks) {
+    console.log("bannedLinks is undefined, did I remember to add my api key??");
+    return false;
+  }
   for (let i = 0; i < bannedLinks.length; i++) {
     if (lowerCase.includes(bannedLinks[i].toLowerCase())) {
       // GTFOOOO
-      document.getElementById("ERROR_MSG").innerHTML="Sorry, that link won't work. Please try another link.";
+      document.getElementById("ERROR_MSG").innerHTML =
+        "Sorry, that link won't work. Please try another link.";
 
       // If the link is also saved in storage, remove it
-      chrome.storage.sync.remove([url], function() {});
+      chrome.storage.sync.remove([url], function () {});
       return true;
     }
   }
@@ -524,26 +545,25 @@ function isBannedURLRaceCondition(url, bannedLinks) {
 // @param name The name to assign the url item in the popup
 function addLink(url, name) {
   // Set error message to blank
-  document.getElementById("ERROR_MSG").innerHTML="";
+  document.getElementById("ERROR_MSG").innerHTML = "";
 
   // "Declare" a li object
   let li = document.createElement("li");
-  let isURL = (!url.includes('file://'));
+  let isURL = !url.includes("file://");
 
   // Yay! Input seems to be valid
   // Assert that the url begins with http:// or https:// (necessary for when we want to open new tabs)
   // If not, add the http (helps smoothen user experience)
-  if (!(url.includes('http://') || url.includes('https://'))  && isURL) {
-    url = 'http://' + url;
+  if (!(url.includes("http://") || url.includes("https://")) && isURL) {
+    url = "http://" + url;
   }
 
   // If name field was left blank, use the url as the text to display
-  let t = '';
-  if (name === '') {
+  let t = "";
+  if (name === "") {
     t = document.createTextNode(url);
     name = url;
-  }
-  else {
+  } else {
     t = document.createTextNode(name);
   }
   li.appendChild(t);
@@ -556,7 +576,7 @@ function addLink(url, name) {
   // When the limits are exceeded, we receive an error message. We handle that
   //  in the catch block
   try {
-    chrome.storage.sync.set({[url]: name}, function() {
+    chrome.storage.sync.set({ [url]: name }, function () {
       // Add new li object if storage.sync was a success and
       //  give the element the id of the url received as input to enable onClick
       // document.getElementById("websites").appendChild(li);
@@ -564,11 +584,15 @@ function addLink(url, name) {
       li.id = url;
       document.getElementById("websites").appendChild(li);
       if (!isURL) {
-        document.getElementById("ERROR_MSG").innerHTML = "Reminder: Local files can't be accessed on other machines, unless you copy the file to that machine.".fontcolor('DeepPink');
+        document.getElementById("ERROR_MSG").innerHTML =
+          "Reminder: Local files can't be accessed on other machines, unless you copy the file to that machine.".fontcolor(
+            "DeepPink"
+          );
       }
     });
   } catch (err) {
-    document.getElementById("ERROR_MSG").innerHTML="Error...please try again later, sorry!";
+    document.getElementById("ERROR_MSG").innerHTML =
+      "Error...please try again later, sorry!";
   }
 
   // Empty the input field
@@ -589,27 +613,20 @@ function addLink(url, name) {
 // The url is gathered from the clicked li object's id
 // @param URL The url to open in the new tab
 function openLink(URL) {
-  chrome.tabs.getSelected(null, function(tab) {
-      chrome.tabs.create(
-        {url: URL}
-      );
+  chrome.tabs.getSelected(null, function (tab) {
+    chrome.tabs.create({ url: URL });
   });
 }
 
 // Function openWindow
 // helper function that open URL in a new window
 function openWindow(URL) {
-  chrome.windows.getCurrent(null, function(tab) {
+  chrome.windows.getCurrent(null, function (tab) {
     // Maintain incognito status for opened windows
     if (tab.incognito) {
-      chrome.windows.create(
-        {url: URL, incognito: true}
-      );
-    }
-    else {
-      chrome.windows.create(
-        {url: URL}
-      );
+      chrome.windows.create({ url: URL, incognito: true });
+    } else {
+      chrome.windows.create({ url: URL });
     }
   });
 }
@@ -618,10 +635,10 @@ function openWindow(URL) {
 // This function checks whether or not PorNo! is enabled in incognito browsing
 // If not, we show the tip message because forcing users will only hurt our intentions
 function setIncognito() {
-  chrome.extension.isAllowedIncognitoAccess(function(isAllowedAccess) {
+  chrome.extension.isAllowedIncognitoAccess(function (isAllowedAccess) {
     // If we are enabled in incognito, remove the tip
-    if (isAllowedAccess && document.getElementById('setIncognito')) {
-      document.getElementById('setIncognito').remove();
+    if (isAllowedAccess && document.getElementById("setIncognito")) {
+      document.getElementById("setIncognito").remove();
     }
   });
 }
@@ -631,8 +648,8 @@ function setIncognito() {
 //  extension page to help with the process of enabling "Allow in incognito"
 function helpIncognito() {
   chrome.tabs.create({
-    url: 'chrome://extensions/?id=' + chrome.runtime.id
-  })
+    url: "chrome://extensions/?id=" + chrome.runtime.id,
+  });
 }
 
 // Function emergency()
@@ -642,13 +659,13 @@ function helpIncognito() {
 //  spends looking at the stuff that motivates him/her
 // More exposure may lead to more conversion of sexual energy into positive energy
 function emergency() {
-  chrome.storage.sync.get(null, function(items) {
+  chrome.storage.sync.get(null, function (items) {
     urls = Object.keys(items);
 
     // Add quality education to the opened links
-    urls.push('https://fightthenewdrug.org/overview/');
-    urls.push('http://virtual-addiction.com/online-pornography-test/');
-    urls.push('user_manual/welcome.html');
+    urls.push("https://fightthenewdrug.org/overview/");
+    urls.push("http://virtual-addiction.com/online-pornography-test/");
+    urls.push("user_manual/welcome.html");
     // Iterate through the urls array
     //  and mass-open all the links
     for (let i = 0; urls[i] !== undefined; i++) {

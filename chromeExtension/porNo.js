@@ -13,8 +13,8 @@
 let links = [];
 let size = -1;
 let counter = 0;
-let safeSearch = '&safe=active';
-let defaultLink = 'https://github.com/mrvivacious/PorNo-_Porn_Blocker';
+let safeSearch = "&safe=active";
+let defaultLink = "https://github.com/mrvivacious/PorNo-_Porn_Blocker";
 // 'https://fiftyshadesoflove.org/#connection'
 
 // Let's go
@@ -32,26 +32,28 @@ function main() {
   }
 
   // ROUTE LOCALSTORAGE ( [ideally is] MOST UP TO DATE )
-  chrome.storage.local.get("realtimeBannedLinks", function(returnValue) {
+  chrome.storage.local.get("realtimeBannedLinks", function (returnValue) {
     let firebaseLinks = returnValue.realtimeBannedLinks;
     let hostname = location.hostname;
 
     // console.log(firebaseLinks);
     // If the url is a porn site, PorNo!
-    if (isBannedFirebase(firebaseLinks) &&
-      location.hostname !== 'console.firebase.google.com' &&
-      location.hostname !== 'www.google.com') {
-      if (hostname.includes('google') ||
-        hostname.includes('gmail') ||
-        hostname.includes('youtube') ||
-        hostname.includes('amazon') ||
-        hostname.includes('instagram') ||
-        hostname.includes('is.muni.cs') ||
-        hostname.includes('virtual-addiction')
+    if (
+      isBannedFirebase(firebaseLinks) &&
+      location.hostname !== "console.firebase.google.com" &&
+      location.hostname !== "www.google.com"
+    ) {
+      if (
+        hostname.includes("google") ||
+        hostname.includes("gmail") ||
+        hostname.includes("youtube") ||
+        hostname.includes("amazon") ||
+        hostname.includes("instagram") ||
+        hostname.includes("is.muni.cs") ||
+        hostname.includes("virtual-addiction")
       ) {
         return;
-      }
-      else {
+      } else {
         PorNo();
       }
     }
@@ -67,22 +69,25 @@ function main() {
 
   // ROUTE HARDCODED ( FASTER but does not contain latest links )
   // If the url is a porn site, PorNo!
-  if (isBannedURL() &&
-    window.location.hostname !== 'console.firebase.google.com' &&
-    window.location.hostname !== 'www.google.com') {
+  if (
+    isBannedURL() &&
+    window.location.hostname !== "console.firebase.google.com" &&
+    window.location.hostname !== "www.google.com"
+  ) {
     let hostname = window.location.hostname;
 
-    if (hostname.includes('google') ||
-      hostname.includes('gmail') ||
-      hostname.includes('youtube') ||
-      hostname.includes('amazon') ||
-      hostname.includes('instagram') ||
-      hostname.includes('is.muni.cs') ||
-      hostname.includes('virtual-addiction')
+    if (
+      hostname.includes("google") ||
+      hostname.includes("gmail") ||
+      hostname.includes("youtube") ||
+      hostname.includes("amazon") ||
+      hostname.includes("instagram") ||
+      hostname.includes("is.muni.cs") ||
+      hostname.includes("virtual-addiction")
     ) {
       return;
-    }
-    else { // todo: if url contains 'reddit', regex the url (check with pathname or smth)
+    } else {
+      // todo: if url contains 'reddit', regex the url (check with pathname or smth)
       PorNo();
     }
   }
@@ -103,13 +108,10 @@ function checkURL() {
 // Adds links from storage to our links array so that
 // openLink() can select a random wholesome link to fill the user's window with
 function PorNo() {
-  window.stop()
-
-  // Array that stores all the keys (aka the urls)
-  let allKeys;
+  window.stop();
 
   // Get all/no urls currently in storage
-  chrome.storage.sync.get(null, function(items) {
+  chrome.storage.sync.get(null, function (items) {
     urls = Object.keys(items);
     size = urls.length;
 
@@ -151,11 +153,11 @@ function evaluateWords() {
   let url = window.location.href.toLowerCase();
 
   // Remove all "url buffers" for easier parsing
-  while (url.indexOf('-') != -1) {
-    url = url.replace('-', ' ');
+  while (url.indexOf("-") != -1) {
+    url = url.replace("-", " ");
   }
-  while (url.indexOf('+') != -1) {
-    url = url.replace('+', ' ');
+  while (url.indexOf("+") != -1) {
+    url = url.replace("+", " ");
   }
 
   // mfw 12000~ array size
@@ -181,7 +183,7 @@ function evaluateWords() {
 // Evaluates the title of the current page for porn clues
 // NOT a better indicator than the URL (don't use!)
 function checkTitle() {
-  $(document).ready(function() {
+  $(document).ready(function () {
     let title = document.title.toLowerCase();
     let ctr = 0;
 
@@ -202,27 +204,29 @@ function checkTitle() {
 
 function store(url) {
   // If there is a www. header, remove it
-  if (url.includes('www.')) {
-    let idxOfPeriod = url.indexOf('.');
+  if (url.includes("www.")) {
+    let idxOfPeriod = url.indexOf(".");
     url = url.substring(idxOfPeriod + 1, url.length);
   }
 
   // Begin database process
   chrome.storage.local.set(
     {
-      [url]: url
-    }, function() {}
+      [url]: url,
+    },
+    function () {}
   );
 
   // Meanwhile, update local storage list
-  chrome.storage.local.get("realtimeBannedLinks", function(returnValue) {
+  chrome.storage.local.get("realtimeBannedLinks", function (returnValue) {
     let urls = returnValue.realtimeBannedLinks;
     urls.push(url);
 
     chrome.storage.local.set(
       {
-        realtimeBannedLinks: urls
-      }, function() {}
+        realtimeBannedLinks: urls,
+      },
+      function () {}
     );
   });
 }
@@ -256,7 +260,11 @@ function isBannedFirebase(linksFromFirebase) {
   let url = window.location.href.toLowerCase();
 
   // fightthenewdrug was flagged...let's avoid that
-  if (linksFromFirebase && !url.includes('fightthenewdrug') && !url.includes('github')) {
+  if (
+    linksFromFirebase &&
+    !url.includes("fightthenewdrug") &&
+    !url.includes("github")
+  ) {
     // O(n) worst case feels bad but whO(l)esome porn-checker feels good
     for (let i = 0; linksFromFirebase[i]; i++) {
       if (url.includes(linksFromFirebase[i].toLowerCase())) {
@@ -273,16 +281,17 @@ function isBannedURL() {
   // Header(s) removed so that we can find the correct period to substring to
   //  in order to collect only the domain name
   let host = window.location.hostname.toLowerCase();
-  let idx = host.indexOf('.');
+  let idx = host.indexOf(".");
   let trimmedUrl; //todo re-evaluate 4chan strategy
 
   let href = window.location.href.toLowerCase();
-  let hrefWithPath = href.substring(href.indexOf('://') + 3, href.length);
+  let hrefWithPath = href.substring(href.indexOf("://") + 3, href.length);
 
   // 8 to account for sites with extended intros (ie. boards.4chan)
   // This evaluates to false for a URL that looks like abcdefgh.name.com
   // Here's to hoping that there aren't too many of those URLs around
-  if (idx < 8) { // todo rethink this strategy...
+  if (idx < 8) {
+    // todo rethink this strategy...
     trimmedUrl = host.substring(idx + 1);
   }
 
@@ -298,9 +307,9 @@ function isBannedURL() {
 
 function checkWithIBM() {
   let url = window.location.hostname;
-  let api = 'https://api.xforce.ibmcloud.com/url/' + url;
+  let api = "https://api.xforce.ibmcloud.com/url/" + url;
 
-  if (!url.includes('fightthenewdrug')) {
+  if (!url.includes("fightthenewdrug")) {
     // Too slow -- some websites load before PorNo! executes
     // $.getJSON(api, function(data) {
     //   if (data.result.cats.Pornography) {
@@ -314,9 +323,9 @@ function checkWithIBM() {
     //  to get to PorNo! if needed
     // Thank you, http://youmightnotneedjquery.com/#json
     let request = new XMLHttpRequest();
-    request.open('GET', api, false);
+    request.open("GET", api, false);
 
-    request.onload = function() {
+    request.onload = function () {
       if (request.status >= 200 && request.status < 400) {
         // Success!
         let data = JSON.parse(request.responseText);
@@ -325,14 +334,13 @@ function checkWithIBM() {
           PorNo();
           store(url);
         }
-      }
-      else {
+      } else {
         // We received an error from the api!
         // console.log('PorNo! is having some errors, hmmm....');
       }
     };
 
-    request.onerror = function() {
+    request.onerror = function () {
       // There was another error, not from the api,
       // alert('PorNo! : Error');
     };
@@ -341,5 +349,5 @@ function checkWithIBM() {
 }
 
 function isUnsafeGoogleSearch(url) {
-  return url.includes('google.com/search?') && !url.includes(safeSearch)
+  return url.includes("google.com/search?") && !url.includes(safeSearch);
 }

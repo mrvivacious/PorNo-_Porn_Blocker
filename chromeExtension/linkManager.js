@@ -287,7 +287,6 @@ function initList(currentKey) {
 //  F::::::::FF           I::::::::IR::::::R     R:::::RE::::::::::::::::::::E
 //  FFFFFFFFFFF           IIIIIIIIIIRRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE
 //
-// function updateDB
 // Send the links we've captured and set in local storage to my database
 // I can update porNo.js accordingly with the links written
 function updateDB() {
@@ -303,28 +302,23 @@ function submit() {
   let url = document.getElementById("INPUT_url").value.trim();
   let name = document.getElementById("INPUT_name").value.trim();
 
-  // Boolean flag to avoid modifiying filepath submissions
-  let isURL = !url.includes("file://");
+  // Avoid modifiying filepath submissions
+  let isFilepath = url.includes("file://");
 
-  // URL checks
-  if (isURL) {
-    // Input blank, do nothing
+  if (!isFilepath) {
     if (url === "") {
-      // Set error message to blank
+      // Remove error message
       document.getElementById("ERROR_MSG").innerHTML = "";
-
       return;
-    }
-
-    // Any spaces, display error
-    else if (url.includes(" ")) {
+    } else if (url.includes(" ")) {
+      // Any spaces, display error
       document.getElementById("ERROR_MSG").innerHTML =
         "Invalid format, sorry. Do not include spaces in the link.";
       return;
     }
   }
 
-  isBanned(url, name, "submit");
+  isBanned(url, name, "submit"); // Adds safe links to UI...todo refactor?
 }
 
 //                                                                                                                                    dddddddd

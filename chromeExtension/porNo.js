@@ -38,20 +38,8 @@ function main() {
 
     // console.log(firebaseLinks);
     // If the url is a porn site, PorNo!
-    if (
-      isBannedFirebase(firebaseLinks) &&
-      location.hostname !== "console.firebase.google.com" &&
-      location.hostname !== "www.google.com"
-    ) {
-      if (
-        hostname.includes("google") ||
-        hostname.includes("gmail") ||
-        hostname.includes("youtube") ||
-        hostname.includes("amazon") ||
-        hostname.includes("instagram") ||
-        hostname.includes("is.muni.cs") ||
-        hostname.includes("virtual-addiction")
-      ) {
+    if (isBannedFirebase(firebaseLinks)) {
+      if (isHostnameInSafeList(hostname)) {
         return;
       } else {
         PorNo();
@@ -69,28 +57,28 @@ function main() {
 
   // ROUTE HARDCODED ( FASTER but does not contain latest links )
   // If the url is a porn site, PorNo!
-  if (
-    isBannedURL() &&
-    window.location.hostname !== "console.firebase.google.com" &&
-    window.location.hostname !== "www.google.com"
-  ) {
+  if (isBannedURL()) {
     let hostname = window.location.hostname;
 
-    if (
-      hostname.includes("google") ||
-      hostname.includes("gmail") ||
-      hostname.includes("youtube") ||
-      hostname.includes("amazon") ||
-      hostname.includes("instagram") ||
-      hostname.includes("is.muni.cs") ||
-      hostname.includes("virtual-addiction")
-    ) {
+    if (isHostnameInSafeList(hostname)) {
       return;
     } else {
       // todo: if url contains 'reddit', regex the url (check with pathname or smth)
       PorNo();
     }
   }
+}
+
+function isHostnameInSafeList(hostname) {
+  return (
+    hostname.includes("google") ||
+    hostname.includes("gmail") ||
+    hostname.includes("youtube") ||
+    hostname.includes("amazon") ||
+    hostname.includes("instagram") ||
+    hostname.includes("is.muni.cs") ||
+    hostname.includes("virtual-addiction")
+  );
 }
 
 // If our local route fails, the database route will still be checked.
@@ -125,8 +113,7 @@ function PorNo() {
       }
 
       openLink();
-    }
-    else {
+    } else {
       // When your wholesome list is empty, redirect to quality education
       window.location.href = defaultLink;
     }

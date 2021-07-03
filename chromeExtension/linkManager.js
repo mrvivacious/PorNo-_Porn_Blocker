@@ -62,8 +62,8 @@ chrome.runtime.setUninstallURL(
 // Open welcome and how to use pages on initial download
 chrome.storage.local.get("notFirstTime", function (returnValue) {
   if (returnValue.notFirstTime === undefined) {
-    openLink("user_manual/welcome.html");
-    openLink("user_manual/help.html"); // Replace with youtube video
+    openURLInSameWindow("user_manual/welcome.html");
+    openURLInSameWindow("user_manual/help.html"); // Replace with youtube video
     chrome.storage.local.set({ notFirstTime: true }, function () {});
   }
 });
@@ -75,13 +75,13 @@ $(document).ready(function () {
   // initialize() fills the popup with the links saved in storage
   // setIncognito() informs users to enable the extension in incognito
   updateDB();
-  setIncognito();
+  ifIncognitoIsEnabledThenRemovePrompt();
   initialize();
 
   // Popup-internal behavior for the add button and the incognito tip message
   $("#submit").click(submit);
-  $("#setIncognito").click(helpIncognito);
-  $("#emergency").click(emergency);
+  $("#setIncognito").click(openExtensionSettingsPage);
+  $("#emergency").click(openAllRedirectLinks);
 });
 
 // Allow enter key press to add links
@@ -94,7 +94,7 @@ $(document).on("keyup", function (event) {
 // Gets the title attribute (the url) of the clicked li and sends that to openLink, which opens the url
 // Thank you https://stackoverflow.com/questions/34964039/dynamically-created-li-click-event-not-working-jquery
 $(document).on("click", "li", function () {
-  openLink(this.id);
+  openURLInSameWindow(this.id);
 });
 
 // Deletes the selected list item and removes it from storage
@@ -438,51 +438,35 @@ function isBannedURLRaceCondition(url, bannedLinks) {
   return false;
 }
 
-// Function addLink()
-// Creates a li item of a non-banned url and saves the url in storage
-// @param url The url to save
-// @param name The name to assign the url item in the popup
-function addLink(url, name) {
+// Create a li item of a non-banned url and write the url to storage
+function addLink(url, urlLabel) {
   // Set error message to blank
   document.getElementById("ERROR_MSG").innerHTML = "";
 
   // "Declare" a li object
   let li = document.createElement("li");
-  let isURL = !url.includes("file://");
+  let isFilepath = url.includes("file://");
 
-  // Yay! Input seems to be valid
   // Assert that the url begins with http:// or https:// (necessary for when we want to open new tabs)
   // If not, add the http (helps smoothen user experience)
-  if (!(url.includes("http://") || url.includes("https://")) && isURL) {
+  if (!(url.includes("http://") || url.includes("https://")) && !isFilepath) {
     url = "http://" + url;
   }
 
-  // If name field was left blank, use the url as the text to display
-  let t = "";
-  if (name === "") {
-    t = document.createTextNode(url);
-    name = url;
-  } else {
-    t = document.createTextNode(name);
+  // Empty name? use the url as the item label
+  if (urlLabel === "") {
+    urlLabel = url;
   }
-  li.appendChild(t);
+  li.appendChild(document.createTextNode(urlLabel));
 
-  // Add new key-value of the new url to storage
-  // Why try-catch?
-  // The Google storage documentation (https://developer.chrome.com/extensions/storage#property-sync):
-  //  MAX_WRITE_OPERATIONS_PER_MINUTE, 120
-  //  MAX_WRITE_OPERATIONS_PER_HOUR, 1800
-  // When the limits are exceeded, we receive an error message. We handle that
-  //  in the catch block
   try {
-    chrome.storage.sync.set({ [url]: name }, function () {
-      // Add new li object if storage.sync was a success and
-      //  give the element the id of the url received as input to enable onClick
+    chrome.storage.sync.set({ [url]: urlLabel }, function () {
+      // Give the li the id of the url received as input to enable onClick
       // document.getElementById("websites").appendChild(li);
-      // li.id = input;
       li.id = url;
       document.getElementById("websites").appendChild(li);
-      if (!isURL) {
+
+      if (isFilepath) {
         document.getElementById("ERROR_MSG").innerHTML =
           "Reminder: Local files can't be accessed on other machines, unless you copy the file to that machine.".fontcolor(
             "DeepPink"
@@ -490,6 +474,9 @@ function addLink(url, name) {
       }
     });
   } catch (err) {
+    // The Google storage documentation (https://developer.chrome.com/extensions/storage#property-sync):
+    //  MAX_WRITE_OPERATIONS_PER_MINUTE, 120
+    //  MAX_WRITE_OPERATIONS_PER_HOUR, 1800
     document.getElementById("ERROR_MSG").innerHTML =
       "Error...please try again later, sorry!";
   }
@@ -506,69 +493,53 @@ function addLink(url, name) {
   li.appendChild(span);
 }
 
-// Function openLink()
-// Clicking on a list item should open the url it
-//  corresponds to in a new tab within the same window
-// The url is gathered from the clicked li object's id
-// @param URL The url to open in the new tab
-function openLink(URL) {
+function openURLInSameWindow(URL) {
   chrome.tabs.getSelected(null, function (tab) {
     chrome.tabs.create({ url: URL });
   });
 }
 
-// Function openWindow
-// helper function that open URL in a new window
-function openWindow(URL) {
+function openURLInNewWindow(URL) {
   chrome.windows.getCurrent(null, function (tab) {
     // Maintain incognito status for opened windows
-    if (tab.incognito) {
-      chrome.windows.create({ url: URL, incognito: true });
-    } else {
-      chrome.windows.create({ url: URL });
-    }
+    chrome.windows.create({ url: URL, incognito: tab.incognito });
   });
 }
 
-// Function setIncognito()
-// This function checks whether or not PorNo! is enabled in incognito browsing
-// If not, we show the tip message because forcing users will only hurt our intentions
-function setIncognito() {
+// If PorNo! is not allowed in icognito,
+//  show the tip message because forcing users will only hurt our intentions
+function ifIncognitoIsEnabledThenRemovePrompt() {
   chrome.extension.isAllowedIncognitoAccess(function (isAllowedAccess) {
-    // If we are enabled in incognito, remove the tip
     if (isAllowedAccess && document.getElementById("setIncognito")) {
       document.getElementById("setIncognito").remove();
     }
   });
 }
 
-// Function helpIncognito()
-// Should users click on the incognito tip, they are directed to PorNo!'s
-//  extension page to help with the process of enabling "Allow in incognito"
-function helpIncognito() {
+// Clicking on the incognito tip opens PorNo!'s extension page to
+//  help with the process of enabling "Allow in incognito"
+function openExtensionSettingsPage() {
   chrome.tabs.create({
     url: "chrome://extensions/?id=" + chrome.runtime.id,
   });
 }
 
-// Function emergency()
-// emergency button functionality
-// open all redirects in separate windows
+// Open all redirects in separate windows
 // Why so many windows? so many windows to maximize the amount of time user
 //  spends looking at the stuff that motivates him/her
 // More exposure may lead to more conversion of sexual energy into positive energy
-function emergency() {
+function openAllRedirectLinks() {
   chrome.storage.sync.get(null, function (items) {
     urls = Object.keys(items);
 
-    // Add quality education to the opened links
+    // Some "education"
     urls.push("https://fightthenewdrug.org/overview/");
     urls.push("http://virtual-addiction.com/online-pornography-test/");
     urls.push("user_manual/welcome.html");
-    // Iterate through the urls array
-    //  and mass-open all the links
-    for (let i = 0; urls[i] !== undefined; i++) {
-      openWindow(urls[i]);
+
+    // https://stackoverflow.com/questions/43031988
+    for (let i = 0, n = urls.length; i < n; i++) {
+      openURLInNewWindow(urls[i]);
     }
   });
 }

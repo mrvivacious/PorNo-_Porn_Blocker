@@ -62,8 +62,8 @@ chrome.runtime.setUninstallURL(
 // Open welcome and how to use pages on initial download
 chrome.storage.local.get("notFirstTime", function (returnValue) {
   if (returnValue.notFirstTime === undefined) {
-    openLink("user_manual/welcome.html");
-    openLink("user_manual/help.html"); // Replace with youtube video
+    openURLInSameWindow("user_manual/welcome.html");
+    openURLInSameWindow("user_manual/help.html"); // Replace with youtube video
     chrome.storage.local.set({ notFirstTime: true }, function () {});
   }
 });
@@ -75,7 +75,7 @@ $(document).ready(function () {
   // initialize() fills the popup with the links saved in storage
   // setIncognito() informs users to enable the extension in incognito
   updateDB();
-  setIncognito();
+  ifIncognitoIsEnabledThenRemovePrompt();
   initialize();
 
   // Popup-internal behavior for the add button and the incognito tip message
@@ -94,7 +94,7 @@ $(document).on("keyup", function (event) {
 // Gets the title attribute (the url) of the clicked li and sends that to openLink, which opens the url
 // Thank you https://stackoverflow.com/questions/34964039/dynamically-created-li-click-event-not-working-jquery
 $(document).on("click", "li", function () {
-  openLink(this.id);
+  openURLInSameWindow(this.id);
 });
 
 // Deletes the selected list item and removes it from storage
@@ -506,36 +506,26 @@ function addLink(url, name) {
   li.appendChild(span);
 }
 
-// Function openLink()
 // Clicking on a list item should open the url it
 //  corresponds to in a new tab within the same window
 // The url is gathered from the clicked li object's id
-// @param URL The url to open in the new tab
-function openLink(URL) {
+function openURLInSameWindow(URL) {
   chrome.tabs.getSelected(null, function (tab) {
     chrome.tabs.create({ url: URL });
   });
 }
 
-// Function openWindow
-// helper function that open URL in a new window
-function openWindow(URL) {
+function openURLInNewWindow(URL) {
   chrome.windows.getCurrent(null, function (tab) {
     // Maintain incognito status for opened windows
-    if (tab.incognito) {
-      chrome.windows.create({ url: URL, incognito: true });
-    } else {
-      chrome.windows.create({ url: URL });
-    }
+    chrome.windows.create({ url: URL, incognito: tab.incognito });
   });
 }
 
-// Function setIncognito()
-// This function checks whether or not PorNo! is enabled in incognito browsing
-// If not, we show the tip message because forcing users will only hurt our intentions
-function setIncognito() {
+// If PorNo! is not allowed in icognito,
+//  show the tip message because forcing users will only hurt our intentions
+function ifIncognitoIsEnabledThenRemovePrompt() {
   chrome.extension.isAllowedIncognitoAccess(function (isAllowedAccess) {
-    // If we are enabled in incognito, remove the tip
     if (isAllowedAccess && document.getElementById("setIncognito")) {
       document.getElementById("setIncognito").remove();
     }
@@ -568,7 +558,7 @@ function emergency() {
     // Iterate through the urls array
     //  and mass-open all the links
     for (let i = 0; urls[i] !== undefined; i++) {
-      openWindow(urls[i]);
+      openURLInNewWindow(urls[i]);
     }
   });
 }

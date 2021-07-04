@@ -45,6 +45,8 @@ who what where when why how, goals of project (last porn blocker ever rawr)
 mention problem with finding urls
 
 [Installation](#installation)
+    
+[HELP TRANSLATE PorNo! ](#translations)
 
 add a gif for web and a gif for android
 
@@ -92,6 +94,21 @@ Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pc
 4. NOTE: For Firebase stuff to work, you will need a [google-services.json file](https://support.google.com/firebase/answer/7015592?hl=en#zippy=%2Cin-this-article) (and probably need to create the project, create the database, etc)
 
 **Note: I don't have a magic CI/CD pipeline at the moment where y'all can recieve the latest changes to the repositories so just make sure you `git pull` regularly thx**
+    
+## [Translations](#contents)
+    
+1. Fork this repository, button in top right of screen
+2. Download/clone your repo to your computer
+3. Download [Android Studio](https://developer.android.com/studio/index.html)
+4. Open `androidApp/` in Android Studio
+5. Go to `androidApp/app/src/main/res/values/strings.xml`
+
+6. Do [this](https://developer.android.com/studio/write/translations-editor#designlayout)
+7. Translate / Use Google Translate to copy the English text into the rows of the language you are translating for
+8. When finished, [change your device language](https://www.androidcentral.com/how-change-system-language-your-android-phone) and run PorNo! (green triangle at top of studio) to verify there is no more English
+9. Git commit your changes and git push
+10. On the GitHub page for your fork, create a pull request for me to review your changes!
+(If these instructions aren't clear enough, dm me on Instagram @mrvivacious and let me know how I can improve them)
 
 ## Features
 - 

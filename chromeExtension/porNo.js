@@ -117,6 +117,38 @@ function PorNo() {
       // When your wholesome list is empty, redirect to quality education
       window.location.href = defaultLink;
     }
+
+    addRedirectionEventToHistory();
+  });
+}
+
+function addRedirectionEventToHistory() {
+  chrome.storage.local.get("redirectionHistory", function (returnValue) {
+    // https://stackoverflow.com/questions/4673527
+    let redirectionHistory = returnValue.redirectionHistory;
+    let currentTimeInMillis = new Date().getTime();
+
+    if (!redirectionHistory) {
+      chrome.storage.local.set({ redirectionHistory: [currentTimeInMillis] });
+    } else {
+      redirectionHistory.push(currentTimeInMillis);
+      chrome.storage.local.set({
+        redirectionHistory: redirectionHistory,
+      });
+    }
+
+    // pretty print for debugging sake
+    let prettyPrint = "STATISTICS DEBUG:\n\n";
+    // for (let i = 0, n = redirectionHistory.length; i < n; i++) {
+    for (let i = 0; redirectionHistory[i]; i++) {
+      let time = redirectionHistory[i];
+      let date = new Date(time);
+      console.log(date);
+      prettyPrint += date.toLocaleString();
+      prettyPrint += "\n";
+    }
+
+    alert(prettyPrint);
   });
 }
 

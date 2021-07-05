@@ -72,16 +72,36 @@ chrome.storage.local.get("notFirstTime", function (returnValue) {
 //  with help from https://stackoverflow.com/questions/13591983/onclick-within-chrome-extension-not-working
 $(document).ready(function () {
   // updateDB() gets the latest URLs from Firebase (is called whenever the popup is opened)
-  // initialize() fills the popup with the links saved in storage
+  // getUserLinksFromStorageAndAddToPopup fills the popup with the links saved in storag()e
   // setIncognito() informs users to enable the extension in incognito
-  updateDB();
+  updateDB(); // todo rename syncWithFirebase()
   ifIncognitoIsEnabledThenRemovePrompt();
-  initialize();
+  getUserLinksFromStorageAndAddToPopup(); // clean code says to break this into two functions get...() and add...()
 
   // Popup-internal behavior for the add button and the incognito tip message
   $("#submit").click(submit);
   $("#setIncognito").click(openExtensionSettingsPage);
   $("#emergency").click(openAllRedirectLinks);
+});
+
+// todo A test function that should be removed in future (or associated with a proper button idk)
+$(document).on("click", "#testStats", function () {
+  chrome.storage.local.get("redirectionHistory", function (returnValue) {
+    let redirectionHistory = returnValue.redirectionHistory;
+
+    // pretty print for debugging sake
+    let prettyPrint = "STATISTICS DEBUG:\n\n";
+    // for (let i = 0, n = redirectionHistory.length; i < n; i++) {
+    for (let i = 0; redirectionHistory[i]; i++) {
+      let time = redirectionHistory[i];
+      let date = new Date(time);
+      console.log(date);
+      prettyPrint += date.toLocaleString();
+      prettyPrint += "\n";
+    }
+
+    alert(prettyPrint);
+  });
 });
 
 // Allow enter key press to add links
@@ -175,11 +195,10 @@ $(document).on("mouseover", "#emergency", function () {
 //  i::::::i n::::n    n::::ni::::::i       tt:::::::::::tti::::::i a::::::::::aa:::al::::::li::::::iz:::::::::::::::z  ee:::::::::::::e
 //  iiiiiiii nnnnnn    nnnnnniiiiiiii         ttttttttttt  iiiiiiii  aaaaaaaaaa  aaaalllllllliiiiiiiizzzzzzzzzzzzzzzzz    eeeeeeeeeeeeee
 //
-// Function initialize()
 // Initializes the websites list with the links saved in storage
 // Using Google.sync.storage allows the links to persist through devices as the
 //  data is saved to the Google account currently signed in
-function initialize() {
+function getUserLinksFromStorageAndAddToPopup() {
   // Array that stores all the keys (urls)
   let urls;
 
@@ -230,7 +249,7 @@ function initialize() {
 //  iiiiiiii nnnnnn    nnnnnniiiiiiii         ttttttttttt  LLLLLLLLLLLLLLLLLLLLLLLLiiiiiiii  sssssssssss              ttttttttttt
 //
 // Function initList()
-// Creates the li objects with the values passed in from initialize()
+// Creates the li objects with the values passed in from getUserLinksFromStorageAndAddToPopu()p
 // The reason this function exists is to avoid race conditions between the for loop
 //  iteration and the value sent into the get(). The loop resolves faster than the
 //  get method can return the associated value and create an li, so we were left with

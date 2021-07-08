@@ -23,6 +23,10 @@
       <img width="220" alt='Subreddit for PorNo!. r-slash-ourlastpornblocker' src='https://1000logos.net/wp-content/uploads/2017/05/Reddit-logo.jpg'/>
     </a>
 </p>
+    
+<p>
+    <a href="mailto:jvnnvt@gmail.com?Subject=PorNo! (From GitHub)" target="_blank"><em>Email me!</em></a>
+</p>
 
 
 <!--

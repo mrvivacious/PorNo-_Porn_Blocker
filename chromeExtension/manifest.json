@@ -13,7 +13,7 @@
   },
 
   "background": {
-    "scripts": ["jquery.min.js", "lists.js", "MagicalMessages.js", "linkManager.js", "porNo.js"]
+    "scripts": ["jquery.min.js", "lists.js", "linkManager.js", "porNo.js"]
   },
 
   "icons": {
@@ -27,7 +27,7 @@
       "matches": [
           "<all_urls>"
       ],
-      "js": ["jquery.min.js", "lists.js", "MagicalMessages.js", "firebaseStuff.js", "linkManager.js", "porNo.js", "subredditDetection.js"],
+      "js": ["jquery.min.js", "lists.js", "firebaseStuff.js", "linkManager.js", "porNo.js", "subredditDetection.js"],
       "run_at": "document_start"
     }
   ],

@@ -71,6 +71,8 @@ chrome.storage.local.get("notFirstTime", function (returnValue) {
 // MAIN
 //  with help from https://stackoverflow.com/questions/13591983/onclick-within-chrome-extension-not-working
 $(document).ready(function () {
+  generateInputMessage();
+
   // updateDB() gets the latest URLs from Firebase (is called whenever the popup is opened)
   // getUserLinksFromStorageAndAddToPopup fills the popup with the links saved in storag()e
   // setIncognito() informs users to enable the extension in incognito
@@ -176,6 +178,26 @@ $(document).on("mouseover", "#emergency", function () {
 // F::::::::FF               UU:::::::::UU    N::::::N        N::::::N     CCC::::::::::::C      T:::::::::T      I::::::::I   OO:::::::::OO   N::::::N        N::::::NS:::::::::::::::SS
 // FFFFFFFFFFF                 UUUUUUUUU      NNNNNNNN         NNNNNNN        CCCCCCCCCCCCC      TTTTTTTTTTT      IIIIIIIIII     OOOOOOOOO     NNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS
 //
+
+// Rotates the input box messages to provoke new ideas for links
+function generateInputMessage() {
+  let messages = [
+    "Your favorite websites!",
+    "What's your favorite song?",
+    "What picture inspires you?",
+    "Is there an article that motivates you?",
+    "What makes you feel your best?",
+    "What defines you?",
+    "What's a link to something you want?",
+    "Link a picture to a role model of yours!",
+    "A link to your greatest aspirations?",
+  ];
+
+  if (document.getElementById("INPUT_url")) {
+    document.getElementById("INPUT_url").placeholder =
+      messages[Math.floor(Math.random() * messages.length)];
+  }
+}
 
 //
 //    iiii                     iiii          tttt            iiii                    lllllll   iiii

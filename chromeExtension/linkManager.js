@@ -122,22 +122,30 @@ $(document).on("click", "li", function () {
 // Deletes the selected list item and removes it from storage
 $(document).on("click", "#delete", function (event) {
   let keyValueToRemove = this.parentElement.id;
+  let listItemText = this.parentElement.innerText;
+  let urlName = listItemText.substring(0, listItemText.length - 2);
 
-  // Remove key-value from storage
-  // Try-catch cause when the limits are exceeded, we receive an error message. We handle that
-  //  in the catch block
-  try {
-    chrome.storage.sync.remove([keyValueToRemove], function () {});
-  } catch (e) {
-    document.getElementById("ERROR_MSG").innerHTML =
-      "Too many operations...please try again later, sorry!";
-  }
+  let userConfirmedDelete = confirm(
+    "Delete this link?\n\nName: " + urlName + "\nLink: " + keyValueToRemove
+  );
 
-  // Only update list when we confirm that the desired deletion has succeeded
-  if (
-    chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
-  ) {
-    this.parentElement.remove();
+  if (userConfirmedDelete) {
+    // Remove key-value from storage
+    // Try-catch cause when the limits are exceeded, we receive an error message. We handle that
+    //  in the catch block
+    try {
+      chrome.storage.sync.remove([keyValueToRemove], function () {});
+    } catch (e) {
+      document.getElementById("ERROR_MSG").innerHTML =
+        "Too many operations...please try again later, sorry!";
+    }
+
+    // Only update list when we confirm that the desired deletion has succeeded
+    if (
+      chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
+    ) {
+      this.parentElement.remove();
+    }
   }
 
   // Prevents the li.click from firing -- this resulted in opening a new tab of

@@ -3,23 +3,25 @@
 // NSFW subreddit detection (via the 'nsfw' post tags)
 // + We can add other post-load stuff in here too ie. keyword check, ibm api, etc
 
-function saveSubredditToBannedLinksList(domain) {
+function getSubredditFromDomain(domain) {
   let splitPathname = window.location.pathname.split('/');
   let URLFormattedWithSubreddit = domain + '/r/' + splitPathname[2];
-  URLFormattedWithSubreddit = URLFormattedWithSubreddit.toLowerCase();
+  
+  return URLFormattedWithSubreddit.toLowerCase();
+}
 
+function saveSubredditToBannedLinksList(subredditURL) {
   // Today I learned there is r/undefined
-  if (URLFormattedWithSubreddit === 'reddit.com/r/undefined') {
+  if (subredditURL === 'reddit.com/r/undefined') {
     return;
   }
 
-  // URL should look like "reddit.com/r/cscareerquestions[/]?"
-  // alert(URLFormattedWithSubreddit);
+  // alert(subredditURL);  // Should resemble "reddit.com/r/cscareerquestions[/]"
 
   // Add this website to our database for faster subsequent redirections
   // User can enter either of these formats so save both for now
-  store(URLFormattedWithSubreddit);
-  store(URLFormattedWithSubreddit + '/');
+  store(subredditURL);
+  store(subredditURL + '/');
 }
 
 window.onload = () => {
@@ -29,7 +31,9 @@ window.onload = () => {
   if (domain === 'reddit.com') {
     if (document.getElementsByClassName('_1x9diBHPBP-hL1JiwUwJ5J').length) {
       document.firstElementChild.remove(); // window.stop() wont work (.onload LOL)
-      saveSubredditToBannedLinksList(domain);
+      
+      let subreddit = getSubredditFromDomain(domain);
+      saveSubredditToBannedLinksList(subreddit);
       PorNo();
     }
   }

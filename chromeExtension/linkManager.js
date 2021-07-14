@@ -114,7 +114,7 @@ $(document).on("keyup", function (event) {
 });
 
 // Gets the title attribute (the url) of the clicked li and sends that to openLink, which opens the url
-// Thank you https://stackoverflow.com/questions/34964039/dynamically-created-li-click-event-not-working-jquery
+// Thank you https://stackoverflow.com/questions/34964039
 $(document).on("click", "li", function () {
   openURLInSameWindow(this.id);
 });
@@ -207,24 +207,6 @@ function generateInputMessage() {
   }
 }
 
-//
-//    iiii                     iiii          tttt            iiii                    lllllll   iiii
-//   i::::i                   i::::i      ttt:::t           i::::i                   l:::::l  i::::i
-//    iiii                     iiii       t:::::t            iiii                    l:::::l   iiii
-//                                        t:::::t                                    l:::::l
-//  iiiiiiinnnn  nnnnnnnn    iiiiiiittttttt:::::ttttttt    iiiiiii   aaaaaaaaaaaaa    l::::l iiiiiii zzzzzzzzzzzzzzzzz    eeeeeeeeeeee
-//  i:::::in:::nn::::::::nn  i:::::it:::::::::::::::::t    i:::::i   a::::::::::::a   l::::l i:::::i z:::::::::::::::z  ee::::::::::::ee
-//   i::::in::::::::::::::nn  i::::it:::::::::::::::::t     i::::i   aaaaaaaaa:::::a  l::::l  i::::i z::::::::::::::z  e::::::eeeee:::::ee
-//   i::::inn:::::::::::::::n i::::itttttt:::::::tttttt     i::::i            a::::a  l::::l  i::::i zzzzzzzz::::::z  e::::::e     e:::::e
-//   i::::i  n:::::nnnn:::::n i::::i      t:::::t           i::::i     aaaaaaa:::::a  l::::l  i::::i       z::::::z   e:::::::eeeee::::::e
-//   i::::i  n::::n    n::::n i::::i      t:::::t           i::::i   aa::::::::::::a  l::::l  i::::i      z::::::z    e:::::::::::::::::e
-//   i::::i  n::::n    n::::n i::::i      t:::::t           i::::i  a::::aaaa::::::a  l::::l  i::::i     z::::::z     e::::::eeeeeeeeeee
-//   i::::i  n::::n    n::::n i::::i      t:::::t    tttttt i::::i a::::a    a:::::a  l::::l  i::::i    z::::::z      e:::::::e
-//  i::::::i n::::n    n::::ni::::::i     t::::::tttt:::::ti::::::ia::::a    a:::::a l::::::li::::::i  z::::::zzzzzzzze::::::::e
-//  i::::::i n::::n    n::::ni::::::i     tt::::::::::::::ti::::::ia:::::aaaa::::::a l::::::li::::::i z::::::::::::::z e::::::::eeeeeeee
-//  i::::::i n::::n    n::::ni::::::i       tt:::::::::::tti::::::i a::::::::::aa:::al::::::li::::::iz:::::::::::::::z  ee:::::::::::::e
-//  iiiiiiii nnnnnn    nnnnnniiiiiiii         ttttttttttt  iiiiiiii  aaaaaaaaaa  aaaalllllllliiiiiiiizzzzzzzzzzzzzzzzz    eeeeeeeeeeeeee
-//
 // Initializes the websites list with the links saved in storage
 // Using Google.sync.storage allows the links to persist through devices as the
 //  data is saved to the Google account currently signed in
@@ -260,25 +242,6 @@ function getUserLinksFromStorageAndAddToPopup() {
   });
 }
 
-//
-//    iiii                     iiii          tttt          LLLLLLLLLLL               iiii                            tttt
-//   i::::i                   i::::i      ttt:::t          L:::::::::L              i::::i                        ttt:::t
-//    iiii                     iiii       t:::::t          L:::::::::L               iiii                         t:::::t
-//                                        t:::::t          LL:::::::LL                                            t:::::t
-//  iiiiiiinnnn  nnnnnnnn    iiiiiiittttttt:::::ttttttt      L:::::L               iiiiiii     ssssssssss   ttttttt:::::ttttttt
-//  i:::::in:::nn::::::::nn  i:::::it:::::::::::::::::t      L:::::L               i:::::i   ss::::::::::s  t:::::::::::::::::t
-//   i::::in::::::::::::::nn  i::::it:::::::::::::::::t      L:::::L                i::::i ss:::::::::::::s t:::::::::::::::::t
-//   i::::inn:::::::::::::::n i::::itttttt:::::::tttttt      L:::::L                i::::i s::::::ssss:::::stttttt:::::::tttttt
-//   i::::i  n:::::nnnn:::::n i::::i      t:::::t            L:::::L                i::::i  s:::::s  ssssss       t:::::t
-//   i::::i  n::::n    n::::n i::::i      t:::::t            L:::::L                i::::i    s::::::s            t:::::t
-//   i::::i  n::::n    n::::n i::::i      t:::::t            L:::::L                i::::i       s::::::s         t:::::t
-//   i::::i  n::::n    n::::n i::::i      t:::::t    tttttt  L:::::L         LLLLLL i::::i ssssss   s:::::s       t:::::t    tttttt
-//  i::::::i n::::n    n::::ni::::::i     t::::::tttt:::::tLL:::::::LLLLLLLLL:::::Li::::::is:::::ssss::::::s      t::::::tttt:::::t
-//  i::::::i n::::n    n::::ni::::::i     tt::::::::::::::tL::::::::::::::::::::::Li::::::is::::::::::::::s       tt::::::::::::::t
-//  i::::::i n::::n    n::::ni::::::i       tt:::::::::::ttL::::::::::::::::::::::Li::::::i s:::::::::::ss          tt:::::::::::tt
-//  iiiiiiii nnnnnn    nnnnnniiiiiiii         ttttttttttt  LLLLLLLLLLLLLLLLLLLLLLLLiiiiiiii  sssssssssss              ttttttttttt
-//
-// Function initList()
 // Creates the li objects with the values passed in from getUserLinksFromStorageAndAddToPopu()p
 // The reason this function exists is to avoid race conditions between the for loop
 //  iteration and the value sent into the get(). The loop resolves faster than the
@@ -370,25 +333,6 @@ function submit() {
   isBanned(url, name, "submit"); // Adds safe links to UI...todo refactor?
 }
 
-//                                                                                                                                    dddddddd
-//    iiii                   BBBBBBBBBBBBBBBBB                                                                                        d::::::d     ((((((  ))))))
-//   i::::i                  B::::::::::::::::B                                                                                       d::::::d   ((::::::()::::::))
-//    iiii                   B::::::BBBBBB:::::B                                                                                      d::::::d ((:::::::(  ):::::::))
-//                           BB:::::B     B:::::B                                                                                     d:::::d (:::::::((    )):::::::)
-//  iiiiiii     ssssssssss     B::::B     B:::::B  aaaaaaaaaaaaa  nnnn  nnnnnnnn    nnnn  nnnnnnnn        eeeeeeeeeeee        ddddddddd:::::d (::::::(        )::::::)
-//  i:::::i   ss::::::::::s    B::::B     B:::::B  a::::::::::::a n:::nn::::::::nn  n:::nn::::::::nn    ee::::::::::::ee    dd::::::::::::::d (:::::(          ):::::)
-//   i::::i ss:::::::::::::s   B::::BBBBBB:::::B   aaaaaaaaa:::::an::::::::::::::nn n::::::::::::::nn  e::::::eeeee:::::ee d::::::::::::::::d (:::::(          ):::::)
-//   i::::i s::::::ssss:::::s  B:::::::::::::BB             a::::ann:::::::::::::::nnn:::::::::::::::ne::::::e     e:::::ed:::::::ddddd:::::d (:::::(          ):::::)
-//   i::::i  s:::::s  ssssss   B::::BBBBBB:::::B     aaaaaaa:::::a  n:::::nnnn:::::n  n:::::nnnn:::::ne:::::::eeeee::::::ed::::::d    d:::::d (:::::(          ):::::)
-//   i::::i    s::::::s        B::::B     B:::::B  aa::::::::::::a  n::::n    n::::n  n::::n    n::::ne:::::::::::::::::e d:::::d     d:::::d (:::::(          ):::::)
-//   i::::i       s::::::s     B::::B     B:::::B a::::aaaa::::::a  n::::n    n::::n  n::::n    n::::ne::::::eeeeeeeeeee  d:::::d     d:::::d (:::::(          ):::::)
-//   i::::i ssssss   s:::::s   B::::B     B:::::Ba::::a    a:::::a  n::::n    n::::n  n::::n    n::::ne:::::::e           d:::::d     d:::::d (::::::(        )::::::)
-//  i::::::is:::::ssss::::::sBB:::::BBBBBB::::::Ba::::a    a:::::a  n::::n    n::::n  n::::n    n::::ne::::::::e          d::::::ddddd::::::dd(:::::::((    )):::::::)
-//  i::::::is::::::::::::::s B:::::::::::::::::B a:::::aaaa::::::a  n::::n    n::::n  n::::n    n::::n e::::::::eeeeeeee   d:::::::::::::::::d ((:::::::(  ):::::::))
-//  i::::::i s:::::::::::ss  B::::::::::::::::B   a::::::::::aa:::a n::::n    n::::n  n::::n    n::::n  ee:::::::::::::e    d:::::::::ddd::::d   ((::::::()::::::)
-//  iiiiiiii  sssssssssss    BBBBBBBBBBBBBBBBB     aaaaaaaaaa  aaaa nnnnnn    nnnnnn  nnnnnn    nnnnnn    eeeeeeeeeeeeee     ddddddddd   ddddd     ((((((  ))))))
-//
-// Function isBanned
 // Extract the domain name from the inputted url and check if the input's
 //  domain name is a porn site domain
 // Ya boi Vivek out here writing a porn filter ayy lmao
@@ -415,7 +359,6 @@ function isBanned(url, name, origin) {
   });
 }
 
-// Function isBannedURLRaceCondition()
 // Race condition boooooo
 // This function does the checking of a link's ban-status. It exists to remove the undesired effects
 //  from asynchronous behaviors that were affecting PorNo!'s functionality

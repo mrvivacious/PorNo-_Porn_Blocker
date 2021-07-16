@@ -88,7 +88,7 @@ $(document).ready(function () {
 
 // todo A test function that should be removed in future (or associated with a proper button idk)
 $(document).on("click", "#testStats", function () {
-  chrome.storage.local.get("redirectionHistory", function (returnValue) {
+  chrome.storage.sync.get("redirectionHistory", function (returnValue) {
     let redirectionHistory = returnValue.redirectionHistory;
 
     // pretty print for debugging sake
@@ -97,7 +97,7 @@ $(document).on("click", "#testStats", function () {
     for (let i = 0; redirectionHistory[i]; i++) {
       let time = redirectionHistory[i];
       let date = new Date(time);
-      console.log(date);
+      // console.log(date);
       prettyPrint += date.toLocaleString();
       prettyPrint += "\n";
     }
@@ -226,7 +226,10 @@ function getUserLinksFromStorageAndAddToPopup() {
       //  and collect the names associated and add them to the list,
       //  one at a time with initList()
       // 4/27/18 - I encountered asynchronous programming
-      for (let i = 0; urls[i] !== undefined; i++) {
+      for (let i = 0; urls[i]; i++) {
+        if (urls[i] === "redirectionHistory") {
+          continue;
+        }
         initList(urls[i]);
       }
     }
@@ -525,6 +528,9 @@ function openAllRedirectLinks() {
 
     // https://stackoverflow.com/questions/43031988
     for (let i = 0, n = urls.length; i < n; i++) {
+      if (urls[i] === "redirectionHistory") {
+        continue;
+      }
       openURLInNewWindow(urls[i]);
     }
   });

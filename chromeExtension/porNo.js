@@ -11,7 +11,6 @@
 //  to retrieve values, contrary to what I believed....
 
 let links = [];
-let size = -1;
 let counter = 0;
 let safeSearch = "&safe=active";
 let defaultLink = "https://github.com/mrvivacious/PorNo-_Porn_Blocker";
@@ -20,7 +19,6 @@ let defaultLink = "https://github.com/mrvivacious/PorNo-_Porn_Blocker";
 // Let's go
 main();
 
-// Function main()
 // Evaluates current site for ban status
 function main() {
   let location = window.location;
@@ -92,7 +90,6 @@ function checkURL() {
   // checkTitle();
 }
 
-// Function PorNo()
 // Adds links from storage to our links array so that
 // openLink() can select a random wholesome link to fill the user's window with
 function PorNo() {
@@ -101,20 +98,20 @@ function PorNo() {
   // Get all/no urls currently in storage
   chrome.storage.sync.get(null, function (items) {
     urls = Object.keys(items);
-    size = urls.length;
 
-    // If urls[0] is undefined (aka nothing exists in storage), open
-    //  the default link
     if (urls[0] !== undefined) {
       // Iterate through the urls array
       //  and add the urls to our links list to select from
       for (let i = 0; urls[i] !== undefined; i++) {
+        if (urls[i] === "redirectionHistory") {
+          continue;
+        }
         links.push(urls[i]);
       }
 
       openLink();
     } else {
-      // When your wholesome list is empty, redirect to quality education
+      // User redirect list is empty!
       window.location.href = defaultLink;
     }
 
@@ -123,49 +120,31 @@ function PorNo() {
 }
 
 function addRedirectionEventToHistory() {
-  chrome.storage.local.get("redirectionHistory", function (returnValue) {
+  chrome.storage.sync.get("redirectionHistory", function (returnValue) {
     // https://stackoverflow.com/questions/4673527
     let redirectionHistory = returnValue.redirectionHistory;
     let currentTimeInMillis = new Date().getTime();
 
     if (!redirectionHistory) {
-      chrome.storage.local.set({ redirectionHistory: [currentTimeInMillis] });
+      chrome.storage.sync.set({ redirectionHistory: [currentTimeInMillis] });
     } else {
       redirectionHistory.push(currentTimeInMillis);
-      chrome.storage.local.set({
+      chrome.storage.sync.set({
         redirectionHistory: redirectionHistory,
       });
     }
-
-    // pretty print for debugging sake
-    let prettyPrint = "STATISTICS DEBUG:\n\n";
-    // for (let i = 0, n = redirectionHistory.length; i < n; i++) {
-    for (let i = 0; redirectionHistory[i]; i++) {
-      let time = redirectionHistory[i];
-      let date = new Date(time);
-      console.log(date);
-      prettyPrint += date.toLocaleString();
-      prettyPrint += "\n";
-    }
-
-    alert(prettyPrint);
   });
 }
 
-// Function openLink()
 // Redirects users to a random website from their wholesome sites lists
 // Runs only after links[] is fully filled with the links from storage
 function openLink() {
-  // Selecting a random link
-  let linkIndex = Math.floor(Math.random() * links.length);
-  let linkToOpen = links[linkIndex];
+  let randomLink = links[Math.floor(Math.random() * links.length)];
   // Open within same window
-  window.location.href = linkToOpen;
+  window.location.href = randomLink;
 }
 
-// Function evaluateWords()
-// Goes through bannedWordsList and counts the number of banned words
-//  in the current window's url
+// Counts the number of banned words in the current URL
 function evaluateWords() {
   let counter = 0;
 
@@ -179,7 +158,7 @@ function evaluateWords() {
     url = url.replace("+", " ");
   }
 
-  // mfw 12000~ array size
+  // mfw 12000~ length
   // console.log(url);
   // console.log('evaluateWords() -- List of keywords:');
   for (let i = 0; i < bannedWordsList.length; i++) {
@@ -198,7 +177,6 @@ function evaluateWords() {
   return false;
 }
 
-// Function checkTitle()
 // Evaluates the title of the current page for porn clues
 // NOT a better indicator than the URL (don't use!)
 function checkTitle() {
@@ -222,7 +200,7 @@ function checkTitle() {
 }
 
 function store(url) {
-  // If there is a www. header, remove it
+  // Save domain without www.
   if (url.includes("www.")) {
     let idxOfPeriod = url.indexOf(".");
     url = url.substring(idxOfPeriod + 1, url.length);
@@ -250,25 +228,6 @@ function store(url) {
   });
 }
 
-//                                                                                                                                    dddddddd
-//    iiii                   BBBBBBBBBBBBBBBBB                                                                                        d::::::d     ((((((  ))))))
-//   i::::i                  B::::::::::::::::B                                                                                       d::::::d   ((::::::()::::::))
-//    iiii                   B::::::BBBBBB:::::B                                                                                      d::::::d ((:::::::(  ):::::::))
-//                           BB:::::B     B:::::B                                                                                     d:::::d (:::::::((    )):::::::)
-//  iiiiiii     ssssssssss     B::::B     B:::::B  aaaaaaaaaaaaa  nnnn  nnnnnnnn    nnnn  nnnnnnnn        eeeeeeeeeeee        ddddddddd:::::d (::::::(        )::::::)
-//  i:::::i   ss::::::::::s    B::::B     B:::::B  a::::::::::::a n:::nn::::::::nn  n:::nn::::::::nn    ee::::::::::::ee    dd::::::::::::::d (:::::(          ):::::)
-//   i::::i ss:::::::::::::s   B::::BBBBBB:::::B   aaaaaaaaa:::::an::::::::::::::nn n::::::::::::::nn  e::::::eeeee:::::ee d::::::::::::::::d (:::::(          ):::::)
-//   i::::i s::::::ssss:::::s  B:::::::::::::BB             a::::ann:::::::::::::::nnn:::::::::::::::ne::::::e     e:::::ed:::::::ddddd:::::d (:::::(          ):::::)
-//   i::::i  s:::::s  ssssss   B::::BBBBBB:::::B     aaaaaaa:::::a  n:::::nnnn:::::n  n:::::nnnn:::::ne:::::::eeeee::::::ed::::::d    d:::::d (:::::(          ):::::)
-//   i::::i    s::::::s        B::::B     B:::::B  aa::::::::::::a  n::::n    n::::n  n::::n    n::::ne:::::::::::::::::e d:::::d     d:::::d (:::::(          ):::::)
-//   i::::i       s::::::s     B::::B     B:::::B a::::aaaa::::::a  n::::n    n::::n  n::::n    n::::ne::::::eeeeeeeeeee  d:::::d     d:::::d (:::::(          ):::::)
-//   i::::i ssssss   s:::::s   B::::B     B:::::Ba::::a    a:::::a  n::::n    n::::n  n::::n    n::::ne:::::::e           d:::::d     d:::::d (::::::(        )::::::)
-//  i::::::is:::::ssss::::::sBB:::::BBBBBB::::::Ba::::a    a:::::a  n::::n    n::::n  n::::n    n::::ne::::::::e          d::::::ddddd::::::dd(:::::::((    )):::::::)
-//  i::::::is::::::::::::::s B:::::::::::::::::B a:::::aaaa::::::a  n::::n    n::::n  n::::n    n::::n e::::::::eeeeeeee   d:::::::::::::::::d ((:::::::(  ):::::::))
-//  i::::::i s:::::::::::ss  B::::::::::::::::B   a::::::::::aa:::a n::::n    n::::n  n::::n    n::::n  ee:::::::::::::e    d:::::::::ddd::::d   ((::::::()::::::)
-//  iiiiiiii  sssssssssss    BBBBBBBBBBBBBBBBB     aaaaaaaaaa  aaaa nnnnnn    nnnnnn  nnnnnn    nnnnnn    eeeeeeeeeeeeee     ddddddddd   ddddd     ((((((  ))))))
-//
-// Function isBanned
 // Extract the domain name from the inputted url and check if the input's
 //  domain name is a porn site domain
 // Ya boi Vivek out here writing a porn filter
@@ -278,7 +237,7 @@ function isBannedFirebase(linksFromFirebase) {
   //  in order to collect only the domain name
   let url = window.location.href.toLowerCase();
 
-  // fightthenewdrug was flagged...let's avoid that
+  // fightthenewdrug was flagged...create a safeList checker method
   if (
     linksFromFirebase &&
     !url.includes("fightthenewdrug") &&

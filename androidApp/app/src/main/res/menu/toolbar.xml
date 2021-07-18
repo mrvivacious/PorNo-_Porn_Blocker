@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Thank you, https://stackoverflow.com/questions/17311833/how-we-can-add-menu-item-dynamically -->
+    <item
+        android:id="@+id/email"
+        android:title="@string/action_email_me"
+        android:onClick="sendEmail" />
+
+    <item
+        android:id="@+id/about"
+        android:title="@string/menu_about_activity"
+        android:onClick="openActivityForAboutPorNo" />
+
+    <item
+        android:id="@+id/howTo"
+        android:title="@string/menu_instructions"
+        android:onClick="openAlertDialogForInstructions" />
+
+    <item
+        android:id="@+id/action_refresh"
+        android:title="@string/menu_update"
+        android:onClick="updateLinks"/>
+
+    <item
+        android:id="@+id/chrome"
+        android:title="@string/menu_chrome_extension"
+        android:onClick="openUrlForChromeExtension" />
+
+    <item
+        android:id="@+id/privacyPolicy"
+        android:title="@string/menu_privacy_policy"
+        android:onClick="openUrlForPrivacyPolicy" />
+
+    <item
+        android:id="@+id/gitHub"
+        android:title="@string/menu_source_code"
+        android:onClick="openUrlForGitHub" />
+
+</menu>
+

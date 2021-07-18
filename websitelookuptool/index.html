@@ -1,0 +1,42 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title></title>  
+        <link rel="stylesheet" href="style.css"> 
+        <script src="../lists.js"></script>
+        <script >
+            function feedback(){
+                
+                console.log(pornMap)
+                //get url from user
+                var str = document.getElementById("text1").value.toLowerCase();
+                var bool_str = pornMap[str];
+                bool_str = bool_str ? "is" : "is not";
+                //store this url
+                localStorage.setItem('url', str);
+                let url = localStorage.getItem('url');
+                //feedback
+                if (str.indexOf('.') === -1) {
+                    alert("invalid url");
+                    return 0;
+                }
+                for (var i = 0; i < str.length; i++) {
+                    var thisChar = str.charAt(i);
+                    if (!((/[a-zA-Z]/).test(thisChar)) && thisChar !== '.' && thisChar !== '-') {
+                        alert("invalid url");
+                        return 0;
+                    }
+                }
+                alert(url + " " + bool_str + " a porn site");
+                
+                localStorage.removeItem('url');
+                return 0;
+            } 
+        </script>
+    </head>
+    <body>
+        <h1>Type a URL!</h1> 
+        <input id="text1" placeholder="Enter a url">
+        <button onclick="feedback()" id="button1">search</button>
+    </body>
+</html>

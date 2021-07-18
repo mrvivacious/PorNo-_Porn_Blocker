@@ -1,0 +1,16 @@
+
+√ thoughts.html -- my thoughts regarding how porn works (gender role promotion,
+   masculinity and misogyny promotion, sexual drive increase + decrease of other non-sexual stimuli...)
+   and
+   the importance of not using it at all (don't support it, don't support sex trade and sex work,
+    sexual fulfillment can be attained through healthier means)
+  This are all my theories, finding support for them would be solid tho $$$$$
+
+–––
+
+  √ help.html -- breaks down the functionality
+  √ (somewhat) welcome page -- provides links to other pages and offers
+   abiilty to share PorNo!, submit errors/comments, review,
+   and donate to porn-related charities
+   √ porNo.html -- the "about PorNo!" page: why I built it, goals of PorNo!, explaining my idea of redirection,
+     and the features of PorNo! and how to access and use them

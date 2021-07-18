@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>PorNo!</title>
+  <link rel="icon" src="icons/porNo_icon.png">
+  <style type="text/css">
+
+  body {
+    display: block;
+    background-color: pink;
+    margin: 10px;
+  /* background: #FF82AB; */
+  }
+
+  p {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-size: 22px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  align: center;
+  /* color: DeepPink; */
+  color: black;
+  /* line-height: 20px; */
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  h3 {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
+  }
+
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    /* border-top: 1px solid black; */
+    border-top: 1px solid white;
+    margin: 0em 0;
+    padding: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .vertical-menu {
+  width: 100%; /* Set a width if you like */
+  }
+
+  .vertical-menu a {
+      display: block; /* Make the links appear below each other */
+      padding: 12px; /* Add some padding */
+  }
+
+  a:link {
+    color: blanchedAlmond;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+  }
+
+    a:visited {
+      color: blanchedAlmond;
+      background-color: transparent;
+      text-decoration: none;
+      outline: none;
+    }
+
+    a:hover {
+      color: DeepPink;
+      background-color: transparent;
+      outline: none;
+      /*text-decoration: underline;*/
+    }
+
+    #containerPost {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    }
+    #leftPost {
+      width: 20%;
+      margin-right: 20px;
+    }
+    #middlePost {
+      width: 60%;
+      margin-right: 20px;
+    }
+    #rightPost {
+      width: 20%;
+    }
+
+  #container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    /* width: 350px; */
+  }
+
+  #w {
+    font-size: 45px;
+    margin-left: 25px;
+    /* color: brown; */
+    color: white;
+  }
+
+  #list {
+    margin-left: 30px;
+    font-style: italic;
+    color: white;
+  }
+
+  #containerthirds {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  }
+  #left {
+    width: 33%;
+    margin-right: 20px;
+  }
+  #mid {
+    width: 33%;
+    margin-right: 20px;
+  }
+  #right {
+    width: 33%;
+  }
+
+  </style>
+  <script src="jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-firestore.js"></script>
+  <script src="MagicalMessages.js"></script>
+  <script src="linkManager.js"></script>
+</head>
+
+<body>
+  <!-- <h1><em><a href="../popup.html">Home</a></em></h1> -->
+  <div id="container">
+    <div id="vertical-menu" class="vertical-menu">
+      <p align="center" style="margin-bottom:50px;"><em>This page is a different colorset than
+      the others because I'm experimenting. Please disregard, haha.</em></p>
+      <p align="center" style="font-size:100px; margin-bottom:50px;"><em><a href="welcome.html">PorNo!</a></em></p>
+      <!-- <p align="center" style="font-size: 30px; color: DeepPink;">How to use <em>PorNo!</em></p> -->
+      <p align="center" style="font-size: 24px; color: black;"><em>PorNo!</em> will automatically redirect from porn sites.
+         <br>All you have to do is add links.</p>
+
+      <hr>
+
+      <div id="containerthirds">
+        <div id="left" align="center">
+        <a href="porNo.html">
+          <h3>About</h3>
+          <hr>
+        </a>
+        </div>
+
+        <div id="mid" align="center">
+        <a href="help.html">
+          <h3>How to use</h3>
+          <hr>
+        </a>
+        </div>
+
+        <div id="right" align="center">
+        <a href="thoughts.html">
+          <h3>My thoughts</h3>
+          <hr>
+        </a>
+        </div>
+      </div>
+
+    <!-- How to begins -->
+    <div id="containerPost">
+      <div id="leftPost"></div>
+        <div id="middlePost>">
+        <p id="list" align="center">0. Commit.
+        </p>
+        <hr>
+        <p align="center" style="color:black; font-size:18px;">
+          Welcome! To get the best results of beating your addiction/impulse/whatever it may be,
+           there are some suggestions I have for you.
+           <br><br>
+           First, I suggest that you keep in mind what an addiction to anything is:
+           <br>
+           An addiction to some entity A develops as one continues to find pleasure in the entity A.
+           As more and more pleasure is received, the brain will strengthen more and more neurons that associate pleasure
+           with A. As a result: The stronger the associations with A, the greater pull one feels towards A when s/he isn't using A.
+           <br>
+           An example: When you are hungry, your brain provides thoughts of food and eating. This is because
+           the pains of hunger transform into pleasure when the body receives food. The hungrier one is, the
+           more thoughts s/he will have about food and consumption, as humans are directly addicted to eating (because
+           not eating results in death).
+
+           <br><br>
+           My next suggestion is to spend more time away from your computer and phone when you don't need to be on them.
+           <br>
+           In my experience, spending time with family, friends, outdoors, and with people in my free time
+           helped me escape thoughts regarding porn and porn use. Of course, when I have to use my computer for homework
+           and etc, I try to focus on my homework. When a distracting thought appears, I'll stop what I'm doing and
+           go talk to a friend or get away from my computer for a bit.
+
+           <br><br>
+           In the case that you feel tempted to visit porn while on your phone, visit instead the sites you've
+           saved in <em>PorNo!</em> on your computer. This may help redirect your energy and thoughts to the same level
+           as your computer does.
+
+           <br><br>
+           Spend more time with members of your desired sexual preference (ie I am a heterosexual male, so my desired preference of gender is female).
+           <br>
+           By interacting with more "real people" of the gender, you dissolve your brain's strong images of porn associated with the desired gender.
+           This is very helpful with overcoming the false ideas portrayed in porn, resulting in giving you a better understanding of the people in the
+           world. Additionally, you'll meet some very cool people along the way, and your brain will rewire its pleasure receptors
+           with the appreciation of individuals beyond surface level, which weakens the pull that porn has on your mind and possibly
+           helping you make some super neat friends!
+
+           <br><br>
+           Finally, commit. Make a resolution and resolve it. Fail unwillingly, succeed willingly.
+           <br>
+           Treat this journey with the discipline you would if you trained for your favorite sport/hobby/profession/etc.
+           <br>
+           The effects of porn use are quite terrible, and the benefits of overcoming them are quite terrific. You won't miss
+           out on anything once you've stopped filling your time with porn -- in fact, you'll find yourself spending that time on
+           things you enjoy and bring you greater joy.
+           <br>
+           This process of this detox is tough, but not impossible. Every time you relapse, note down what contributed to you
+           relapsing. Learn how to avoid those factors, and try again. The more you learn about the habits you've created and how to avoid
+           them, the better you'll get at overcoming your urges. If it helps, get a friend to join you on your journey to
+           help serve as extra motivation.
+           <br>
+
+           <br><br>
+           You've got what it takes, but there will be times where it will take everything you've got.
+           <br>Make a better future, right now.
+        </p>
+
+        <hr>
+        <p id="list" align="center">1. Find all the websites, articles, songs, pictures...etc,
+          that motivate and empower you. The more meaningful your links, the more meaningful your experience!
+        </p>
+        <hr>
+        <p align="center" style="color:black; font-size:18px;">
+          For example, here are some links I use and why:
+          <br>
+          <a href="https://github.com/mrvivacious?tab=repositories" target="_blank">
+            My Github.</a>My projects inspire me to keep trying
+            to improve what I build and to start/keep working on the ideas I have.
+          <br>
+          <a href="https://www.youtube.com/watch?v=T2r8X6GaxN4&list=LLbXFsP9kfnG3cUVvuz2v6HA" target="_blank">
+            My favorite music.</a>Listening to my favorite songs brings me greater and longer-lasting pleasure than
+            what I'd gain from watching porn. I'll happily lose myself in music over losing parts of myself.
+          <br>
+          <a href="https://www.youtube.com/watch?v=DmbWDhyY94o" target="_blank">
+            "Japan's DJ Monk Spins the Holiest Beats"</a>This video tells the story of a DJ who realized that he
+             could use music to convey messages of spirituality to others. Spritiuality and religion are important to me
+             and this video makes for a nice example of how we can continue to use modern technology and methods to make it easier
+              to share the simple ideas and beliefs that discuss acceptance, peace, love...etc that I wish to encourage more of in the world.
+        </p>
+
+        <hr>
+        <p id="list" align="center"><em>2. Copy the website address (http://www.example.com) and paste
+          it into the input box above the add button in the </em>PorNo!<em> menu.</em>
+        </p>
+        <hr>
+        <p align="center" style="font-size:18px;">Adding a name in the "Name this link?" input box will display
+          the title in the menu instead of the address to make the menu easier to read.
+           If this box is left blank, the website's address is displayed. Now, click the add button!
+        </p>
+
+        <hr>
+        <p id="list" align="center">3. Adding local files.
+        </p>
+        <hr>
+        <p align="center" style="font-size:18px;">You can add files on your computer too!
+          Just open a file in your browser (for example, right-click on an image
+          saved to your desktop, select "Open with Chrome", and the image should open in your browser window). Copy the file path in the search bar,
+           paste it into <em>PorNo!</em>, name the link if you desire, and select add. That's how you add files!
+        </p>
+
+        <hr>
+        <p id="list" align="center">4. To delete links, simply click the x in the rightmost side of each link.
+        </p>
+        <hr>
+
+        <p id="list" align="center">5. The EMERGENCY button.
+        </p>
+        <hr>
+        <p align="center" style="font-size:18px;">The EMERGENCY button is there for the times
+          when you feel that you could use a little bit more help. Clicking it opens all of the links you've saved,
+           so that you can view all the things that inspire you, empower you, define you...as a gentle reminder of what's important.
+        </p>
+        <hr>
+
+        <p id="list" align="center">6. Receiving updates.
+        </p>
+        <hr>
+        <p align="center" style="font-size:18px;">There are two ways to receive updates!
+          <br>The first way is to do nothing. As I push updates to <em>PorNo!</em>, your version of <em>PorNo!</em> will update automatically!
+          <br>The second way is to open the <em>PorNo!</em> menu for a few seconds every now and then. Due to the way <em>PorNo!</em> is written,
+           <em>PorNo!</em> is allowed to communicate with the <em>PorNo!</em> database only when the menu is open. By opening the menu for 5 to 10 seconds once every few days,
+            you allow your copy of <em>PorNo!</em> to download the latest links straight from the database.
+        </p>
+        <hr>
+
+        <p id="list" align="center">7. Notify Vivek of problems.
+        </p>
+        <hr>
+        <p align="center" style="font-size:18px;">Found a problem with <em>PorNo!</em>? Found some websites that bypassed
+          the algorithm? Feel like sharing how you've benefited from <em>PorNo!</em>, and everything else? Send me an email at
+          <a href="mailto:jvnnvt@gmail.com?Subject=PorNo!" target="_top">jvnnvt@gmail.com</a>
+          Any and all mail is appreciated ^_^ .
+        </p>
+        <hr>
+
+        <p id="list" align="center"><em>Extra: For those who want to use </em>PorNo!<em> anonymously for whatever reason,</em>
+        </p>
+        <hr>
+        <p align="center" style="font-size:18px;">Right-click on the <em>PorNo!</em> icon
+          (yellow heart) and select "Hide in Chrome Menu". To access <em>PorNo!</em>, select the row of three vertical dots
+           in the rightmost side of your browser (to the right of the website address bar)
+           and select the <em>PorNo!</em> icon. <em>PorNo!</em>'s menu will appear for full use, but will disappear back into hiding when you're finished
+            using it. All the functionality of <em>PorNo!</em>, tucked away for your desired privacy!
+          <br>To bring the icon back, right-click on the icon while in the menu and select "Keep in toolbar".
+        </p>
+      </div>
+      <div id="rightPost"></div>
+    </div>
+      <hr>
+      <!-- How to ends -->
+
+      <p align="center" style="font-size:18px;"><em>Thank you for using </em>PorNo!<em>!</em>
+        <br>Vivek Bhookya
+        <br>
+      </p>
+
+    </div>
+  </div>
+</body>
+
+</html>

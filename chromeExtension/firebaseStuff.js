@@ -42,7 +42,12 @@ function DBOperations(linkNames) {
   ) {
     let val = linkNames[currentLink];
 
-    if (val !== "realtimeBannedLinks" && val !== "notFirstTime") {
+    if (
+      val !== "realtimeBannedLinks" &&
+      val !== "notFirstTime" &&
+      val !== "redirectionHistory" &&
+      val !== "lastTimestampSynced" // todo please establish a better data schema smh
+    ) {
       db.collection("links").doc(val).set({
         // Adding this line will write another document ( links -> link -> link:currentLink )
         url: val,
@@ -98,4 +103,79 @@ function DBOperations(linkNames) {
     .catch(function (error) {
       console.log("ERROR UH OH:  " + error);
     });
+
+  // Metrics
+  chrome.storage.sync.get("lastTimestampSynced", function (returnedTimestamp) {
+    let timestamp = returnedTimestamp.lastTimestampSynced;
+
+    chrome.storage.sync.get("redirectionHistory", function (returnedHistory) {
+      let history = returnedHistory.redirectionHistory;
+
+      if (!history) {
+        return;
+      }
+      let startIndex = history.lastIndexOf(timestamp) + 1;
+      let newEvents = history.slice(startIndex, history.length);
+
+      if (newEvents.length < 1) {
+        return;
+      }
+
+      // todo make into new method
+      let reformattedTimestamp = getTimestampAsYearMonth(newEvents[0]);
+      let year = String(reformattedTimestamp[0]);
+      let month = String(reformattedTimestamp[1]);
+      let metrics = db.collection("metrics").doc(year);
+      metrics
+        .get()
+        .then(function (doc) {
+          if (doc.exists) {
+            let allEvents = doc.data()[month];
+
+            if (!allEvents) {
+              allEvents = [];
+            }
+
+            // console.log("There have been this many recorded redirects: " + allEvents.length);
+            for (let i = 0, n = newEvents.length; i < n; i++) {
+              allEvents.push(newEvents[i]);
+            }
+
+            // console.log(allEvents.length);
+
+            db.collection("metrics")
+              .doc(year)
+              .set({
+                [month]: allEvents,
+              });
+
+            chrome.storage.sync.set({
+              lastTimestampSynced: newEvents[newEvents.length - 1],
+            });
+          } else {
+            // doc.data() will be undefined
+            console.log("NO SUCH DOCUMENT: " + year);
+            db.collection("metrics")
+              .doc(year)
+              .set({
+                [month]: newEvents,
+              });
+
+            chrome.storage.sync.set({
+              lastTimestampSynced: newEvents[newEvents.length - 1],
+            });
+          }
+        })
+        .catch(function (error) {
+          console.log("ERROR UH OH: " + error);
+        });
+    });
+  });
+}
+
+function getTimestampAsYearMonth(timestamp) {
+  let timestampAsDate = new Date(timestamp);
+  let year = timestampAsDate.getUTCFullYear();
+  let month = timestampAsDate.getUTCMonth();
+  return [year, month];
 }

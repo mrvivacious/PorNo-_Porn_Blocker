@@ -227,7 +227,10 @@ function getUserLinksFromStorageAndAddToPopup() {
       //  one at a time with initList()
       // 4/27/18 - I encountered asynchronous programming
       for (let i = 0; urls[i]; i++) {
-        if (urls[i] === "redirectionHistory") {
+        if (
+          urls[i] === "redirectionHistory" ||
+          urls[i] === "lastTimestampSynced"
+        ) {
           continue;
         }
         initList(urls[i]);
@@ -528,7 +531,10 @@ function openAllRedirectLinks() {
 
     // https://stackoverflow.com/questions/43031988
     for (let i = 0, n = urls.length; i < n; i++) {
-      if (urls[i] === "redirectionHistory") {
+      if (
+        urls[i] === "redirectionHistory" ||
+        urls[i] === "lastTimestampSynced"
+      ) {
         continue;
       }
       openURLInNewWindow(urls[i]);

@@ -65,6 +65,10 @@ chrome.storage.local.get("notFirstTime", function (returnValue) {
     openURLInSameWindow("user_manual/welcome.html");
     openURLInSameWindow("user_manual/help.html"); // Replace with youtube video
     chrome.storage.local.set({ notFirstTime: true }, function () {});
+    chrome.storage.sync.set(
+      { lastTimestampSynced: new Date().getTime() },
+      function () {}
+    ); // TODO test this on raw install
   }
 });
 
@@ -79,12 +83,45 @@ $(document).ready(function () {
   updateDB(); // todo rename syncWithFirebase()
   ifIncognitoIsEnabledThenRemovePrompt();
   getUserLinksFromStorageAndAddToPopup(); // clean code says to break this into two functions get...() and add...()
+  showStreakInPopup();
 
   // Popup-internal behavior for the add button and the incognito tip message
   $("#submit").click(submit);
   $("#setIncognito").click(openExtensionSettingsPage);
   $("#emergency").click(openAllRedirectLinks);
 });
+
+let start = new Date().getTime();
+function showStreakInPopup() {
+  // calculate diff
+  chrome.storage.sync.get("lastTimestampSynced", function (returnedTimestamp) {
+    start = returnedTimestamp.lastTimestampSynced;
+    calculateDiff();
+  });
+}
+
+function calculateDiff() {
+  setInterval(updateClock, 1000);
+}
+
+function updateClock() {
+  https://stackoverflow.com/questions/26049855
+  let now = new Date().getTime();
+  var diff = Math.round((now - start) / 1000);
+
+  var d = Math.floor(
+    diff / (24 * 60 * 60)
+  ); /* though I hope she won't be working for consecutive days :) */
+  diff = diff - d * 24 * 60 * 60;
+  var h = Math.floor(diff / (60 * 60));
+  diff = diff - h * 60 * 60;
+  var m = Math.floor(diff / 60);
+  diff = diff - m * 60;
+  var s = diff;
+
+  document.getElementById("streak").innerHTML =
+    d + " day(s), " + h + " hour(s), " + m + " minute(s), " + s + " second(s)";
+}
 
 // todo A test function that should be removed in future (or associated with a proper button idk)
 $(document).on("click", "#testStats", function () {

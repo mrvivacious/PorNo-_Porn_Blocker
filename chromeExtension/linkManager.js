@@ -93,9 +93,13 @@ $(document).ready(function () {
 
 let start = new Date().getTime();
 function showStreakInPopup() {
-  // calculate diff
-  chrome.storage.sync.get("lastTimestampSynced", function (returnedTimestamp) {
-    start = returnedTimestamp.lastTimestampSynced;
+  chrome.storage.sync.get("redirectionHistory", function (returnedHistory) {
+    let history = returnedHistory.redirectionHistory;
+    if (!history) {
+      return;
+    }
+
+    start = history[history.length - 1];
     calculateDiff();
   });
 }
@@ -105,22 +109,30 @@ function calculateDiff() {
 }
 
 function updateClock() {
-  https://stackoverflow.com/questions/26049855
+  // https://stackoverflow.com/questions/26049855
   let now = new Date().getTime();
-  var diff = Math.round((now - start) / 1000);
+  let diff = Math.round((now - start) / 1000);
 
-  var d = Math.floor(
-    diff / (24 * 60 * 60)
-  ); /* though I hope she won't be working for consecutive days :) */
+  let d = Math.floor(diff / (24 * 60 * 60));
   diff = diff - d * 24 * 60 * 60;
-  var h = Math.floor(diff / (60 * 60));
+  let h = Math.floor(diff / (60 * 60));
   diff = diff - h * 60 * 60;
-  var m = Math.floor(diff / 60);
+  let m = Math.floor(diff / 60);
   diff = diff - m * 60;
-  var s = diff;
+  let s = diff;
 
-  document.getElementById("streak").innerHTML =
-    d + " day(s), " + h + " hour(s), " + m + " minute(s), " + s + " second(s)";
+  let streak = document.getElementById("streak");
+  if (streak) {
+    streak.innerHTML =
+      d +
+      " day(s), " +
+      h +
+      " hour(s), " +
+      m +
+      " minute(s), " +
+      s +
+      " second(s)<br>since your last redirect!";
+  }
 }
 
 // todo A test function that should be removed in future (or associated with a proper button idk)
@@ -151,7 +163,7 @@ $(document).on("keyup", function (event) {
 });
 
 // Gets the title attribute (the url) of the clicked li and sends that to openLink, which opens the url
-// Thank you https://stackoverflow.com/questions/34964039
+// https://stackoverflow.com/questions/34964039
 $(document).on("click", "li", function () {
   openURLInSameWindow(this.id);
 });
@@ -304,12 +316,16 @@ function initList(currentKey) {
         // This key:value pair is removed from storage in isBanned()
       } else {
         let name = returnValue[url];
+        let websiteList = document.getElementById("websites");
         let li = document.createElement("li");
-
         let t = document.createTextNode(name);
 
         li.appendChild(t);
-        document.getElementById("websites").appendChild(li);
+
+        if (!websiteList) {
+          return;
+        }
+        websiteList.appendChild(li);
 
         // ID the element we just made with its url
         li.id = url;

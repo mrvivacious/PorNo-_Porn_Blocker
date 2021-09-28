@@ -85,6 +85,10 @@ $(document).ready(function () {
   getUserLinksFromStorageAndAddToPopup(); // clean code says to break this into two functions get...() and add...()
   showStreakInPopup();
 
+  if (window.location.href.includes("/stats.html")) {
+    getRedirects();
+  }
+
   // Popup-internal behavior for the add button and the incognito tip message
   $("#submit").click(submit);
   $("#setIncognito").click(openExtensionSettingsPage);
@@ -136,24 +140,25 @@ function updateClock() {
 }
 
 // todo A test function that should be removed in future (or associated with a proper button idk)
-$(document).on("click", "#testStats", function () {
-  chrome.storage.sync.get("redirectionHistory", function (returnValue) {
-    let redirectionHistory = returnValue.redirectionHistory;
+// $(document).on("click", "#testStats", function () {
+//   window.open("stats.html");
+// chrome.storage.sync.get("redirectionHistory", function (returnValue) {
+//   let redirectionHistory = returnValue.redirectionHistory;
 
-    // pretty print for debugging sake
-    let prettyPrint = "STATISTICS DEBUG:\n\n";
-    // for (let i = 0, n = redirectionHistory.length; i < n; i++) {
-    for (let i = 0; redirectionHistory[i]; i++) {
-      let time = redirectionHistory[i];
-      let date = new Date(time);
-      // console.log(date);
-      prettyPrint += date.toLocaleString();
-      prettyPrint += "\n";
-    }
+//   // pretty print for debugging sake
+//   let prettyPrint = "STATISTICS DEBUG:\n\n";
+//   // for (let i = 0, n = redirectionHistory.length; i < n; i++) {
+//   for (let i = 0; redirectionHistory[i]; i++) {
+//     let time = redirectionHistory[i];
+//     let date = new Date(time);
+//     // console.log(date);
+//     prettyPrint += date.toLocaleString();
+//     prettyPrint += "\n";
+//   }
 
-    alert(prettyPrint);
-  });
-});
+//   alert(prettyPrint);
+// });
+// });
 
 // Allow enter key press to add links
 $(document).on("keyup", function (event) {

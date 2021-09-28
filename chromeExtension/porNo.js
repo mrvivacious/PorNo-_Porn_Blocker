@@ -103,7 +103,10 @@ function PorNo() {
       // Iterate through the urls array
       //  and add the urls to our links list to select from
       for (let i = 0; urls[i] !== undefined; i++) {
-        if (urls[i] === "redirectionHistory") {
+        if (
+          urls[i] === "redirectionHistory" ||
+          urls[i] === "lastTimestampSynced"
+        ) {
           continue;
         }
         links.push(urls[i]);

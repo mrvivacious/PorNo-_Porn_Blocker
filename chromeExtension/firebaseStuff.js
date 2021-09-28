@@ -141,8 +141,6 @@ function DBOperations(linkNames) {
               allEvents.push(newEvents[i]);
             }
 
-            // console.log(allEvents.length);
-
             db.collection("metrics")
               .doc(year)
               .set({
@@ -171,6 +169,70 @@ function DBOperations(linkNames) {
         });
     });
   });
+}
+
+function getRedirects() {
+  // FIREBASE STUFF
+  if (!API_KEY) {
+    console.warn(
+      '"Please set the Firebase credentials at the top of this file...with love, Vivek"'
+    );
+    return;
+  }
+
+  let config = {
+    apiKey: API_KEY,
+    authDomain: AUTH_DOMAIN,
+    databaseURL: DATABASE_URL,
+    projectId: PROJECT_ID,
+    storageBucket: STORAGE_BUCKET,
+    messagingSenderId: MESSAGING_SENDER_ID,
+  };
+  firebase.initializeApp(config);
+  let db = firebase.firestore();
+
+  // Silence warning and avoid app breaking
+  let settings = { /* your settings... */ timestampsInSnapshots: true };
+  db.settings(settings);
+
+  let metrics = db.collection("metrics").doc("2021");
+  metrics
+    .get()
+    .then(function (doc) {
+      if (doc.exists) {
+        let allEvents = doc.data()["6"];
+
+        if (!allEvents) {
+          allEvents = [];
+        }
+
+        console.log(
+          "There have been this many recorded redirects: " + allEvents.length
+        );
+
+        document.getElementById("redirects").innerText =
+          "There have been this many recorded redirects: " + allEvents.length;
+
+        // pretty print for debugging sake
+        let prettyPrint = "";
+        // for (let i = 0, n = redirectionHistory.length; i < n; i++) {
+        for (let i = 0; allEvents[i]; i++) {
+          let time = allEvents[i];
+          let date = new Date(time);
+          // console.log(date);
+          prettyPrint += date.toLocaleString();
+          prettyPrint += "\n";
+        }
+
+        document.getElementById("events").innerText = prettyPrint;
+      } else {
+        // doc.data() will be undefined
+        console.log("NO SUCH DOCUMENT: " + year);
+      }
+    })
+    .catch(function (error) {
+      console.log("ERROR UH OH: " + error);
+    });
 }
 
 function getTimestampAsYearMonth(timestamp) {

@@ -1,3 +1,11 @@
+# releaseNotes
+
+## 0.0.1.8
+
+- (Bug fix) Issue with PorNo! attempting to redirect to `/lastTimestampSynced`. This bug has been taken care of and PorNo! will redirect as usual.
+
+***
+
 ## 0.0.1.7
 
 - (Feature) Streak! See how long it's been since your last redirect. Hopefully this helps motivate users to keep going during tougher times.

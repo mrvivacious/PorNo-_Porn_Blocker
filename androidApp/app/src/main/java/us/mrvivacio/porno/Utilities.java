@@ -33,7 +33,7 @@ public class Utilities {
         File file = new File(dir, "links.txt");
 
         // Check if the file exists
-        // Thank you, https://stackoverflow.com/questions/15571496/how-to-check-if-a-folder-exists
+        // https://stackoverflow.com/questions/15571496
         if (!file.exists()) {
             // File doesn't exist, so let's return default url
             return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
@@ -97,7 +97,7 @@ public class Utilities {
             File file = new File(dir, "links.txt");
 
             // Check if the file exists
-            // Thank you, https://stackoverflow.com/questions/15571496/how-to-check-if-a-folder-exists
+            // https://stackoverflow.com/questions/15571496
             if (!file.exists()) {
                 // File doesn't exist, so let's create a new file and save today's date
                 FileOutputStream os = new FileOutputStream(file);
@@ -160,7 +160,7 @@ public class Utilities {
             File file = new File(dir, "links.txt");
 
             // Check if the file exists
-            // Thank you, https://stackoverflow.com/questions/15571496/how-to-check-if-a-folder-exists
+            // https://stackoverflow.com/questions/15571496
             if (!file.exists()) {
                 // File doesn't exist, so let's create a new file
                 FileOutputStream os = new FileOutputStream(file);
@@ -215,12 +215,8 @@ public class Utilities {
     }
 
     public static void removeFromFile(String url) {
-        // Back to our hero, file io
-        // Construct the filepath for the received month
         // First, get the path to external storage...
         File path = Environment.getExternalStorageDirectory();
-
-        // ...and specify the HappyBirthday folder in order to access our prevDate info
         File dir = new File(path.getAbsolutePath() + "/PorNo_user_data/");
 
         // Check if the directory exists
@@ -234,7 +230,7 @@ public class Utilities {
         File file = new File(dir, "links.txt");
 
         // Check if the file exists
-        // Thank you, https://stackoverflow.com/questions/15571496/how-to-check-if-a-folder-exists
+        // https://stackoverflow.com/questions/15571496/
         if (!file.exists()) {
             // no file no work
             return;

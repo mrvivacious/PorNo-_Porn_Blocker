@@ -14,7 +14,6 @@ public class porNo {
 
     /*
      * Function isPorn
-     * UNREFINED !! put me in another dedicated class of my own pleaseeeee
      * Checks only if the url contains any mention of a porn url
      * Ya boi Vivek out here writing a porn filter part 2!!!!!!!!!
      * @param url The url whose domain name we check against the porn sites
@@ -85,20 +84,9 @@ public class porNo {
 //                Log.d(TAG, "isPornDomain: only took " + (old - System.currentTimeMillis()));
                 return true;
             }
-
-            // O(n) worst case feels bad but whO(l)esome porn-checker feels good
-//            for (int i = 0; i < Domains.domains.length; i++) {
-//                if (url.contains(Domains.domains[i])) {
-//                    // GET THE FUCK OUTTTTTTTTTTTTTTT
-////                    Log.d(TAG, "isPorn: TRUE");
-//
-//                    return true;
-//                }
-//            }
         }
 
         // Inconclusive
         return false;
     }
-
 }

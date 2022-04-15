@@ -13,8 +13,8 @@ public class AboutActivity extends AppCompatActivity {
 
         // https://stackoverflow.com/questions/39052127
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("About PorNo!");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Add back arrow in action bar
+            getSupportActionBar().setTitle("About PorNo!"); // TODO extract String resource
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Add back arrow in action bar TODO do we need this line?
         }
     }
 

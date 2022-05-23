@@ -5,3 +5,4 @@ chromeExtension/porNo_new.js
 androidApp/.idea/*
 androidApp/gradle/*
 androidApp/app/release/*
+chromeExtension/.vscode/settings.json

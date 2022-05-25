@@ -5,29 +5,42 @@
     <h1 align="center">PorNo! Porn Blocker</h1>
     <h3 align="center">PorNo! redirects users from porn to positive, fulfilling websites, instead of the standard "page blocked / blank screen" response<h3>
 </p>
-
-<p align="left">
-    <a href="https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp" target="_blank">
-        <img src="/pictures/chromeWebStoreIcon.png">
-    </a>
-</p>
-
-<p align="left">
-    <a href='https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' target="_blank">
-      <img width="220" alt='Get PorNo! Porn Blocker on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/>
-    </a>
-</p>
     
-<p align="left">
-    <a href='https://www.reddit.com/r/ourlastpornblocker/' target="_blank">
-      <img width="220" alt='Subreddit for PorNo!. r-slash-ourlastpornblocker' src='https://1000logos.net/wp-content/uploads/2017/05/Reddit-logo.jpg'/>
-    </a>
-</p>
+<br>
     
-<p>
-    <a href="mailto:jvnnvt@gmail.com?Subject=PorNo! (From GitHub)" target="_blank"><em>Email me!</em></a>
-</p>
+<!--   Links   -->
 
+<table align="center">
+  <tr>
+    <th>Chrome Extension</th>
+    <th>Android App</th>
+    <th>Join the Subreddit</th>
+    <th>Additional Support</th>
+  </tr>
+  <tr>
+    <th>
+        <a href="https://chrome.google.com/webstore/detail/porno-porn-blocker-beta/fnfchnplgejcfmphhboehhlpcjnjkomp" target="_blank">
+            <img src="/pictures/chromeWebStoreIcon.png">
+        </a>
+    </th>
+    <th>
+            <a href='https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' target="_blank">
+              <img width="220" alt='Get PorNo! Porn Blocker on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/>
+            </a>
+    </th>
+    <th>
+            <a href='https://www.reddit.com/r/ourlastpornblocker/' target="_blank">
+              <img width="220" alt='Subreddit for PorNo!. r-slash-ourlastpornblocker' src='https://1000logos.net/wp-content/uploads/2017/05/Reddit-logo.jpg'/>
+            </a>
+    </th>
+    <th>  
+        <a href="mailto:jvnnvt@gmail.com?Subject=PorNo! (From GitHub)" target="_blank"><em>Email me!</em></a>
+    </th>
+  </tr>
+</table>
+
+
+<!--   End links   -->
 
 <!--
 <h5 align="center">

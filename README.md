@@ -67,6 +67,21 @@ mention problem with finding urls
 
 add a gif for web and a gif for android
 
+
+# Note to self
+
+    Your problems with porn are not my issue.
+    
+    Your welfare is not my priority.
+    
+    I work on this project for my own amusement. 
+    I am not your friend.   
+    
+    If there are ways to improve the software / issues with the software, I am 
+     listening at jvnnvt@gmail.com and the ourlastpornblocker Subreddit.
+    
+    Thank you for your time.
+    
 ## Why?
 - motivation
 

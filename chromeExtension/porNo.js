@@ -29,6 +29,11 @@ function main() {
     return;
   }
 
+  if (isUnsafeBingSearch(href)) {
+    window.location.href = location + "&adlt=strict";
+    return;
+  }
+
   // ROUTE LOCALSTORAGE ( [ideally is] MOST UP TO DATE )
   chrome.storage.local.get("realtimeBannedLinks", function (returnValue) {
     let firebaseLinks = returnValue.realtimeBannedLinks;
@@ -331,4 +336,8 @@ function checkWithIBM() {
 
 function isUnsafeGoogleSearch(url) {
   return url.includes("google.com/search?") && !url.includes(safeSearch);
+}
+
+function isUnsafeBingSearch(url) {
+  return url.includes("bing.com/search?") && !url.includes("&adlt=strict");
 }

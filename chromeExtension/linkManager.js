@@ -92,6 +92,8 @@ window.onload = function() {
     getRedirects();
   }
 
+  document.addEventListener('keydown', handleEnterKeypress);
+
   let submitLinkButton = document.getElementById('submit');
   if (submitLinkButton) {
     submitLinkButton.addEventListener('click', submit);
@@ -102,12 +104,17 @@ window.onload = function() {
     incognitoWarning.addEventListener('click', openExtensionSettingsPage);
   }
 
-
   let emergencyButton = document.getElementById('emergency');
   if (emergencyButton) {
     emergencyButton.addEventListener('click', openAllRedirectLinks);
   }
 };
+
+function handleEnterKeypress(event) { // submitLinkViaEnterKey todo refactor?
+  if (event.keyCode === 13) { // isEnterKeyPressed() todo refactor
+    submit();
+  }
+}
 
 let start = new Date().getTime();
 function showStreakInPopup() {
@@ -173,13 +180,6 @@ function updateClock() {
 //   alert(prettyPrint);
 // });
 // });
-
-// Register "Enter/Return" key to add links
-$(document).on("keyup", function (event) {
-  if (event.keyCode === 13) {
-    submit();
-  }
-});
 
 // Gets the title attribute (the url) of the clicked li and sends that to openLink, which opens the url
 // https://stackoverflow.com/questions/34964039

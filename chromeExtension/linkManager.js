@@ -54,10 +54,17 @@
 // √ Make a how-to youtube video / trailer
 
 // Opens a survey when PorNo! is deleted
-chrome.runtime.setUninstallURL(
-  "https://docs.google.com/forms/d/e/1FAIpQLSd1f_0gTaqpFPAznFzcsF_Wsb0xLv9Y0Nli-0_CG6-jG3r54Q/viewform?usp=sf_link",
-  function () {}
-);
+try {
+  chrome.runtime.setUninstallURL(
+    "https://docs.google.com/forms/d/e/1FAIpQLSd1f_0gTaqpFPAznFzcsF_Wsb0xLv9Y0Nli-0_CG6-jG3r54Q/viewform?usp=sf_link",
+    function () {}
+  );
+} catch (e) {
+  // hide warning in chrome://extensions
+  console.log("Error with chrome.runtime.setUninstallURL");
+  console.log(e)
+}
+
 
 // Open welcome and how to use pages on initial download
 chrome.storage.local.get("notFirstTime", function (returnValue) {
@@ -556,11 +563,16 @@ function openURLInNewWindow(URL) {
 // If PorNo! is not allowed in icognito,
 //  show the tip message because forcing users will only hurt our intentions
 function ifIncognitoIsEnabledThenRemovePrompt() {
-  chrome.extension.isAllowedIncognitoAccess(function (isAllowedAccess) {
-    if (isAllowedAccess && document.getElementById("setIncognito")) {
-      document.getElementById("setIncognito").remove();
-    }
-  });
+  try {
+    chrome.extension.isAllowedIncognitoAccess(function (isAllowedAccess) {
+      if (isAllowedAccess && document.getElementById("setIncognito")) {
+        document.getElementById("setIncognito").remove();
+      }
+    });
+  } catch (e) {
+    console.log("Error with chrome.extension.isAllowedIncognitoAccess");
+    console.log(e)
+  }
 }
 
 // Clicking on the incognito tip opens PorNo!'s extension page to

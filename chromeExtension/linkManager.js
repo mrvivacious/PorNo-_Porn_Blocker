@@ -92,15 +92,21 @@ window.onload = function() {
     getRedirects();
   }
 
+  let submitLinkButton = document.getElementById('submit');
+  if (submitLinkButton) {
+    submitLinkButton.addEventListener('click', submit);
+  }
+
   let incognitoWarning = document.getElementById('setIncognito');
   if (incognitoWarning) {
     incognitoWarning.addEventListener('click', openExtensionSettingsPage);
   }
 
-  // Popup-internal behavior for the add button and the incognito tip message
-  $("#submit").click(submit);
-  // $("#setIncognito").click(openExtensionSettingsPage);
-  $("#emergency").click(openAllRedirectLinks);
+
+  let emergencyButton = document.getElementById('emergency');
+  if (emergencyButton) {
+    emergencyButton.addEventListener('click', openAllRedirectLinks);
+  }
 };
 
 let start = new Date().getTime();

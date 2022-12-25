@@ -1,0 +1,185 @@
+body {
+    display: block;
+    margin: 10px;
+    background: #FFFAFA;
+    /* white-space: nowrap; */
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  p {
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    font-size: 15px;
+    font-style: normal;
+    font-variant: normal;
+    margin: 0px;
+    padding: 5px;
+  }
+
+  #container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+  }
+
+  /* https://www.w3schools.com/howto/howto_css_vertical_menu.asp */
+  .vertical-menu {
+    width: 100%; /* Set a width if you like */
+  }
+
+  .vertical-menu a {
+    display: block; /* Make the links appear below each other */
+    padding: 12px; /* Add some padding */
+  }
+
+  /*//////////////////////////////////////////////////////////////////////////////////////////
+  /* Include the padding and border in an element's total width and height */
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Remove margins and padding from the list */
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Style the list items */
+  ul li {
+    cursor: pointer;
+    position: relative;
+    padding: 12px 40px 12px 12px;
+    list-style-type: none;
+    background: inherit;
+    font-size: 17px;
+    transition: 0.2s;
+    word-break: break-all;
+    color: #FF82AB;
+
+    /* make the list items unselectable/unhighlightable */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Darker background-color on hover */
+  ul li:hover {
+    background: #FF82AB;
+    color: blanchedAlmond;
+  }
+
+  /* Style the "Add" button */
+  .addBtn {
+    /* padding: 10px; */
+    /* float: left; */
+    background-color:blanchedAlmond;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.7s;
+  }
+
+  .addBtn:hover {
+    background-color: #FF82AB;
+    color: blanchedAlmond;
+  }
+
+  /* Style the "EMERGENCY" button */
+  .emergency {
+    /* padding: 10px; */
+    /* float: left; */
+    background-color: pink;
+    color: red;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.4s;
+  }
+
+  .emergency:hover {
+    background-color: red;
+    color: white;
+  }
+
+  /* Style the close button */
+  .delete {
+    position: absolute;
+    float: right;
+    color: #f44336;
+
+    right: 0;
+    top: 0;
+    padding: 12px 16px 12px 16px;
+  }
+
+  .delete:hover {
+    /* background-color: #f44336; */
+    color: white;
+  }
+
+  a:link {
+    color: #750014;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+  }
+
+  a:visited {
+    color: #750014;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+  }
+
+  a:hover {
+    color: DeepPink;
+    background-color: transparent;
+    outline: none;
+    /*text-decoration: underline;*/
+  }
+
+  span {
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    font-size: 14px;
+  }
+
+  /* Style the input */
+  input {
+    border: none;
+    width: 95%;
+    padding: 10px;
+    margin: 10px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    float: left;
+    font-size: 16px;
+    /* outline-style: solid; */
+    outline-width: 1px;
+    outline-color: black;
+  }
+
+  #setIncognito {
+    color: red;
+    text-decoration: underline;
+  }
+
+  #setIncognito:hover {
+    color: maroon;
+    cursor: pointer;
+  }
+
+  #INPUT_url {
+    background: inherit;
+    border-style: solid;
+    border-width:1px;
+  }
+
+  #INPUT_name {
+    background: inherit;
+    border-style: solid;
+    border-width:1px;
+  }

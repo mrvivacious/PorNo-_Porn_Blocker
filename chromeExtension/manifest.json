@@ -16,6 +16,11 @@
     "scripts": ["jquery.min.js", "lists.js", "linkManager.js", "porNo.js"]
   },
 
+  // "background": {
+  //   "service_worker": "porNo.js"
+  // },
+
+
   "icons": {
     "16": "icons/porNo_16.png",
     "48": "icons/porNo_48.png",
@@ -34,7 +39,5 @@
 
   "permissions": [
     "storage"
-  ],
-
-  "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
+  ]
 }

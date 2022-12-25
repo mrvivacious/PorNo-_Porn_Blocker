@@ -63,7 +63,7 @@ chrome.runtime.setUninstallURL(
 chrome.storage.local.get("notFirstTime", function (returnValue) {
   if (returnValue.notFirstTime === undefined) {
     openURLInSameWindow("user_manual/welcome.html");
-    openURLInSameWindow("user_manual/help.html"); // Replace with youtube video
+    // openURLInSameWindow("user_manual/help.html"); // Replace with youtube video TODO
     chrome.storage.local.set({ notFirstTime: true }, function () {});
     chrome.storage.sync.set(
       { lastTimestampSynced: new Date().getTime() },
@@ -73,14 +73,11 @@ chrome.storage.local.get("notFirstTime", function (returnValue) {
 });
 
 // MAIN
-//  with help from https://stackoverflow.com/questions/13591983/onclick-within-chrome-extension-not-working
+// https://stackoverflow.com/questions/13591983/
 $(document).ready(function () {
   generateInputMessage();
 
-  // updateDB() gets the latest URLs from Firebase (is called whenever the popup is opened)
-  // getUserLinksFromStorageAndAddToPopup fills the popup with the links saved in storag()e
-  // setIncognito() informs users to enable the extension in incognito
-  updateDB(); // todo rename syncWithFirebase()
+  // updateDB(); // todo rename syncWithFirebase() ADD AFTER V3 MIGRATION
   ifIncognitoIsEnabledThenRemovePrompt();
   getUserLinksFromStorageAndAddToPopup(); // clean code says to break this into two functions get...() and add...()
   showStreakInPopup();
@@ -160,7 +157,7 @@ function updateClock() {
 // });
 // });
 
-// Allow enter key press to add links
+// Register "Enter/Return" key to add links
 $(document).on("keyup", function (event) {
   if (event.keyCode === 13) {
     submit();

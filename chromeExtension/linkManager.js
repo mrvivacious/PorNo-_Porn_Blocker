@@ -79,9 +79,8 @@ chrome.storage.local.get("notFirstTime", function (returnValue) {
   }
 });
 
-// MAIN
 // https://stackoverflow.com/questions/13591983/
-$(document).ready(function () {
+window.onload = function() {
   generateInputMessage();
 
   // updateDB(); // todo rename syncWithFirebase() ADD AFTER V3 MIGRATION
@@ -93,11 +92,16 @@ $(document).ready(function () {
     getRedirects();
   }
 
+  let incognitoWarning = document.getElementById('setIncognito');
+  if (incognitoWarning) {
+    incognitoWarning.addEventListener('click', openExtensionSettingsPage);
+  }
+
   // Popup-internal behavior for the add button and the incognito tip message
   $("#submit").click(submit);
-  $("#setIncognito").click(openExtensionSettingsPage);
+  // $("#setIncognito").click(openExtensionSettingsPage);
   $("#emergency").click(openAllRedirectLinks);
-});
+};
 
 let start = new Date().getTime();
 function showStreakInPopup() {

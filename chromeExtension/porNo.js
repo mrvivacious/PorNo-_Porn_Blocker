@@ -104,7 +104,7 @@ function PorNo() {
   chrome.storage.sync.get(null, function (items) {
     urls = Object.keys(items);
 
-    if (urls[0] !== undefined) {
+    if (urls && urls[0] !== undefined) {
       // Iterate through the urls array
       //  and add the urls to our links list to select from
       for (let i = 0; urls[i] !== undefined; i++) {

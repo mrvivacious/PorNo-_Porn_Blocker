@@ -13,7 +13,7 @@
   },
 
   "background": {
-    "scripts": ["jquery.min.js", "lists.js", "linkManager.js", "porNo.js"]
+    "scripts": ["jquery.min.js", "lists.js", "porNo.js"]
   },
 
   // "background": {

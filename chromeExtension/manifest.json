@@ -12,15 +12,6 @@
     "default_title": "PorNo!"
   },
 
-  "background": {
-    "scripts": ["jquery.min.js", "lists.js", "porNo.js"]
-  },
-
-  // "background": {
-  //   "service_worker": "porNo.js"
-  // },
-
-
   "icons": {
     "16": "icons/porNo_16.png",
     "48": "icons/porNo_48.png",

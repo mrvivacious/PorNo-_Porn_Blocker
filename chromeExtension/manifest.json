@@ -1,23 +1,21 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
 
   "name": "PorNo! Porn Blocker (Beta)",
   "description": "Beat porn once and for all. Redirect your temptations to wholesome and healthy outlets.",
   "version": "0.0.1.8",
   "author": "Vivek Bhookya | https://github.com/mrvivacious/PorNo-_Porn_Blocker",
 
-  "browser_action": {
-    "default_icon": "icons/heart_PorNo.png",
-    "default_popup": "popup.html",
-    "default_title": "PorNo!"
+  "action": {
+    "default_icon": {
+      "16": "icons/porNo_16.png",
+      "48": "icons/porNo_48.png",
+      "128": "icons/porNo_128.png"
+    },
+    "default_title": "PorNo!",
+    "default_popup": "popup.html"
   },
-
-  "icons": {
-    "16": "icons/porNo_16.png",
-    "48": "icons/porNo_48.png",
-    "128": "icons/porNo_128.png"
-  },
-
+  
   "content_scripts": [
     {
       "matches": [

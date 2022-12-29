@@ -1,12 +1,22 @@
 # releaseNotes
 
-## 0.0.1.8
+## 0.0.1.9 Chrome Extension
+
+- (Enhancement) Submit V3 migration, to prevent Chrome from removing PorNo!
+- (Enhancement) UI and visual improvements, courtesy [webVerts](https://github.com/mrvivacious/PorNo-_Porn_Blocker/commits?author=webVerts)! Thank you so much! Good ideas with the input box border and contrasting colors 😃
+- (Enhancement) Bing now defaults to safemode
+- (Enhancement) Ported some jQuery into Vanilla JS. Planning to eventually phase out all jQuery, which will lead to removing the library, futher saving on app size.
+- (Lists) updated the ban list!
+
+***
+
+## 0.0.1.8 Chrome Extension
 
 - (Bug fix) Issue with PorNo! attempting to redirect to `/lastTimestampSynced`. This bug has been taken care of and PorNo! will redirect as usual.
 
 ***
 
-## 0.0.1.7
+## 0.0.1.7 Chrome Extension
 
 - (Feature) Streak! See how long it's been since your last redirect. Hopefully this helps motivate users to keep going during tougher times.
 - (Feature) Link to subreddit has been added. Join the subreddit and leave feedback about this version update!
@@ -19,13 +29,13 @@ Again, NO PERSONAL INFORMATION IS COLLECTED, if you are conscious of your data y
 
 ***
 
-## 0.0.1.6
+## 0.0.1.6 Chrome Extension
 
 - (Improvement) Better filtering for NSFW subreddits to avoid flagging an entire, potentially SFW subreddit because of an arbitrary NSFW post [that was most likely flagged to hide spoilers as opposed to containing genuinely NSFW material].
 
 ***
 
-## 0.0.1.5
+## 0.0.1.5 Chrome Extension
 
 - (Feature) Redirection and detection support for NSFW subreddits.
 - (Improvement) Slight improvement to the detection algorithm, now support websites that are generally SFW but have an NSFW section as a path in the URL (ie. "test.com/adultstuff", "test2.com/nsfw")

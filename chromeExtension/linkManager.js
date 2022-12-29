@@ -558,9 +558,7 @@ function addLink(url, urlLabel) {
 }
 
 function openURLInSameWindow(URL) {
-  chrome.tabs.getSelected(null, function (tab) {
     chrome.tabs.create({ url: URL });
-  });
 }
 
 function openURLInNewWindow(URL) {
@@ -589,7 +587,7 @@ function ifIncognitoIsEnabledThenRemovePrompt() {
 //  help with the process of enabling "Allow in incognito"
 function openExtensionSettingsPage() {
   chrome.tabs.create({
-    url: "chrome://extensions/?id=" + chrome.runtime.id,
+    url: "chrome://extensions/?id=" + chrome.runtime.id, // todo check out chrome.runtime.getURL
   });
 }
 

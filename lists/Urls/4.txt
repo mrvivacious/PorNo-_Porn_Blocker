@@ -24,6 +24,7 @@
 4chan.org/hm
 4chan.org/hr
 4chan.org/r
+4chan.org/s/
 4chan.org/t
 4chan.org/u
 4chan.org/y
@@ -48,4 +49,3 @@
 4tubefree.net
 4uck.org
 4us.pw
-4chan.org/s/

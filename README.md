@@ -59,7 +59,7 @@
 ## Contents
 who what where when why how, goals of project (last porn blocker ever rawr)
 
-monetization
+[Will PorNo! ever cost money?](#monetization)
 
 mention problem with finding urls
 
@@ -93,7 +93,19 @@ This technology didn't exist. I was in college studying computer science (and as
 
 The PorNo! Chrome Extension was released in July 2018.
 The PorNo! Android app was released in January 2019.
+    
+## [Monetization](#contents)
+No. I don't need to explain myself.
 
+If you're someone who wants to collaborate with the hopes of turning this into a business, however: in terms you'll understand, this segment of the market doesn't offer opportunity for a steady and lucrative income stream.
+
+Additionally, the past, current, and future users of this idea have paid enough of a price with their time and lives.
+    
+Finally, I wouldn't like it if people looked at me as "a person who is comfortable taking money from people who have problems with porn."
+    
+(If you want to send me money anyways, you're welcome to sponsor this project or hit [my Paypal](https://www.paypal.com/paypalme/mrvivacious) directly. Thank you 🔥)
+    
+    
 ## How to use
 - See [Installation](#installation) for updating the lists
 - Download, deploy, visit a porn site, add a redirect site, visit a porn site.

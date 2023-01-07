@@ -59,6 +59,8 @@
 ## Contents
 who what where when why how, goals of project (last porn blocker ever rawr)
 
+monetization
+
 mention problem with finding urls
 
 [Installation](#installation)
@@ -83,7 +85,14 @@ add a gif for web and a gif for android
     Thank you for your time.
     
 ## Why?
-- motivation
+March 2018, I was dealing with a break up off a nasty relationship, and I was using porn to feel less bad/pain/hurt/etc.
+
+When I listened to my favorite music, I noticed I felt good off that. As music doesn't come with the dangers that porn use brings, I thought it would be cool if, whenever I went to a porn site (which was frequent during that time), I instead was shown my favorite music.
+
+This technology didn't exist. I was in college studying computer science (and astronomy), and I thought I could try to build this kind of porn blocker.
+
+The PorNo! Chrome Extension was released in July 2018.
+The PorNo! Android app was released in January 2019.
 
 ## How to use
 - See [Installation](#installation) for updating the lists

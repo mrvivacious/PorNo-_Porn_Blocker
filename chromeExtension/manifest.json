@@ -6,11 +6,17 @@
   "version": "0.0.1.9",
   "author": "Vivek Bhookya | https://github.com/mrvivacious/PorNo-_Porn_Blocker",
 
+  "icons": {
+    "16": "/icons/porNo_16.png",
+    "48": "/icons/porNo_48.png",
+    "128": "/icons/porNo_128.png"
+  },
+
   "action": {
     "default_icon": {
-      "16": "icons/porNo_16.png",
-      "48": "icons/porNo_48.png",
-      "128": "icons/porNo_128.png"
+      "16": "/icons/porNo_16.png",
+      "48": "/icons/porNo_48.png",
+      "128": "/icons/porNo_128.png"
     },
     "default_title": "PorNo!",
     "default_popup": "popup.html"

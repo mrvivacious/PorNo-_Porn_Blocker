@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 18px;
+      }
+
+      .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 9px;
+        width: 9px;
+        left: 5px;
+        bottom: 5px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(18px);
+        -ms-transform: translateX(18px);
+        transform: translateX(18px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 24px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+    </style>
+    <title>PorNo! Edit banlist</title>
+
+    <script src="banlistCustomizer.js"></script>
+</head>
+
+    <body>
+        <h1>
+        Set your banlist
+    
+          <a href="/popup.html" style="float: right;">Back to home</a>
+        </h1>
+    
+        <div id="container">
+          <div id="vertical-menu" class="vertical-menu">
+            <!-- Input field for link -->
+            <p>
+              <em>URL:</em>
+            </p>
+            <input style="color:black;" type="text" id="INPUT_url" placeholder="Your
+              favorite websites!">
+    
+            <ul id="websites">
+              <!-- Websites added will be found here when inspecting the popup -->
+            </ul>
+
+            <p id="ERROR_MSG" style="color:red; font-size:16px; margin-top:10px"></p>
+            
+
+            <p>
+              <em>
+                Block this entire site?
+              </em>
+
+              <label class="switch">
+                <input type="checkbox">
+                <span id="INPUT_slider" class="slider round"></span>
+              </label>
+            </p>
+
+            <br>
+            <!-- Add button -->
+            <input id="submit" class="addBtn" style="outline: none;
+              margin-bottom:20px;" type="submit" value="Block this site">
+            <br>
+          </div>
+          <!-- End of vertical-menu -->
+        </div>
+        <!-- Close container -->
+      </body>
+</html>

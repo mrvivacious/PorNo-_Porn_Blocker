@@ -19,7 +19,8 @@
       "128": "/icons/porNo_128.png"
     },
     "default_title": "PorNo!",
-    "default_popup": "popup.html"
+    // "default_popup": "popup.html"
+    "default_popup": "banlistCustomizer.html"
   },
 
   "content_scripts": [
@@ -33,6 +34,7 @@
   ],
 
   "permissions": [
-    "storage"
+    "storage",
+    "tabs"
   ]
 }

@@ -65,17 +65,23 @@ try {
   console.log(e)
 }
 
-
 // Open welcome and how to use pages on initial download
 chrome.storage.local.get("notFirstTime", function (returnValue) {
   if (returnValue.notFirstTime === undefined) {
     openURLInSameWindow("user_manual/welcome.html");
     // openURLInSameWindow("user_manual/help.html"); // Replace with youtube video TODO
+
     chrome.storage.local.set({ notFirstTime: true }, function () {});
+
     chrome.storage.sync.set(
       { lastTimestampSynced: new Date().getTime() },
       function () {}
     ); // TODO test this on raw install
+
+    // chrome.storage.sync.set(
+    //   { customBanlistByExactURL: {"https://www.yahoo.com/": !0} },
+    //   function () {}
+    // );
   }
 });
 
@@ -297,7 +303,8 @@ function getUserLinksFromStorageAndAddToPopup() {
       for (let i = 0; urls[i]; i++) {
         if (
           urls[i] === "redirectionHistory" ||
-          urls[i] === "lastTimestampSynced"
+          urls[i] === "lastTimestampSynced" ||
+          urls[i] === "customBanlistByExactURL"
         ) {
           continue;
         }
@@ -608,7 +615,8 @@ function openAllRedirectLinks() {
     for (let i = 0, n = urls.length; i < n; i++) {
       if (
         urls[i] === "redirectionHistory" ||
-        urls[i] === "lastTimestampSynced"
+        urls[i] === "lastTimestampSynced" ||
+        urls[i] === "customBanlistByExactURL"
       ) {
         continue;
       }

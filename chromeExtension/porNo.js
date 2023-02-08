@@ -110,7 +110,8 @@ function PorNo() {
       for (let i = 0; urls[i] !== undefined; i++) {
         if (
           urls[i] === "redirectionHistory" ||
-          urls[i] === "lastTimestampSynced"
+          urls[i] === "lastTimestampSynced" ||
+          urls[i] === "customBanlistByExactURL"
         ) {
           continue;
         }

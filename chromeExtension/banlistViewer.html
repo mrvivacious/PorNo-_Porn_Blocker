@@ -1,0 +1,66 @@
+<!doctype html>
+  <head>
+    <title>Banlist Viewer</title>
+    <style>
+      body {
+        font-size: 24px;
+      }
+
+      #container {
+        height: 100%;
+        width: 100%;
+        display: flex;
+      }
+
+      #left {
+        width: 50%;
+        margin: 10px;
+      }
+
+      #right {
+        width: 50%;
+        margin: 10px;
+      }
+
+      /* Style the close button */
+      .delete {
+        float: right;
+        color: #e9857e;
+      }
+
+      .delete:hover {
+        cursor: pointer;
+        color: #f44336;
+      }
+    </style>
+
+    <script src="banlistViewer.js"></script>
+  </head>
+
+  <body>
+    <h1>Banlists</h1>
+    <br>
+
+    <div id="container">
+      <div id="left">
+        <p>Specific sites</p>
+        <hr>
+
+        <div id="listOfSpecificSites">
+          <p>sites should appear below:</p>
+        </div>
+
+      </div>
+
+      <div id="right">
+        <p>Entire sites</p>
+        <hr>
+        
+        <div id="listOfEntireSites">
+          <p>sites should appear below:</p>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

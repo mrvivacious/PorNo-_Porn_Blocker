@@ -26,10 +26,9 @@ function getHostnameFromURL(url) {
   // Find & remove port number
   hostname = hostname.split(':')[0];
 
-  // Find & remove "?"
+  // Find & remove "?" from path queries
   hostname = hostname.split('?')[0];
 
-  // Thank you, https://github.com/mrvivacious/PorNo-_public/blob/master/porNo.js#L194
   // If there is a www. header, remove it
   if (hostname.includes('www.')) {
     let idxOfPeriod = hostname.indexOf('.');
@@ -40,8 +39,6 @@ function getHostnameFromURL(url) {
 }
 
 function toggleURL() {
-  // alert("slider clicked");
-
   if (HOSTNAME === undefined) {
     chrome.tabs.query({
       'active': true,
@@ -57,13 +54,48 @@ function toggleURL() {
     document.getElementById("INPUT_url").value = URL;
     HOSTNAME = undefined;
   }
+}
 
+function isChromeURL(url) {
+  return url.startsWith('chrome')
+}
 
-  // document.getElementById("INPUT_url").value = getHostnameFromURL();
+function addSiteToBanlist() {
+  // alert(URL)
+  if (isChromeURL(URL)) {
+    alert(`Chrome browser pages* will not be blocked.\n
+    The user shouldn't lose access to important browser functionality.\n\n
+    * = URLs that start with "chrome"`)
 
+    return;
+  }
 
-  // fillInputWithURLHostname();
+  // Else, URL is not a Chrome/browser page
+  if (HOSTNAME === undefined) {
+    alert('add this site to the Specific Sites Map')
 
+    // chrome.storage.sync.get specific sites map
+    // if map does not exist, create empty map ... here? not in linkManager.js??
+    // else map exists, so map[URL] = true (or !0)
+    // chrome.storage.sync.set map with the map we just made
+    /* 
+    
+    Can use one object to save on get/set calls, but really my interest is
+     less lines of code for me to deal with and look at HA
+    userBanlists {
+      specificSite1 : true,
+      specificSite2 : true,
+      specificSite3 : !0,
+
+      generalSites : [domain1, domain2, domain3, domain4]
+    }
+    
+    
+    */
+  }
+  else {
+    alert('add this site to the Entire Sites List')
+  }
 }
 
 let URL = undefined;
@@ -74,11 +106,7 @@ window.onload = () => {
 
   let inputSlider = document.getElementById('INPUT_slider')
   inputSlider.addEventListener('click', toggleURL);
-}
 
-// chrome.storage.sync.set(
-//     { 
-//         customBanlistByExactURL: {"https://www.yahoo.com/": !0} 
-//     }, 
-//     function () {}
-// );
+  let addButton = document.getElementById('BUTTON_addToBanlist')
+  addButton.addEventListener('click', addSiteToBanlist)
+}

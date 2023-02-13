@@ -78,10 +78,10 @@ chrome.storage.local.get("notFirstTime", function (returnValue) {
       function () {}
     ); // TODO test this on raw install
 
-    // chrome.storage.sync.set(
-    //   { customBanlistByExactURL: {"https://www.yahoo.com/": !0} },
-    //   function () {}
-    // );
+    chrome.storage.sync.set(
+      { userBanlists: {} },
+      function () {}
+    );
   }
 });
 
@@ -304,7 +304,7 @@ function getUserLinksFromStorageAndAddToPopup() {
         if (
           urls[i] === "redirectionHistory" ||
           urls[i] === "lastTimestampSynced" ||
-          urls[i] === "customBanlistByExactURL"
+          urls[i] === "userBanlists"
         ) {
           continue;
         }
@@ -616,7 +616,7 @@ function openAllRedirectLinks() {
       if (
         urls[i] === "redirectionHistory" ||
         urls[i] === "lastTimestampSynced" ||
-        urls[i] === "customBanlistByExactURL"
+        urls[i] === "userBanlists"
       ) {
         continue;
       }

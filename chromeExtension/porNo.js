@@ -111,7 +111,7 @@ function PorNo() {
         if (
           urls[i] === "redirectionHistory" ||
           urls[i] === "lastTimestampSynced" ||
-          urls[i] === "customBanlistByExactURL"
+          urls[i] === "userBanlists"
         ) {
           continue;
         }

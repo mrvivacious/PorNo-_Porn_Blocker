@@ -57,7 +57,7 @@ function toggleURL() {
 }
 
 function isChromeURL(url) {
-  return url.startsWith('chrome')
+  return url.startsWith('chrome');
 }
 
 function addSiteToBanlist() {
@@ -65,37 +65,50 @@ function addSiteToBanlist() {
   if (isChromeURL(URL)) {
     alert(`Chrome browser pages* will not be blocked.\n
     The user shouldn't lose access to important browser functionality.\n\n
-    * = URLs that start with "chrome"`)
+    * = URLs that start with "chrome"`);
 
     return;
   }
 
-  // Else, URL is not a Chrome/browser page
-  if (HOSTNAME === undefined) {
-    alert('add this site to the Specific Sites Map')
+  // Else, URL is not a Chrome/browser page, so add the site.
+  // chrome.storage.sync.get specific sites map
+  chrome.storage.sync.get(`userBanlists`, function(returnedObject) {
+    let userBanlistsMap = returnedObject[`userBanlists`];
 
-    // chrome.storage.sync.get specific sites map
-    // if map does not exist, create empty map ... here? not in linkManager.js??
-    // else map exists, so map[URL] = true (or !0)
-    // chrome.storage.sync.set map with the map we just made
-    /* 
-    
-    Can use one object to save on get/set calls, but really my interest is
-     less lines of code for me to deal with and look at HA
-    userBanlists {
-      specificSite1 : true,
-      specificSite2 : true,
-      specificSite3 : !0,
+    if (userBanlistsMap === undefined) {
+      // if map does not exist, create empty map ... here? not in linkManager.js??
 
-      generalSites : [domain1, domain2, domain3, domain4]
+      userBanlistsMap = {};
     }
-    
-    
+
+    // else map exists, so map[URL] = true (or !0)
+
+    if (HOSTNAME === undefined) {
+      alert('add this site to the Specific Sites Map');
+      userBanlistsMap[URL] = !0;
+    }
+    else {
+      alert('add this site to the Entire Sites List');
+
+    }
+
+    // chrome.storage.sync.set map with the map we just made
+    chrome.storage.sync.set({
+      userBanlists: userBanlistsMap
+    }, function() {alert('site added to Specific Sites!')});
+  });
+
+    /* 
+      Can use one object to save on get/set calls, but really my interest is
+      less lines of code for me to deal with and look at HA
+      userBanlists {
+        specificSite1 : true,
+        specificSite2 : true,
+        specificSite3 : !0,
+
+        generalSites : [domain1, domain2, domain3, domain4]
+      }
     */
-  }
-  else {
-    alert('add this site to the Entire Sites List')
-  }
 }
 
 let URL = undefined;

@@ -70,32 +70,33 @@ function addSiteToBanlist() {
     return;
   }
 
-  // Else, URL is not a Chrome/browser page, so add the site.
+  // Else, URL is not a Chrome/browser page, so add the site, then PorNo (lmao how porNo from here?)
   // chrome.storage.sync.get specific sites map
   chrome.storage.sync.get(`userBanlists`, function(returnedObject) {
     let userBanlistsMap = returnedObject[`userBanlists`];
-
     if (userBanlistsMap === undefined) {
-      // if map does not exist, create empty map ... here? not in linkManager.js??
-
+      // if map does not exist, create empty map ... here? not in linkManager.js?? ANSWER: should create only when SET is called
       userBanlistsMap = {};
     }
 
-    // else map exists, so map[URL] = true (or !0)
-
     if (HOSTNAME === undefined) {
-      alert('add this site to the Specific Sites Map');
+      // alert('ADDING site to the SPECIFIC Sites Map');
       userBanlistsMap[URL] = !0;
     }
     else {
-      alert('add this site to the Entire Sites List');
+      // alert('ADDING site to the ENTIRE Sites List');
+      let listOfEntireSites = userBanlistsMap['listOfEntireSites'];
+      if (listOfEntireSites === undefined) {
+        listOfEntireSites = [];
+      }
 
+      listOfEntireSites.push(HOSTNAME);
+      userBanlistsMap['listOfEntireSites'] = listOfEntireSites;
     }
 
-    // chrome.storage.sync.set map with the map we just made
-    chrome.storage.sync.set({
-      userBanlists: userBanlistsMap
-    }, function() {alert('site added to Specific Sites!')});
+    chrome.storage.sync.set({ userBanlists: userBanlistsMap }, function() {
+      // TODO add visual indicator (under or above the ADD button? or smth else?) that the item was saved to the appropriate list (SPECIFIC/ENTIRE)
+    });
   });
 
     /* 
@@ -104,8 +105,7 @@ function addSiteToBanlist() {
       userBanlists {
         specificSite1 : true,
         specificSite2 : true,
-        specificSite3 : !0,
-
+        ...,
         generalSites : [domain1, domain2, domain3, domain4]
       }
     */

@@ -20,7 +20,7 @@
     },
     "default_title": "PorNo!",
     // "default_popup": "popup.html"
-    "default_popup": "banlistCustomizer.html"
+    "default_popup": "banlistPopup.html"
   },
 
   "content_scripts": [

@@ -60,6 +60,8 @@ function isChromeURL(url) {
   return url.startsWith('chrome');
 }
 
+// TODO can break up this method somehow so it's not 60 lines to have to read and work through
+// maybe, isInputValid() -> addToBanlists() or smtn
 function addSiteToBanlist() {
   // alert(URL)
   if (isChromeURL(URL)) {
@@ -94,9 +96,17 @@ function addSiteToBanlist() {
       userBanlistsMap['listOfEntireSites'] = listOfEntireSites;
     }
 
+  try {
     chrome.storage.sync.set({ userBanlists: userBanlistsMap }, function() {
       // TODO add visual indicator (under or above the ADD button? or smth else?) that the item was saved to the appropriate list (SPECIFIC/ENTIRE)
+      let feedback = document.getElementById(`feedbackForAddButton`);
+      let siteToShow = HOSTNAME ? HOSTNAME : URL;
+      feedback.innerText = `Successfully added\n${siteToShow}`;
     });
+  } catch (e) {
+    let feedback = document.getElementById(`feedbackForAddButton`);
+    feedback.innerText = `Error with data sync. Please try again after a minute.\n(From banlistPopupLogic)`;
+  }
   });
 
     /* 

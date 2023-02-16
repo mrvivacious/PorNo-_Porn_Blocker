@@ -85,12 +85,6 @@
             <input style="color:black;" type="text" id="INPUT_url" placeholder="Your
               favorite websites!">
     
-            <ul id="websites">
-              <!-- Websites added will be found here when inspecting the popup -->
-            </ul>
-
-            <p id="ERROR_MSG" style="color:red; font-size:16px; margin-top:10px"></p>
-
             <p>
               <em>
                 Block this entire site?
@@ -104,10 +98,11 @@
 
             <br>
             <!-- Add button -->
-            <input id="BUTTON_addToBanlist" class="addBtn" style="outline: none;
-              margin-bottom:0px;" type="submit" value="Block this site">
+            <input id="BUTTON_addToBanlist" class="addBtn" style="outline: none; margin-bottom: 12px;" type="submit" value="Block this site"></input>
               
-              <h3>
+            <p id="feedbackForAddButton" style="margin-top: 24px"></p>
+
+            <h3 style="margin: 0px;">
               <a href="/banlistViewer.html" target="_blank" style="float: left;">View your banlist</a>
             </h3>
 

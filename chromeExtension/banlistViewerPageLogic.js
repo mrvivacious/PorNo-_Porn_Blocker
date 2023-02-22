@@ -1,83 +1,54 @@
 window.onload = () => {
-  let sites = [
-    'reddit.com/r/nsfwexample1',
-    'reddit.com/r/nsfwexample2',
-    'site3.net/video13',
-    'gamingsite.com/adultsection'
-  ];
+  chrome.storage.sync.get('userBanlists', function(returnedObject) {
+    let userBanData = returnedObject['userBanlists'];
+    let sites = Object.keys(userBanData);
 
-  for (item in sites) {
-    addListItemToSpecificSitesList(sites[item]);
-  }
+    for (item in sites) {
+      if (sites[item] !== 'listOfEntireSites') {
+        addUrlListItemToSpecificList(sites[item], 'listOfSpecificSites');
+      }
+    }
 
-  let exactSites = [
-    'blahblahnsfw.org',
-    'randomadultsite.abc',
-    'pornwhatever.ok'
-  ];
-
-  for (item in exactSites) {
-    addListItemToEntireSitesList(exactSites[item]);
-  }
-};
-
-function addListItemToSpecificSitesList(url) {
-  let name = url;
-  let listOfSpecificSites = document.getElementById("listOfSpecificSites");
-  let li = document.createElement("p");
-  let t = document.createTextNode(name);
-
-  li.appendChild(t);
-
-  if (!listOfSpecificSites) {
-    return;
-  }
-  listOfSpecificSites.appendChild(li);
-
-  let span = document.createElement("SPAN");
-  let txt = document.createTextNode("\u00D7");
-
-  span.className = "delete";
-  span.title = `Delete ${url}`
-
-  span.addEventListener('click', () => {
-    let userConfirmedDelete = confirm(
-      `Delete this link?\n${url}`
-    );
-
-    if (userConfirmedDelete) {
-      // try {
-      //   chrome.storage.sync.remove([keyValueToRemove], function () {});
-      // } catch (e) {
-      //   document.getElementById("ERROR_MSG").innerHTML =
-      //     "Too many operations...please try again later, sorry!";
-      // }
-  
-      // // Only update list when we confirm that the desired deletion has succeeded
-      // if (
-      //   chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
-      // ) {
-        li.remove()
-      // }
+    let exactSites = userBanData['listOfEntireSites'];
+    for (item in exactSites) {
+      addUrlListItemToSpecificList(exactSites[item], 'listOfEntireSites');
     }
   });
 
-  span.appendChild(txt);
-  li.appendChild(span);
-}
+  // let sites = [
+  //   'reddit.com/r/nsfwexample1',
+  //   'reddit.com/r/nsfwexample2',
+  //   'site3.net/video13',
+  //   'gamingsite.com/adultsection'
+  // ];
 
-function addListItemToEntireSitesList(url) {
+  // for (item in sites) {
+  //   addListItemToSpecificSitesList(sites[item]);
+  // }
+
+  // let exactSites = [
+  //   'blahblahnsfw.org',
+  //   'randomadultsite.abc',
+  //   'pornwhatever.ok'
+  // ];
+
+  // for (item in exactSites) {
+  //   addListItemToEntireSitesList(exactSites[item]);
+  // }
+};
+
+function addUrlListItemToSpecificList(url, specificList) {
   let name = url;
-  let listOfEntireSites = document.getElementById("listOfEntireSites");
+  let specifiedList = document.getElementById(specificList);
   let li = document.createElement("p");
   let t = document.createTextNode(name);
 
   li.appendChild(t);
 
-  if (!listOfEntireSites) {
+  if (!specifiedList) {
     return;
   }
-  listOfEntireSites.appendChild(li);
+  specifiedList.appendChild(li);
 
   let span = document.createElement("SPAN");
   let txt = document.createTextNode("\u00D7");

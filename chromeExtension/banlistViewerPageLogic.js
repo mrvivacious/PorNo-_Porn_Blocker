@@ -69,6 +69,7 @@ function addUrlListItemToSpecificList(url, specificList) {
           try {
             chrome.storage.sync.set({ userBanlists: userBanData }, function() {
               alert(`Succesfully deleted URL:\n${url}`);
+              li.remove()
             });
           } catch (e) {
             alert(`Error with deleting URL:\n${url}\n\nPlease try again after a minute.`);
@@ -77,26 +78,31 @@ function addUrlListItemToSpecificList(url, specificList) {
       }
       else if (specificList === 'listOfEntireSites') {
         // addEntireSitesDeleteHandler();
+        chrome.storage.sync.get('userBanlists', function(returnedObject) {
+          let userBanData = returnedObject['userBanlists'];
+          let exactSites = userBanData['listOfEntireSites'];
+          let indexOfSite = exactSites.indexOf(url);
+
+          // https://stackoverflow.com/questions/5767325
+          if (indexOfSite > -1) { 
+            exactSites.splice(indexOfSite, 1); 
+          }
+
+          userBanData['listOfEntireSites'] = exactSites;
+
+          try {
+            chrome.storage.sync.set({ userBanlists: userBanData }, function() {
+              alert(`Succesfully deleted URL:\n${url}`);
+              li.remove()
+            });
+          } catch (e) {
+            alert(`Error with deleting URL:\n${url}\n\nPlease try again after a minute.`);
+          }
+        });
       }
       else {
         return;
       }
-
-      // ?? How to delete based on specific or general url?
-      // 
-      // try {
-      //   chrome.storage.sync.remove([keyValueToRemove], function () {});
-      // } catch (e) {
-      //   document.getElementById("ERROR_MSG").innerHTML =
-      //     "Too many operations...please try again later, sorry!";
-      // }
-  
-      // // Only update list when we confirm that the desired deletion has succeeded
-      // if (
-      //   chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
-      // ) {
-        li.remove()
-      // }
     }
   });
 

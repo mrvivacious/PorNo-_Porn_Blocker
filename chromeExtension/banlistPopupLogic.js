@@ -92,21 +92,28 @@ function addSiteToBanlist() {
         listOfEntireSites = [];
       }
 
+      // todo refactor isSiteAlreadyInBanlist
+      if (listOfEntireSites.includes(HOSTNAME)) { 
+        let feedback = document.getElementById(`feedbackForAddButton`);
+        feedback.innerText = `${HOSTNAME} already in banlist.`;
+        return; 
+      }
+
       listOfEntireSites.push(HOSTNAME);
       userBanlistsMap['listOfEntireSites'] = listOfEntireSites;
     }
 
-  try {
-    chrome.storage.sync.set({ userBanlists: userBanlistsMap }, function() {
-      // TODO add visual indicator (under or above the ADD button? or smth else?) that the item was saved to the appropriate list (SPECIFIC/ENTIRE)
+    try {
+      chrome.storage.sync.set({ userBanlists: userBanlistsMap }, function() {
+        // TODO add visual indicator (under or above the ADD button? or smth else?) that the item was saved to the appropriate list (SPECIFIC/ENTIRE)
+        let feedback = document.getElementById(`feedbackForAddButton`);
+        let siteToShow = HOSTNAME ? HOSTNAME : URL;
+        feedback.innerText = `Successfully added\n${siteToShow}`;
+      });
+    } catch (e) {
       let feedback = document.getElementById(`feedbackForAddButton`);
-      let siteToShow = HOSTNAME ? HOSTNAME : URL;
-      feedback.innerText = `Successfully added\n${siteToShow}`;
-    });
-  } catch (e) {
-    let feedback = document.getElementById(`feedbackForAddButton`);
-    feedback.innerText = `Error with data sync. Please try again after a minute.\n(From banlistPopupLogic)`;
-  }
+      feedback.innerText = `Error with data sync. Please try again after a minute.\n(From banlistPopupLogic)`;
+    }
   });
 
     /* 

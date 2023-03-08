@@ -4,7 +4,7 @@
 // 1. Does the url match a recognized porn site url? PorNo!
 // 2. Else, does the url contain enough porn keywords? Check w API, then maybe
 //  PorNo!
-// 3. Else, carry on!
+// 3. Else, site is assumed to be non-pornographic. No response.
 // https://stackoverflow.com/questions/18242527/stop-a-web-page-from-loading-until-a-jquery-ajax-call-completes
 // Is it possible to collect the links from storage, then have them in a kind of "permanent cache"?
 //  This would help with adding links dynamically without releasing an update. storage.local.get takes too long
@@ -12,7 +12,8 @@
 
 let links = [];
 let counter = 0;
-let safeSearch = "&safe=active";
+let googleSafeSearchTag = "&safe=active";
+let bingSafeSearchTag = '&adlt=strict';
 let defaultLink = "https://github.com/mrvivacious/PorNo-_Porn_Blocker";
 // 'https://fiftyshadesoflove.org/#connection'
 
@@ -25,14 +26,35 @@ function main() {
   let href = window.location.href;
 
   if (isUnsafeGoogleSearch(href)) {
-    window.location.href = location + safeSearch;
+    window.location.href = location + googleSafeSearchTag;
     return;
   }
 
   if (isUnsafeBingSearch(href)) {
-    window.location.href = location + "&adlt=strict";
+    window.location.href = location + bingSafeSearchTag;
     return;
   }
+
+  // User banlist
+  chrome.storage.sync.get(`userBanlists`, function(returnedObject) {
+    let userBanlistsMap = returnedObject[`userBanlists`];
+    if (userBanlistsMap !== undefined) {
+      let sites = Object.keys(userBanlistsMap);
+      for (item in sites) {
+        if (sites[item] !== 'listOfEntireSites') {
+          // is the current site this url? IT FUCKING WORKS
+          if (window.location.href === sites[item]) {
+            PorNo();
+          }
+        }
+      }
+  
+      let exactSites = userBanData['listOfEntireSites'];
+      for (item in exactSites) {
+        // does the current hostname have this url?
+      }
+    }
+  });
 
   // ROUTE LOCALSTORAGE ( [ideally is] MOST UP TO DATE )
   chrome.storage.local.get("realtimeBannedLinks", function (returnValue) {
@@ -48,11 +70,7 @@ function main() {
         PorNo();
       }
     }
-    // Else, if the url has four or more "banned words",
-    //  check the url's category through the IBM XFORCE API
-    // Four because there are four inner planets in our solar system
-    // jk I don't have a better system for checking these links faster than the page
-    //  can load
+    // Else, evalute URL with a site category API or something in the future
     else {
       // checkURL(); commented out because this function is empty atm
     }
@@ -336,9 +354,9 @@ function checkWithIBM() {
 }
 
 function isUnsafeGoogleSearch(url) {
-  return url.includes("google.com/search?") && !url.includes(safeSearch);
+  return url.includes("google.com/search?") && !url.includes(googleSafeSearchTag);
 }
 
 function isUnsafeBingSearch(url) {
-  return url.includes("bing.com/search?") && !url.includes("&adlt=strict");
+  return url.includes("bing.com/search?") && !url.includes(bingSafeSearchTag);
 }

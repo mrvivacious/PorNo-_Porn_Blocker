@@ -14,27 +14,6 @@ window.onload = () => {
       addUrlListItemToSpecificList(exactSites[item], 'listOfEntireSites');
     }
   });
-
-  // let sites = [
-  //   'reddit.com/r/nsfwexample1',
-  //   'reddit.com/r/nsfwexample2',
-  //   'site3.net/video13',
-  //   'gamingsite.com/adultsection'
-  // ];
-
-  // for (item in sites) {
-  //   addListItemToSpecificSitesList(sites[item]);
-  // }
-
-  // let exactSites = [
-  //   'blahblahnsfw.org',
-  //   'randomadultsite.abc',
-  //   'pornwhatever.ok'
-  // ];
-
-  // for (item in exactSites) {
-  //   addListItemToEntireSitesList(exactSites[item]);
-  // }
 };
 
 function addUrlListItemToSpecificList(url, specificList) {

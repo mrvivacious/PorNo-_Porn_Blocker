@@ -49,9 +49,12 @@ function main() {
         }
       }
   
-      let exactSites = userBanData['listOfEntireSites'];
+      let exactSites = userBanlistsMap['listOfEntireSites'];
       for (item in exactSites) {
         // does the current hostname have this url?
+        if (window.location.hostname.includes(exactSites[item])) {
+          PorNo();
+        }
       }
     }
   });

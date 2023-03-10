@@ -47,11 +47,17 @@ function toggleURL() {
       let url = tabs[0].url;
       let hostname = getHostnameFromURL(url)
       document.getElementById("INPUT_url").value = hostname;
+      document.getElementById("INPUT_url").disabled = true;
+      document.getElementById("INPUT_url").className = 'disabled';
+
       HOSTNAME = hostname;
     });
   }
   else {
     document.getElementById("INPUT_url").value = URL;
+    document.getElementById("INPUT_url").disabled = false;
+    document.getElementById("INPUT_url").className = '';
+
     HOSTNAME = undefined;
   }
 }
@@ -81,9 +87,11 @@ function addSiteToBanlist() {
       userBanlistsMap = {};
     }
 
+    let urlFromInput = document.getElementById("INPUT_url").value;
+
     if (HOSTNAME === undefined) {
       // alert('ADDING site to the SPECIFIC Sites Map');
-      userBanlistsMap[URL] = !0;
+      userBanlistsMap[urlFromInput] = !0;
     }
     else {
       // alert('ADDING site to the ENTIRE Sites List');
@@ -107,7 +115,7 @@ function addSiteToBanlist() {
       chrome.storage.sync.set({ userBanlists: userBanlistsMap }, function() {
         // TODO add visual indicator (under or above the ADD button? or smth else?) that the item was saved to the appropriate list (SPECIFIC/ENTIRE)
         let feedback = document.getElementById(`feedbackForAddButton`);
-        let siteToShow = HOSTNAME ? HOSTNAME : URL;
+        let siteToShow = HOSTNAME ? HOSTNAME : urlFromInput;
         feedback.innerText = `Successfully added\n${siteToShow}`;
       });
     } catch (e) {

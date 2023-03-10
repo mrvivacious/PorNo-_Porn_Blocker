@@ -116,7 +116,18 @@ function addSiteToBanlist() {
         // TODO add visual indicator (under or above the ADD button? or smth else?) that the item was saved to the appropriate list (SPECIFIC/ENTIRE)
         let feedback = document.getElementById(`feedbackForAddButton`);
         let siteToShow = HOSTNAME ? HOSTNAME : urlFromInput;
+        feedback.style.color = 'green';
         feedback.innerText = `Successfully added\n${siteToShow}`;
+
+        setTimeout(() => {
+          let url = chrome.runtime.getURL('banlistViewer.html');
+
+          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.update(tabs[0].id, { url: url });
+          });
+
+          }, 2000); // 2 seconds
+
       });
     } catch (e) {
       let feedback = document.getElementById(`feedbackForAddButton`);

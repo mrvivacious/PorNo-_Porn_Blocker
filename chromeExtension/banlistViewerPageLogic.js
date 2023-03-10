@@ -47,7 +47,7 @@ function addUrlListItemToSpecificList(url, specificList) {
 
           try {
             chrome.storage.sync.set({ userBanlists: userBanData }, function() {
-              alert(`Succesfully deleted URL:\n${url}`);
+              // alert(`Succesfully deleted URL:\n${url}`);
               li.remove()
             });
           } catch (e) {

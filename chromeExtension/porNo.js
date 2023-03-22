@@ -51,8 +51,8 @@ function main() {
   
       let exactSites = userBanlistsMap['listOfEntireSites'];
       for (item in exactSites) {
-        // does the current hostname have this url?
-        if (window.location.hostname.includes(exactSites[item])) {
+        // does the current site origin have this url?
+        if (window.location.origin.includes(exactSites[item])) {
           PorNo();
         }
       }

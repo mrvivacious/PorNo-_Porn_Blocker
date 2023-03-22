@@ -70,7 +70,7 @@ function isChromeURL(url) {
 // maybe, isInputValid() -> addToBanlists() or smtn
 function addSiteToBanlist() {
   // alert(URL)
-  if (isChromeURL(URL)) {
+  if (isChromeURL(document.getElementById("INPUT_url").value)) {
     alert(`Chrome browser pages* will not be blocked.\n
     The user shouldn't lose access to important browser functionality.\n\n
     * = URLs that start with "chrome"`);
@@ -122,11 +122,12 @@ function addSiteToBanlist() {
         setTimeout(() => {
           let url = chrome.runtime.getURL('banlistViewer.html');
 
+          // https://stackoverflow.com/questions/1891738
           chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             chrome.tabs.update(tabs[0].id, { url: url });
           });
 
-          }, 2000); // 2 seconds
+          }, 1000); // 1 second
 
       });
     } catch (e) {

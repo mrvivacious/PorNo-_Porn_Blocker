@@ -1,5 +1,12 @@
 # releaseNotes
 
+## 0.0.1.901 Chrome Extension
+
+- (Enhancement) Custom banlists. Access the menu by clicking `Ban this site?` in the top right corner of the popup
+- (Lists) updated the ban list!
+
+***
+
 ## 0.0.1.9 Chrome Extension
 
 - (Enhancement) Submit V3 migration, to prevent Chrome from removing PorNo!

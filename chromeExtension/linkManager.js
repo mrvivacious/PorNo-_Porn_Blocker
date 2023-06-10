@@ -227,19 +227,6 @@ $(document).on("click", "#delete", function (event) {
   event.stopPropagation();
 });
 
-// Display little text when hovering over the links
-$(document).on("mouseover", "li", function () {
-  $(this).attr("title", "Click to visit " + this.id);
-});
-
-$(document).on("mouseover", "#delete", function () {
-  $(this).attr("title", "Delete link?");
-});
-
-$(document).on("mouseover", "#emergency", function () {
-  $(this).attr("title", "It's time to PorNo!");
-});
-
 // TODO: read this https://artoflivingretreatcenter.org/slowing-down/?utm_campaign=General%20Registrations&utm_source=hs_email&utm_medium=email&utm_content=62426973&_hsenc=p2ANqtz-9_ANH5jVXnFguLeekK5mILFORbry13zYDIh_Gx7P9Tr-2ynINpNHbCCgLnqvu0EPWPP-ZfgLCu7mKBfoTp0XLnwKWuuw&_hsmi=62426973
 
 //
@@ -355,11 +342,13 @@ function initList(currentKey) {
 
         // ID the element we just made with its url
         li.id = url;
+        li.title = "Click to visit " + li.id; // Hover to view destination URL
 
         let span = document.createElement("SPAN");
         let txt = document.createTextNode("\u00D7");
         span.className = "delete";
         span.id = "delete";
+        span.title = "Delete link?";
         span.appendChild(txt);
         li.appendChild(span);
       }

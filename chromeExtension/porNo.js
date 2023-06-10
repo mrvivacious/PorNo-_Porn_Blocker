@@ -207,28 +207,6 @@ function evaluateWords() {
   return false;
 }
 
-// Evaluates the title of the current page for porn clues
-// NOT a better indicator than the URL (don't use!)
-function checkTitle() {
-  $(document).ready(function () {
-    let title = document.title.toLowerCase();
-    let ctr = 0;
-
-    for (let i = 0; i < bannedWordsList.length; i++) {
-      if (title.includes(bannedWordsList[i])) {
-        ctr++;
-      }
-    }
-    // Moment of silence for IBM XFORCE
-    // RIP
-    // Here comes some fresh NLP, title analysis
-    // 3 because fun
-    if (ctr >= 3) {
-      store(window.location.hostname);
-    }
-  });
-}
-
 function store(url) {
   // Save domain without www.
   if (url.includes("www.")) {

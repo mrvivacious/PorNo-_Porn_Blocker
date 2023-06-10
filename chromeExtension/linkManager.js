@@ -187,12 +187,6 @@ function updateClock() {
 // });
 // });
 
-// Gets the title attribute (the url) of the clicked li and sends that to openLink, which opens the url
-// https://stackoverflow.com/questions/34964039
-$(document).on("click", "li", function () {
-  openURLInSameWindow(this.id);
-});
-
 // Deletes the selected list item and removes it from storage
 $(document).on("click", "#delete", function (event) {
   let keyValueToRemove = this.parentElement.id;
@@ -351,6 +345,10 @@ function initList(currentKey) {
         span.title = "Delete link?";
         span.appendChild(txt);
         li.appendChild(span);
+
+        li.addEventListener('click', () => {
+          openURLInSameWindow(li.id);
+        });
       }
     }
   });

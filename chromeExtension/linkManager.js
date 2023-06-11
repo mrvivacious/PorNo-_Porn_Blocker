@@ -187,40 +187,6 @@ function updateClock() {
 // });
 // });
 
-// Deletes the selected list item and removes it from storage
-$(document).on("click", "#delete", function (event) {
-  let keyValueToRemove = this.parentElement.id;
-  let listItemText = this.parentElement.innerText;
-  let urlName = listItemText.substring(0, listItemText.length - 2);
-
-  let userConfirmedDelete = confirm(
-    "Delete this link?\n\nName: " + urlName + "\nLink: " + keyValueToRemove
-  );
-
-  if (userConfirmedDelete) {
-    // Remove key-value from storage
-    // Try-catch cause when the limits are exceeded, we receive an error message. We handle that
-    //  in the catch block
-    try {
-      chrome.storage.sync.remove([keyValueToRemove], function () {});
-    } catch (e) {
-      document.getElementById("ERROR_MSG").innerHTML =
-        "Too many operations...please try again later, sorry!";
-    }
-
-    // Only update list when we confirm that the desired deletion has succeeded
-    if (
-      chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
-    ) {
-      this.parentElement.remove();
-    }
-  }
-
-  // Prevents the li.click from firing -- this resulted in opening a new tab of
-  //  the deleted link
-  event.stopPropagation();
-});
-
 // TODO: read this https://artoflivingretreatcenter.org/slowing-down/?utm_campaign=General%20Registrations&utm_source=hs_email&utm_medium=email&utm_content=62426973&_hsenc=p2ANqtz-9_ANH5jVXnFguLeekK5mILFORbry13zYDIh_Gx7P9Tr-2ynINpNHbCCgLnqvu0EPWPP-ZfgLCu7mKBfoTp0XLnwKWuuw&_hsmi=62426973
 
 //
@@ -263,8 +229,7 @@ function generateInputMessage() {
 }
 
 // Initializes the websites list with the links saved in storage
-// Using Google.sync.storage allows the links to persist through devices as the
-//  data is saved to the Google account currently signed in
+// Google.sync.storage saves the links to user's Google account (free "cloud" storage)
 function getUserLinksFromStorageAndAddToPopup() {
   // Array that stores all the keys (urls)
   let urls;
@@ -309,7 +274,6 @@ function getUserLinksFromStorageAndAddToPopup() {
 //  iteration and the value sent into the get(). The loop resolves faster than the
 //  get method can return the associated value and create an li, so we were left with
 //  several "undefined" list objects
-// @param currentKey The key we are retrieving the value of from storage
 // tl;dr Something something asynchronous something something race condition
 function initList(currentKey) {
   // Retrieve the value associated with the current key
@@ -338,13 +302,10 @@ function initList(currentKey) {
         li.id = url;
         li.title = "Click to visit " + li.id; // Hover to view destination URL
 
-        let span = document.createElement("SPAN");
-        let txt = document.createTextNode("\u00D7");
-        span.className = "delete";
-        span.id = "delete";
-        span.title = "Delete link?";
-        span.appendChild(txt);
-        li.appendChild(span);
+        let span = createDeleteElement();
+        let spanWithEventListener = addDeleteFunctionToSpan(span);
+
+        li.appendChild(spanWithEventListener);
 
         li.addEventListener('click', () => {
           openURLInSameWindow(li.id);
@@ -353,6 +314,61 @@ function initList(currentKey) {
     }
   });
 }
+
+function createDeleteElement() {
+  let span = document.createElement("SPAN");
+  let txt = document.createTextNode("\u00D7");
+  span.className = "delete";
+  span.id = "delete";
+  span.title = "Delete link?";
+  span.appendChild(txt);
+
+  return span;
+}
+
+// TODO
+function addDeleteFunctionToSpan(spanElement) {
+  spanElement.addEventListener('click', () => {
+    alert('hi!')
+  });
+
+  return spanElement
+}
+
+// Deletes the selected list item and removes it from storage
+$(document).on("click", "#delete", function (event) {
+  let keyValueToRemove = this.parentElement.id;
+  let listItemText = this.parentElement.innerText;
+  let urlName = listItemText.substring(0, listItemText.length - 2);
+
+  let userConfirmedDelete = confirm(
+    "Delete this link?\n\nName: " + urlName + "\nLink: " + keyValueToRemove
+  );
+
+  if (userConfirmedDelete) {
+    // Remove key-value from storage
+    // Try-catch cause when the limits are exceeded, we receive an error message. We handle that
+    //  in the catch block
+    try {
+      chrome.storage.sync.remove([keyValueToRemove], function () {});
+    } catch (e) {
+      document.getElementById("ERROR_MSG").innerHTML =
+        "Too many operations...please try again later, sorry!";
+    }
+
+    // Only update list when we confirm that the desired deletion has succeeded
+    if (
+      chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
+    ) {
+      this.parentElement.remove();
+    }
+  }
+
+  // Prevents the li.click from firing -- this resulted in opening a new tab of
+  //  the deleted link
+  event.stopPropagation();
+});
+
 
 //  FFFFFFFFFFFFFFFFFFFFFFIIIIIIIIIIRRRRRRRRRRRRRRRRR   EEEEEEEEEEEEEEEEEEEEEE
 //  F::::::::::::::::::::FI::::::::IR::::::::::::::::R  E::::::::::::::::::::E
@@ -380,8 +396,7 @@ function updateDB() {
   });
 }
 
-// Function submit()
-// Begin the process of creating a new list item when clicking on the "Add" button
+// The process of creating a new list item when clicking on the "Add" button
 function submit() {
   let url = document.getElementById("INPUT_url").value.trim();
   let name = document.getElementById("INPUT_name").value.trim();
@@ -395,7 +410,6 @@ function submit() {
       document.getElementById("ERROR_MSG").innerHTML = "";
       return;
     } else if (url.includes(" ")) {
-      // Any spaces, display error
       document.getElementById("ERROR_MSG").innerHTML =
         "Invalid format, sorry. Do not include spaces in the link.";
       return;
@@ -415,7 +429,6 @@ function isBanned(url, name, origin) {
   chrome.storage.local.get("realtimeBannedLinks", function (retValue) {
     let bannedLinks = retValue.realtimeBannedLinks;
 
-    // Final test
     if (isBannedURLRaceCondition(url, bannedLinks)) {
       return true;
     }
@@ -426,12 +439,12 @@ function isBanned(url, name, origin) {
       addLink(url, name);
     }
 
-    // Link isn't banned ^_^
     return false;
   });
 }
 
 // Race condition boooooo
+// todo modify this fn to use the porn map. idk
 // This function does the checking of a link's ban-status. It exists to remove the undesired effects
 //  from asynchronous behaviors that were affecting PorNo!'s functionality
 // @param url The url to test
@@ -511,8 +524,7 @@ function addLink(url, urlLabel) {
     url = "http://" + url;
   }
 
-  // Empty name? use the url as the item label
-  if (urlLabel === "") {
+  if (urlLabel === "") { // if no provided name, use the url as the label
     urlLabel = url;
   }
   li.appendChild(document.createTextNode(urlLabel));
@@ -522,7 +534,21 @@ function addLink(url, urlLabel) {
       // Give the li the id of the url received as input to enable onClick
       // document.getElementById("websites").appendChild(li);
       li.id = url;
+      li.title = "Click to visit " + li.id; // Hover to view destination URL
       document.getElementById("websites").appendChild(li);
+
+      // Empty the input field
+      document.getElementById("INPUT_url").value = "";
+      document.getElementById("INPUT_name").value = "";
+
+      let span = createDeleteElement();
+      let spanWithEventListener = addDeleteFunctionToSpan(span);
+
+      li.appendChild(spanWithEventListener);
+
+      li.addEventListener('click', () => {
+        openURLInSameWindow(li.id);
+      });
 
       if (isFilepath) {
         document.getElementById("ERROR_MSG").innerHTML =
@@ -533,22 +559,10 @@ function addLink(url, urlLabel) {
     });
   } catch (err) {
     // The Google storage documentation (https://developer.chrome.com/extensions/storage#property-sync):
-    //  MAX_WRITE_OPERATIONS_PER_MINUTE, 120
-    //  MAX_WRITE_OPERATIONS_PER_HOUR, 1800
+    //  MAX_WRITE_OPERATIONS_PER_MINUTE, 120. MAX_WRITE_OPERATIONS_PER_HOUR, 1800
     document.getElementById("ERROR_MSG").innerHTML =
       "Error...please try again later, sorry!";
   }
-
-  // Empty the input field
-  document.getElementById("INPUT_url").value = "";
-  document.getElementById("INPUT_name").value = "";
-
-  let span = document.createElement("SPAN");
-  let txt = document.createTextNode("\u00D7");
-  span.className = "delete";
-  span.id = "delete";
-  span.appendChild(txt);
-  li.appendChild(span);
 }
 
 function openURLInSameWindow(URL) {
@@ -562,8 +576,7 @@ function openURLInNewWindow(URL) {
   });
 }
 
-// If PorNo! is not allowed in icognito,
-//  show the tip message because forcing users will only hurt our intentions
+// If PorNo! is not allowed in icognito, prompt user to enable. Forcing user will only hurt my intentions
 function ifIncognitoIsEnabledThenRemovePrompt() {
   try {
     chrome.extension.isAllowedIncognitoAccess(function (isAllowedAccess) {
@@ -577,8 +590,7 @@ function ifIncognitoIsEnabledThenRemovePrompt() {
   }
 }
 
-// Clicking on the incognito tip opens PorNo!'s extension page to
-//  help with the process of enabling "Allow in incognito"
+// Click on the incognito tip to see "Allow in incognito" option for PorNo!
 function openExtensionSettingsPage() {
   chrome.tabs.create({
     url: "chrome://extensions/?id=" + chrome.runtime.id, // todo check out chrome.runtime.getURL
@@ -586,9 +598,7 @@ function openExtensionSettingsPage() {
 }
 
 // Open all redirects in separate windows
-// Why so many windows? so many windows to maximize the amount of time user
-//  spends looking at the stuff that motivates him/her
-// More exposure may lead to more conversion of sexual energy into positive energy
+// More sites -> more distractions... i guess
 function openAllRedirectLinks() {
   chrome.storage.sync.get(null, function (items) {
     urls = Object.keys(items);

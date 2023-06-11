@@ -207,28 +207,6 @@ function evaluateWords() {
   return false;
 }
 
-// Evaluates the title of the current page for porn clues
-// NOT a better indicator than the URL (don't use!)
-function checkTitle() {
-  $(document).ready(function () {
-    let title = document.title.toLowerCase();
-    let ctr = 0;
-
-    for (let i = 0; i < bannedWordsList.length; i++) {
-      if (title.includes(bannedWordsList[i])) {
-        ctr++;
-      }
-    }
-    // Moment of silence for IBM XFORCE
-    // RIP
-    // Here comes some fresh NLP, title analysis
-    // 3 because fun
-    if (ctr >= 3) {
-      store(window.location.hostname);
-    }
-  });
-}
-
 function store(url) {
   // Save domain without www.
   if (url.includes("www.")) {
@@ -318,18 +296,7 @@ function checkWithIBM() {
   let api = "https://api.xforce.ibmcloud.com/url/" + url;
 
   if (!url.includes("fightthenewdrug")) {
-    // Too slow -- some websites load before PorNo! executes
-    // $.getJSON(api, function(data) {
-    //   if (data.result.cats.Pornography) {
-    //     alert('PorNo!');
-    //     PorNo();
-    //   }
-    // });
-
-    // The "Vanilla JS" version of $.getJSON(), but with async turned off ('GET', api, false)
-    // This allows us to delay website load by just a teeny bit (hopefully teeny) enough
-    //  to get to PorNo! if needed
-    // Thank you, http://youmightnotneedjquery.com/#json
+    // http://youmightnotneedjquery.com/#json
     let request = new XMLHttpRequest();
     request.open("GET", api, false);
 

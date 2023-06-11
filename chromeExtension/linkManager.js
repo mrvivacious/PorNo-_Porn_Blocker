@@ -95,7 +95,7 @@ window.onload = function() {
   showStreakInPopup();
 
   if (window.location.href.includes("/stats.html")) {
-    getRedirects();
+    getRedirects(); // firebaseStuff.js
   }
 
   document.addEventListener('keydown', handleEnterKeypress);
@@ -303,9 +303,9 @@ function initList(currentKey) {
         li.title = "Click to visit " + li.id; // Hover to view destination URL
 
         let span = createDeleteElement();
-        let spanWithEventListener = addDeleteFunctionToSpan(span);
+        let spanWithDeleteFunction = addDeleteFunctionToSpan(span);
 
-        li.appendChild(spanWithEventListener);
+        li.appendChild(spanWithDeleteFunction);
 
         li.addEventListener('click', () => {
           openURLInSameWindow(li.id);
@@ -326,49 +326,43 @@ function createDeleteElement() {
   return span;
 }
 
-// TODO
+// Deletes the selected list item and removes it from storage
 function addDeleteFunctionToSpan(spanElement) {
-  spanElement.addEventListener('click', () => {
-    alert('hi!')
+  spanElement.addEventListener('click', (event) => {
+
+    let keyValueToRemove = spanElement.parentElement.id;
+    let listItemText = spanElement.parentElement.innerText;
+    let urlName = listItemText.substring(0, listItemText.length - 2);
+
+    let userConfirmedDelete = confirm(
+      "Delete this link?\n\nName: " + urlName + "\nLink: " + keyValueToRemove
+    );
+
+    if (userConfirmedDelete) {
+      // Remove key-value from storage
+      // Try-catch cause when the limits are exceeded, we receive an error message. We handle that
+      //  in the catch block
+      try {
+        chrome.storage.sync.remove([keyValueToRemove], function () {});
+      } catch (e) {
+        document.getElementById("ERROR_MSG").innerHTML =
+          "Too many operations...please try again later, sorry!";
+      }
+
+      // Only update list when we confirm that the desired deletion has succeeded
+      if (
+        chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
+      ) {
+        spanElement.parentElement.remove();
+      }
+    }
+
+    // Prevents opening the deleted link in a new tab
+    event.stopPropagation();
   });
 
   return spanElement
 }
-
-// Deletes the selected list item and removes it from storage
-$(document).on("click", "#delete", function (event) {
-  let keyValueToRemove = this.parentElement.id;
-  let listItemText = this.parentElement.innerText;
-  let urlName = listItemText.substring(0, listItemText.length - 2);
-
-  let userConfirmedDelete = confirm(
-    "Delete this link?\n\nName: " + urlName + "\nLink: " + keyValueToRemove
-  );
-
-  if (userConfirmedDelete) {
-    // Remove key-value from storage
-    // Try-catch cause when the limits are exceeded, we receive an error message. We handle that
-    //  in the catch block
-    try {
-      chrome.storage.sync.remove([keyValueToRemove], function () {});
-    } catch (e) {
-      document.getElementById("ERROR_MSG").innerHTML =
-        "Too many operations...please try again later, sorry!";
-    }
-
-    // Only update list when we confirm that the desired deletion has succeeded
-    if (
-      chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
-    ) {
-      this.parentElement.remove();
-    }
-  }
-
-  // Prevents the li.click from firing -- this resulted in opening a new tab of
-  //  the deleted link
-  event.stopPropagation();
-});
-
 
 //  FFFFFFFFFFFFFFFFFFFFFFIIIIIIIIIIRRRRRRRRRRRRRRRRR   EEEEEEEEEEEEEEEEEEEEEE
 //  F::::::::::::::::::::FI::::::::IR::::::::::::::::R  E::::::::::::::::::::E
@@ -542,9 +536,9 @@ function addLink(url, urlLabel) {
       document.getElementById("INPUT_name").value = "";
 
       let span = createDeleteElement();
-      let spanWithEventListener = addDeleteFunctionToSpan(span);
+      let spanWithDeleteFunction = addDeleteFunctionToSpan(span);
 
-      li.appendChild(spanWithEventListener);
+      li.appendChild(spanWithDeleteFunction);
 
       li.addEventListener('click', () => {
         openURLInSameWindow(li.id);

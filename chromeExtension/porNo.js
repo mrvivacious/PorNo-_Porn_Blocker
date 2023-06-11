@@ -296,18 +296,7 @@ function checkWithIBM() {
   let api = "https://api.xforce.ibmcloud.com/url/" + url;
 
   if (!url.includes("fightthenewdrug")) {
-    // Too slow -- some websites load before PorNo! executes
-    // $.getJSON(api, function(data) {
-    //   if (data.result.cats.Pornography) {
-    //     alert('PorNo!');
-    //     PorNo();
-    //   }
-    // });
-
-    // The "Vanilla JS" version of $.getJSON(), but with async turned off ('GET', api, false)
-    // This allows us to delay website load by just a teeny bit (hopefully teeny) enough
-    //  to get to PorNo! if needed
-    // Thank you, http://youmightnotneedjquery.com/#json
+    // http://youmightnotneedjquery.com/#json
     let request = new XMLHttpRequest();
     request.open("GET", api, false);
 

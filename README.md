@@ -168,6 +168,17 @@ Click [this](https://play.google.com/store/apps/details?id=us.mrvivacio.porno&pc
 
 ## Edit the URL lists
 
+The websites are organized by the first letter of their domain name, in `lists/Urls`. There is a `.txt` file for the English alphanumeric alphabet, so `0-9, a-z`.
+
+Adding a site looks like opening its respective .txt file in a text editor. First check if the site is in the file with your text editor's search function. If the site isn't already in the file, type the name of the site at the top of the file then press enter to keep each site on its own line. Looking through the files will explain the format.
+
+After the site is added, I like to use `:sort` in ViM to keep the txt file alphabetically sorted.
+
+Finally, in the terminal, I run `python generateLists.py`. This script creates the JavaScript and Java files for the Chrome extension and the Android app, respectively, using the contents of the .txt files. You will see an output saying what files were updated along with their paths.
+
+Add the lists and the updated .js and .java files to a Git commit and make a pull request. Thanks!
+
+
 ## Filing issues / contributing
 
 ## Todo

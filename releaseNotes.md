@@ -1,5 +1,12 @@
 # releaseNotes
 
+## 0.0.1.902 Chrome Extension
+
+- (Enhancement) reduced chrome extension size by removing jQuery library. I refactored jQuery into Vanilla JavaScript
+- (Lists) updated the ban list
+
+***
+
 ## 0.0.1.901 Chrome Extension
 
 - (Enhancement) Custom banlists. Access the menu by clicking `Ban this site?` in the top right corner of the popup

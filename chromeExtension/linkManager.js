@@ -73,10 +73,20 @@ chrome.storage.local.get("notFirstTime", function (returnValue) {
 
     chrome.storage.local.set({ notFirstTime: true }, function () {});
 
+    // chrome.storage.sync.set(
+    //   { lastTimestampSynced: new Date().getTime() },
+    //   function () {}
+    // );
+    // todo delete this data from everyone's copies
+
+    let redirectionHistoryList = [];
+    redirectionHistoryList.push(new Date().getTime());
+
     chrome.storage.sync.set(
-      { lastTimestampSynced: new Date().getTime() },
+      { redirectionHistory: redirectionHistoryList },
       function () {}
-    ); // TODO test this on raw install
+    );
+
 
     chrome.storage.sync.set(
       { userBanlists: {} },

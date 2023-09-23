@@ -42,7 +42,6 @@ function main() {
       let sites = Object.keys(userBanlistsMap);
       for (item in sites) {
         if (sites[item] !== 'listOfEntireSites') {
-          // is the current site this url? IT FUCKING WORKS
           if (window.location.href === sites[item]) {
             PorNo();
           }
@@ -139,7 +138,13 @@ function PorNo() {
         links.push(urls[i]);
       }
 
-      openLink();
+      if (links.length >= 1) {
+        openLink();
+      }
+      else {
+        // todo this function can use some refactoring
+        window.location.href = defaultLink
+      }
     } else {
       // User redirect list is empty!
       window.location.href = defaultLink;

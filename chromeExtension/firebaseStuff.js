@@ -1,7 +1,7 @@
 // remember, firebase connection only happens when the popup is opened
 // so add <script> to popup as well
 
-const API_KEY = "";
+const API_KEY = "todo";
 const AUTH_DOMAIN = "";
 const DATABASE_URL = "";
 const PROJECT_ID = "";
@@ -18,12 +18,12 @@ function DBOperations(linkNames) {
   }
 
   let config = {
-    apiKey: API_KEY,
-    authDomain: AUTH_DOMAIN,
-    databaseURL: DATABASE_URL,
-    projectId: PROJECT_ID,
-    storageBucket: STORAGE_BUCKET,
-    messagingSenderId: MESSAGING_SENDER_ID,
+    apiKey: "",
+    authDomain: "porno-urls.firebaseapp.com",
+    databaseURL: "https://porno-urls.firebaseio.com",
+    projectId: "porno-urls",
+    storageBucket: "porno-urls.appspot.com",
+    messagingSenderId: "34851579478"
   };
   firebase.initializeApp(config);
   let db = firebase.firestore();
@@ -46,7 +46,8 @@ function DBOperations(linkNames) {
       val !== "realtimeBannedLinks" &&
       val !== "notFirstTime" &&
       val !== "redirectionHistory" &&
-      val !== "lastTimestampSynced" // todo please establish a better data schema smh
+      val !== "lastTimestampSynced" &&
+      val !== "userBanlists" // todo establish a better data schema? any thoughts?
     ) {
       db.collection("links").doc(val).set({
         // Adding this line will write another document ( links -> link -> link:currentLink )

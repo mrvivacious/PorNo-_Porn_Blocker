@@ -1,7 +1,7 @@
 // remember, firebase connection only happens when the popup is opened
 // so add <script> to popup as well
 
-const API_KEY = "todo";
+const API_KEY = "";
 const AUTH_DOMAIN = "";
 const DATABASE_URL = "";
 const PROJECT_ID = "";
@@ -12,7 +12,7 @@ function DBOperations(linkNames) {
   // FIREBASE STUFF
   if (!API_KEY) {
     console.warn(
-      '"Please set the Firebase credentials at the top of this file...with love, Vivek"'
+      '"Please set the Firebase credentials at the top of this file - Vivek"'
     );
     return;
   }

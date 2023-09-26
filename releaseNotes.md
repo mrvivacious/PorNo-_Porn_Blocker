@@ -1,5 +1,12 @@
 # releaseNotes
 
+## 0.0.1.903 Chrome Extension
+
+- (enhancement) Streak now starts counting when the app is downloaded instead of when the user is redirected for the first time
+- (Bug fix) users without redirect links would get sent to a <URL>/undefined link instead of the default value, which is this GitHub repository. This has been corrected so that users with no redirect links are now redirected to this repo
+
+***
+
 ## 0.0.1.902 Chrome Extension
 
 - (Enhancement) reduced chrome extension size by removing jQuery library. I refactored jQuery into Vanilla JavaScript

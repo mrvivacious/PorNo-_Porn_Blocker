@@ -1,5 +1,11 @@
 # releaseNotes
 
+## 0.0.1.904 Chrome Extension
+
+- (Lists) updated the ban list
+
+***
+
 ## 0.0.1.903 Chrome Extension
 
 - (enhancement) Streak now starts counting when the app is downloaded instead of when the user is redirected for the first time

@@ -57,12 +57,12 @@
 try {
   chrome.runtime.setUninstallURL(
     "https://docs.google.com/forms/d/e/1FAIpQLSd1f_0gTaqpFPAznFzcsF_Wsb0xLv9Y0Nli-0_CG6-jG3r54Q/viewform?usp=sf_link",
-    function () {}
+    function () {},
   );
 } catch (e) {
   // hide warning in chrome://extensions
-  console.log("Error with chrome.runtime.setUninstallURL");
-  console.log(e)
+  // console.log("Error with chrome.runtime.setUninstallURL");
+  // console.log(e);
 }
 
 // Open welcome and how to use pages on initial download
@@ -84,19 +84,15 @@ chrome.storage.local.get("notFirstTime", function (returnValue) {
 
     chrome.storage.sync.set(
       { redirectionHistory: redirectionHistoryList },
-      function () {}
+      function () {},
     );
 
-
-    chrome.storage.sync.set(
-      { userBanlists: {} },
-      function () {}
-    );
+    chrome.storage.sync.set({ userBanlists: {} }, function () {});
   }
 });
 
 // https://stackoverflow.com/questions/13591983/
-window.onload = function() {
+window.onload = function () {
   generateInputMessage();
 
   // updateDB(); // todo rename syncWithFirebase() ADD AFTER V3 MIGRATION
@@ -108,26 +104,28 @@ window.onload = function() {
     getRedirects(); // firebaseStuff.js
   }
 
-  document.addEventListener('keydown', handleEnterKeypress);
+  document.addEventListener("keydown", handleEnterKeypress);
 
-  let submitLinkButton = document.getElementById('submit');
+  let submitLinkButton = document.getElementById("submit");
   if (submitLinkButton) {
-    submitLinkButton.addEventListener('click', submit);
+    submitLinkButton.addEventListener("click", submit);
   }
 
-  let incognitoWarning = document.getElementById('setIncognito');
+  let incognitoWarning = document.getElementById("setIncognito");
   if (incognitoWarning) {
-    incognitoWarning.addEventListener('click', openExtensionSettingsPage);
+    incognitoWarning.addEventListener("click", openExtensionSettingsPage);
   }
 
-  let emergencyButton = document.getElementById('emergency');
+  let emergencyButton = document.getElementById("emergency");
   if (emergencyButton) {
-    emergencyButton.addEventListener('click', openAllRedirectLinks);
+    emergencyButton.addEventListener("click", openAllRedirectLinks);
   }
 };
 
-function handleEnterKeypress(event) { // submitLinkViaEnterKey todo refactor?
-  if (event.keyCode === 13) { // isEnterKeyPressed() todo refactor
+function handleEnterKeypress(event) {
+  // submitLinkViaEnterKey todo refactor?
+  if (event.keyCode === 13) {
+    // isEnterKeyPressed() todo refactor
     submit();
   }
 }
@@ -317,7 +315,7 @@ function initList(currentKey) {
 
         li.appendChild(spanWithDeleteFunction);
 
-        li.addEventListener('click', () => {
+        li.addEventListener("click", () => {
           openURLInSameWindow(li.id);
         });
       }
@@ -338,14 +336,13 @@ function createDeleteElement() {
 
 // Deletes the selected list item and removes it from storage
 function addDeleteFunctionToSpan(spanElement) {
-  spanElement.addEventListener('click', (event) => {
-
+  spanElement.addEventListener("click", (event) => {
     let keyValueToRemove = spanElement.parentElement.id;
     let listItemText = spanElement.parentElement.innerText;
     let urlName = listItemText.substring(0, listItemText.length - 2);
 
     let userConfirmedDelete = confirm(
-      "Delete this link?\n\nName: " + urlName + "\nLink: " + keyValueToRemove
+      "Delete this link?\n\nName: " + urlName + "\nLink: " + keyValueToRemove,
     );
 
     if (userConfirmedDelete) {
@@ -361,7 +358,8 @@ function addDeleteFunctionToSpan(spanElement) {
 
       // Only update list when we confirm that the desired deletion has succeeded
       if (
-        chrome.storage.sync.get([keyValueToRemove], function () {}) === undefined
+        chrome.storage.sync.get([keyValueToRemove], function () {}) ===
+        undefined
       ) {
         spanElement.parentElement.remove();
       }
@@ -371,7 +369,7 @@ function addDeleteFunctionToSpan(spanElement) {
     event.stopPropagation();
   });
 
-  return spanElement
+  return spanElement;
 }
 
 //  FFFFFFFFFFFFFFFFFFFFFFIIIIIIIIIIRRRRRRRRRRRRRRRRR   EEEEEEEEEEEEEEEEEEEEEE
@@ -528,7 +526,8 @@ function addLink(url, urlLabel) {
     url = "http://" + url;
   }
 
-  if (urlLabel === "") { // if no provided name, use the url as the label
+  if (urlLabel === "") {
+    // if no provided name, use the url as the label
     urlLabel = url;
   }
   li.appendChild(document.createTextNode(urlLabel));
@@ -550,14 +549,14 @@ function addLink(url, urlLabel) {
 
       li.appendChild(spanWithDeleteFunction);
 
-      li.addEventListener('click', () => {
+      li.addEventListener("click", () => {
         openURLInSameWindow(li.id);
       });
 
       if (isFilepath) {
         document.getElementById("ERROR_MSG").innerHTML =
           "Reminder: Local files can't be accessed on other machines, unless you copy the file to that machine.".fontcolor(
-            "DeepPink"
+            "DeepPink",
           );
       }
     });
@@ -570,7 +569,7 @@ function addLink(url, urlLabel) {
 }
 
 function openURLInSameWindow(URL) {
-    chrome.tabs.create({ url: URL });
+  if (chrome.tabs) chrome.tabs.create({ url: URL });
 }
 
 function openURLInNewWindow(URL) {
@@ -590,7 +589,7 @@ function ifIncognitoIsEnabledThenRemovePrompt() {
     });
   } catch (e) {
     console.log("Error with chrome.extension.isAllowedIncognitoAccess");
-    console.log(e)
+    console.log(e);
   }
 }
 

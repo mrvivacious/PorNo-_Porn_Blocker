@@ -5,6 +5,12 @@ body {
     /* white-space: nowrap; */
   }
 
+  #links:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bolder;
+  }
+
   h1 {
     font-size: 20px;
   }

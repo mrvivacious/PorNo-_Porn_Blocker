@@ -1,5 +1,12 @@
 # releaseNotes
 
+## 0.0.1.905 Chrome Extension
+
+- (Fun) Added merch. [Buy a shirt!](https://our-last-porn-blocker.printify.me/products)
+- (Lists) updated the ban list
+
+***
+
 ## 0.0.1.904 Chrome Extension
 
 - (Lists) updated the ban list
@@ -8,7 +15,7 @@
 
 ## 0.0.1.903 Chrome Extension
 
-- (enhancement) Streak now starts counting when the app is downloaded instead of when the user is redirected for the first time
+- (Enhancement) Streak now starts counting when the app is downloaded instead of when the user is redirected for the first time
 - (Bug fix) users without redirect links would get sent to a <URL>/undefined link instead of the default value, which is this GitHub repository. This has been corrected so that users with no redirect links are now redirected to this repo
 
 ***

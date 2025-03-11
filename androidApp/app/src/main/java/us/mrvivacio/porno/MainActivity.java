@@ -21,14 +21,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     // This holds the latest porn domains from database
     public static Map<String, Boolean> realtimeBannedLinks = new HashMap<>();
 
-    static FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Thank you, https://stackoverflow.com/questions/39052127/how-to-add-an-actionbar-in-android-studio-for-beginners
     @Override
@@ -64,12 +59,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String message = MyKotlinHelper.INSTANCE.isKotlinWorking();
+        Log.d(TAG, message);
+
         requestStoragePermissionsForSavingUserUrlData();
 
 //        Log.d(TAG, "onCreate: db = " + db);
 
         // update from db
-        readDB();
+//        readDB();
 
         if (!isAccessibilitySettingsOn(this)) {
             openAlertDialogForEnablingPorNoService();
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Tutorial code
         // Thank you, https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
-        lvItems = (ListView) findViewById(R.id.lv_Items);
+        lvItems = findViewById(R.id.lv_Items);
         items = new ArrayList<>();
 
         // Populate the listView with the link names saved in sharedPref
@@ -117,34 +115,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Update local links with the links from the database
-    public static void readDB() {
-        // Thank you, https://firebase.google.com/docs/firestore/query-data/get-data#list_subcollections_of_a_document
-        DocumentReference docRef = db.collection("links").document("realtimeBannedLinks");
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists() && document.getData() != null) {
-                    String bannedLinks = document.getData().toString();
-                    bannedLinks = bannedLinks.substring(6);
-                    bannedLinks = bannedLinks.substring(0, bannedLinks.length() - 2);
-
-                    // Thank you, https://stackoverflow.com/questions/7347856/how-to-convert-a-string-into-an-arraylist
-                    ArrayList<String> banList = new ArrayList<>(Arrays.asList(bannedLinks.split(", ")));
-
-                    for (String link : banList) {
-                        realtimeBannedLinks.put(link, true);
-                    }
-
-                } else {
-                    // TODO add analytics and report no such document
-//                        Log.d(TAG, "No such document");
-                }
-            } else {
-                // TODO add analytics and report failed to get document
-//                    Log.d(TAG, "get failed with ", task.getException());
-            }
-        });
-    }
+//    public static void readDB() {
+//        // Thank you, https://firebase.google.com/docs/firestore/query-data/get-data#list_subcollections_of_a_document
+//        DocumentReference docRef = db.collection("links").document("realtimeBannedLinks");
+//        docRef.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                DocumentSnapshot document = task.getResult();
+//                if (document != null && document.exists() && document.getData() != null) {
+//                    String bannedLinks = document.getData().toString();
+//                    bannedLinks = bannedLinks.substring(6);
+//                    bannedLinks = bannedLinks.substring(0, bannedLinks.length() - 2);
+//
+//                    // Thank you, https://stackoverflow.com/questions/7347856/how-to-convert-a-string-into-an-arraylist
+//                    ArrayList<String> banList = new ArrayList<>(Arrays.asList(bannedLinks.split(", ")));
+//
+//                    for (String link : banList) {
+//                        realtimeBannedLinks.put(link, true);
+//                    }
+//
+//                } else {
+//                    // TODO add analytics and report no such document
+////                        Log.d(TAG, "No such document");
+//                }
+//            } else {
+//                // TODO add analytics and report failed to get document
+////                    Log.d(TAG, "get failed with ", task.getException());
+//            }
+//        });
+//    }
 
     // Open all the saved URLs
     public void onEmergencyButtonPress(View v) {
@@ -180,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         editor.remove(key);
         editor.apply();
 
-        Utilities.removeFromFile(url);
+        UtilitiesKt.removeFromFile(url);
 
         Toast.makeText(this, getString(toast_delete_link) + " " + key, Toast.LENGTH_LONG).show();
     }
@@ -200,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             String name = entry.getKey();
             String URL = entry.getValue().toString();
 
-            if (porNo.isPorn(getHostName(URL))) {
+            if (PorNo.isPorn(getHostName(URL))) {
                 // Shame on you
                 deleteItem(name);
             }
@@ -213,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
         items = names;
         URLs = URLList;
-        Utilities.saveToFile(URLList);
+        UtilitiesKt.saveToFile(URLList);
     }
 
     // Save name:url to Shared Preferences
@@ -303,11 +301,7 @@ public class MainActivity extends AppCompatActivity {
     private void openAlertDialogForEnablingPorNoService() {
         // Thank you, https://stackoverflow.com/questions/2115758
         AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
+        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         // Build the alert
         builder.setTitle(alert_disabled_title)
@@ -328,11 +322,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openAlertDialogToConfirmLinkDeletion(String name, int index) {
         AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
+        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         builder.setTitle(alert_delete_title)
 //                .setMessage("Name: " + name + "\nLink: " + getItem(name))
@@ -385,16 +375,16 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (porNo.isPorn(getHostName(urlText))) {
+        if (PorNo.isPorn(getHostName(urlText))) {
             Toast.makeText(this, toast_validate_url_invalid, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (urlText.length() < 1) {
+        if (urlText.isEmpty()) {
             // No link? No action
             return;
         }
-        else if (nameText.length() < 1) {
+        else if (nameText.isEmpty()) {
             nameText = urlText; // No name provided? Use the url as the name
         }
 
@@ -407,18 +397,14 @@ public class MainActivity extends AppCompatActivity {
         url.setText("");
         name.setText("");
 
-        Utilities.updateFile(urlText);
+        UtilitiesKt.updateFile(urlText);
     }
 
     /////// CORRESPONDS TO ACTION BAR MENU
 
     public void openAlertDialogForInstructions(MenuItem item) {
         AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
+        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         // Build the alert
         builder.setTitle(alert_instructions_title)

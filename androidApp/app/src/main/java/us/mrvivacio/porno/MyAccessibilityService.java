@@ -1,10 +1,5 @@
-// PorNo! Android
-//
-// MyAccessibilityService.java
 // This file handles the reception of Accessibility events
 // We analyze the events related to web-browsing and text-editing for any sign of porn
-//
-// @author Vivek Bhookya
 
 package us.mrvivacio.porno;
 
@@ -48,7 +43,7 @@ public class MyAccessibilityService extends AccessibilityService {
 
     @Override
     public void onCreate() {
-        MainActivity.readDB();
+//        MainActivity.readDB();
         super.onCreate();
 
         // Static shout out mister David Wang pair programming ftw
@@ -147,7 +142,7 @@ public class MyAccessibilityService extends AccessibilityService {
 
                     Log.d(TAG, "onAccessibilityEvent: our text is " + text);
 
-                        if (porNo.isPornDomain(text)) {
+                        if (PorNo.isPornDomain(text)) {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getRandomURL()));
                             intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -210,7 +205,7 @@ public class MyAccessibilityService extends AccessibilityService {
 //            Log.d(TAG, "host : hostNameManually : currentURL = " + host + " : " + hostNameManually + " : " + currentURL);
 
 
-            if (porNo.isPorn(host) || porNo.isPorn(hostNameManually) || porNo.isPorn(hostNameWithoutPath)) {
+            if (PorNo.isPorn(host) || PorNo.isPorn(hostNameManually) || PorNo.isPorn(hostNameWithoutPath)) {
                 long start = System.currentTimeMillis();
                 isFound = true;
                 Log.d(TAG, "porn site " + host + " found at " + start);
@@ -317,7 +312,7 @@ public class MyAccessibilityService extends AccessibilityService {
 //                Log.d(TAG, "dfs: host does equal currURL");
                 isFound = false;
             }
-            if (isFound && !porNo.isPorn(host)) {
+            if (isFound && !PorNo.isPorn(host)) {
 //                Log.d(TAG, "dfs: isFound evaluated to true: host - currURL = " + host + " - " + currURL);
                 return;
             }
@@ -327,7 +322,7 @@ public class MyAccessibilityService extends AccessibilityService {
 //            Log.d(TAG, "isFound = " + isFound);
 
             // Is the txt a banned URL?
-            if (porNo.isPorn(host)) {
+            if (PorNo.isPorn(host)) {
                 isFound = true;
 
 //                Log.d(TAG, "dfs: source info =  " + info);
@@ -395,7 +390,7 @@ public class MyAccessibilityService extends AccessibilityService {
     }
 
     public String getRandomURL() {
-        return Utilities.getRandomURL();
+        return UtilitiesKt.getRandomURL(); //todo does this work?
     }
 
     // todo rethink the DFS strategy in order to avoid having two getHostName lolol

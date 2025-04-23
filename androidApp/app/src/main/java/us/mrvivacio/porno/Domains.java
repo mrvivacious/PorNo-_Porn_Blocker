@@ -1,11 +1,5 @@
 // PorNo!
 // Domains.java THIS FILE WAS GENERATED WITH java.py
-// Thank you:
-// https://github.com/ninjayoto/PornList/blob/master/PornList.txt
-// https://github.com/Bon-Appetit/porn-domains/blob/master/domains.txt
-// https://pastebin.com/gpHmA8X5
-// Alexa web ranking service for that good 7-day free trial
-// People who've triggered PorNo!'s capture system
 //
 // This file looks like this because of https://stackoverflow.com/questions/36797134/
 

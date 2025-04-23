@@ -15,13 +15,7 @@ def generateListsInJavaScript():
     outputFile = open(PROD, "w")
 
     header = "// PorNo!\n"
-    header += "// lists.js THIS FILE WAS GENERATED WITH listBuilder.py\n"
-    header += "// Thank you:\n"
-    header += "// https://github.com/ninjayoto/PornList/blob/master/PornList.txt\n"
-    header += "// https://github.com/Bon-Appetit/porn-domains/blob/master/domains.txt\n"
-    header += "// https://pastebin.com/gpHmA8X5\n"
-    header += "// Alexa web ranking service for that good 7-day free trial\n"
-    header += "// People who've triggered PorNo!'s capture system\n"
+    header += "// lists.js THIS FILE WAS GENERATED WITH generateLists.py\n"
     header += "\n"
 
     outputFile.write(header)
@@ -66,13 +60,7 @@ def generateListsInJava():
     outputFile = open(PROD, "w")
 
     header = "// PorNo!\n"
-    header += "// Domains.java THIS FILE WAS GENERATED WITH java.py\n"
-    header += "// Thank you:\n"
-    header += "// https://github.com/ninjayoto/PornList/blob/master/PornList.txt\n"
-    header += "// https://github.com/Bon-Appetit/porn-domains/blob/master/domains.txt\n"
-    header += "// https://pastebin.com/gpHmA8X5\n"
-    header += "// Alexa web ranking service for that good 7-day free trial\n"
-    header += "// People who've triggered PorNo!'s capture system\n"
+    header += "// Domains.java THIS FILE WAS GENERATED WITH generateLists.py\n"
     header += "//\n"
     header += "// This file looks like this because of https://stackoverflow.com/questions/36797134/\n"
     header += "\n"

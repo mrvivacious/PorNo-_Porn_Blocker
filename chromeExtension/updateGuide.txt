@@ -1,0 +1,21 @@
+porNo updating the chorme extension:
+
+edit version in the popup.html (10 seconds)
+edit verison in the manifest.json (5 seconds)
+
+double check firebase API credentials are NOT in the code (5 seconds)
+
+git commit ; push (10 seconds)
+
+compress .zip (5 seconds)
+
+uplaod .zip (10 seconds)
+https://chrome.google.com/webstore/developer/dashboard
+
+write up quick description (10 seconds)
+
+submit for update √ (5 seconds)
+
+
+building any release should only take:
+60 seconds = 1 minute

@@ -10,3 +10,6 @@
 .externalNativeBuild
 
 app/google-services.json
+
+# Sentry Config File
+sentry.properties

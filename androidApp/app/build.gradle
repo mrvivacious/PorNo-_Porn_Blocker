@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+
+    id 'io.sentry.android.gradle' version '6.0.0'
 }
 
 android {
@@ -51,3 +53,13 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+
+sentry {
+    org = "porno-android"
+    projectName = "android"
+
+    // this will upload your source code to Sentry to show it as part of the stack traces
+    // disable if you don't want to expose your sources
+    includeSourceContext = true
+}

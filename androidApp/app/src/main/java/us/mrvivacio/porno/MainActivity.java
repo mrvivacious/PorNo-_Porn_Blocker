@@ -31,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static us.mrvivacio.porno.R.string.*;
 import static us.mrvivacio.porno.R.string.alert_instructions_title;
+import io.sentry.Sentry;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "dawg";
@@ -57,6 +58,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    // todo sentry waiting for view to draw to better represent a captured error with a screenshot
+    findViewById(android.R.id.content).getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+      try {
+        throw new Exception("This app uses Sentry! :)");
+      } catch (Exception e) {
+        Sentry.captureException(e);
+      }
+    });
+
         setContentView(R.layout.activity_main);
 
         String message = MyKotlinHelper.INSTANCE.isKotlinWorking();

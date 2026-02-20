@@ -88,11 +88,11 @@ fun getWriter(fileName: String): FileOutputStream? {
     }
 }
 
-fun saveToFile(URLs: List<String>) {
+fun saveToFile(urlList: List<String>) {
     val os = getWriter("links.txt") ?: return
 
     var urls = ""
-    for (url in URLs) {
+    for (url in urlList) {
         urls += "$url\n"
     }
 
@@ -112,6 +112,7 @@ fun updateFile(url: String) {
 
     // Check if the file exists. If not, write the url to a new file
     if (!file.exists()) {
+        Log.d("Utilities", "file does not exist")
         val os = getWriter("links.txt") ?: return
         try {
             os.write(urlWithNewLine.toByteArray())

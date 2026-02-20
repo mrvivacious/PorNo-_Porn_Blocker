@@ -14,9 +14,11 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import androidx.annotation.RequiresApi;
 
@@ -390,7 +392,19 @@ public class MyAccessibilityService extends AccessibilityService {
     }
 
     public String getRandomURL() {
-        return UtilitiesKt.getRandomURL(); //todo does this work?
+        ArrayList<String> links = MainActivity.URLList;
+        int index = new Random().nextInt(links.size());
+
+        //todo - actually, UtilitiesKt function doesn't work.
+        // but the try block part does. probably should remove
+        //  utilities file? or does it work for older android versions?
+        // i wonder if links.get() works when
+        // Device turned on -> don't open porNo app -> visit link in chrome
+        try {
+            return links.get(index);
+        } catch (Exception e) {
+            return UtilitiesKt.getRandomURL();
+        }
     }
 
     // todo rethink the DFS strategy in order to avoid having two getHostName lolol

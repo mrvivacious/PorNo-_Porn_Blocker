@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     // This holds the redirect links for MyAccessibilityService to refer to
     public static ArrayList<String> URLs;
+    public static ArrayList<String> URLList = new ArrayList<>();
 
     // This holds the latest porn domains from database
     public static Map<String, Boolean> realtimeBannedLinks = new HashMap<>();
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    // todo sentry waiting for view to draw to better represent a captured error with a screenshot
+    // sentry waiting for view to draw to better represent a captured error with a screenshot
     findViewById(android.R.id.content).getViewTreeObserver().addOnGlobalLayoutListener(() -> {
       try {
         throw new Exception("This app uses Sentry! :)");
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Tutorial code
-        // Thank you, https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
+        // https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
         lvItems = findViewById(R.id.lv_Items);
         items = new ArrayList<>();
 
@@ -197,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
     // Get keys from Shared Preferences and initialize our list
     public void initList() {
         ArrayList<String> names = new ArrayList<>();
-        ArrayList<String> URLList = new ArrayList<>();
 
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         Map<String, ?> allLinks = prefs.getAll();
@@ -210,10 +210,10 @@ public class MainActivity extends AppCompatActivity {
             String URL = entry.getValue().toString();
 
             if (PorNo.isPorn(getHostName(URL))) {
-                // Shame on you
+                // porn site previously added to redirect list
                 deleteItem(name);
             }
-            // The URL isn't in our porn map, so keep it le mao
+            // url not in porn map -> keep it
             else {
                 names.add(name);
                 URLList.add(URL);      // In order to reference URLs during redirection

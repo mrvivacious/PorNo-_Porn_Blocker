@@ -1,13 +1,10 @@
 package us.mrvivacio.porno;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -40,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvItems;
 
     // This holds the redirect links for MyAccessibilityService to refer to
-    public static ArrayList<String> URLs;
     public static ArrayList<String> URLList = new ArrayList<>();
 
     // This holds the latest porn domains from database
@@ -60,26 +56,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    // sentry waiting for view to draw to better represent a captured error with a screenshot
-    findViewById(android.R.id.content).getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-      try {
-        throw new Exception("This app uses Sentry! :)");
-      } catch (Exception e) {
-        Sentry.captureException(e);
-      }
-    });
+// Testing sentry. todo -> safe to delete. note Sentry.captureException
+// sentry waiting for view to draw to better represent a captured error with a screenshot
+//    findViewById(android.R.id.content).getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+//        try {
+//            throw new Exception("This app uses Sentry! :)");
+//        } catch (Exception e) {
+//            Sentry.captureException(e);
+//        }
+//    });
 
         setContentView(R.layout.activity_main);
 
-        String message = MyKotlinHelper.INSTANCE.isKotlinWorking();
-        Log.d(TAG, message);
-
-        requestStoragePermissionsForSavingUserUrlData();
-
-//        Log.d(TAG, "onCreate: db = " + db);
-
-        // update from db
-//        readDB();
+        // update from firebase db
+        // readDB();
 
         if (!isAccessibilitySettingsOn(this)) {
             openAlertDialogForEnablingPorNoService();
@@ -91,37 +81,36 @@ public class MainActivity extends AppCompatActivity {
         items = new ArrayList<>();
 
         // Populate the listView with the link names saved in sharedPref
-        initList();
+        loadLinksFromSharedPreferences();
 
         itemsAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, items);
 
         lvItems.setAdapter(itemsAdapter);
-        setupTouchListeners();
+        setLongClickToDeleteLink();
+        setShortClickToOpenLink();
     }
 
-    // Attaches a long click listener
-    private void setupTouchListeners() {
+    private void setLongClickToDeleteLink() {
         lvItems.setOnItemLongClickListener(
                 (adapterView, view, pos, l) -> {
-                    // DELETE FROM SHARED PREF
-                    String name = items.get(pos);
-                    openAlertDialogToConfirmLinkDeletion(name, pos);
+                    String URLName = items.get(pos);
+                    openDeleteLinkHandler(URLName, pos);
 
                     // Return true consumes the long click event (marks it handled)
                     return true;
                 }
         );
-        // OpenURL(), essentially
+    }
+    private void setShortClickToOpenLink() {
         lvItems.setOnItemClickListener(
                 (adapterView, view, pos, l) -> {
-                    // Get the text value of the clicked item and parse the url
-                    String text = items.get(pos);
-                    String toOpen = getItem(text);
+                    String URLName = items.get(pos);
+                    String URLToOpen = getURLFromSharedPreferences(URLName);
 
-                    if (toOpen == null) { return; } // How would this happen...?
+                    if (URLToOpen == null) { return; } // todo How would this happen...?
 
-                    openUrlInBrowser(toOpen);
+                    openUrlInBrowser(URLToOpen);
                 }
         );
     }
@@ -176,27 +165,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Return the URL of the passed in name key
-    private String getItem(String key) {
+    private String getURLFromSharedPreferences(String key) {
         return this.getPreferences(Context.MODE_PRIVATE).getString(key, null); // The url to open
     }
 
     // Delete name:url from Shared Preferences
-    private void deleteItem(String key) {
+    private void deleteLinkFromSharedPreferences(String key) {
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-
-        String url = getItem(key);
 
         editor.remove(key);
         editor.apply();
 
-        UtilitiesKt.removeFromFile(url);
-
         Toast.makeText(this, getString(toast_delete_link) + " " + key, Toast.LENGTH_LONG).show();
     }
 
-    // Get keys from Shared Preferences and initialize our list
-    public void initList() {
+    public void loadLinksFromSharedPreferences() {
         ArrayList<String> names = new ArrayList<>();
 
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
@@ -204,14 +188,14 @@ public class MainActivity extends AppCompatActivity {
 
 //        Log.d(TAG, "keys  =  " + allLinks.keySet());
 
-        // Thank you, https://stackoverflow.com/questions/22089411/how-to-get-all-keys-of-sharedpreferences-programmatically-in-android
+        // thx https://stackoverflow.com/questions/22089411/how-to-get-all-keys-of-sharedpreferences-programmatically-in-android
         for (Map.Entry<String, ?> entry : allLinks.entrySet()) {
             String name = entry.getKey();
             String URL = entry.getValue().toString();
 
             if (PorNo.isPorn(getHostName(URL))) {
                 // porn site previously added to redirect list
-                deleteItem(name);
+                deleteLinkFromSharedPreferences(name);
             }
             // url not in porn map -> keep it
             else {
@@ -221,13 +205,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         items = names;
-        URLs = URLList;
-        UtilitiesKt.saveToFile(URLList);
     }
 
-    // Save name:url to Shared Preferences
     private void writeItems(String name, String URL) {
-        // Get prefs, then save as NAME:URL
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
@@ -241,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Sentry.captureException(e);
             return url;
         }
 
@@ -266,9 +246,8 @@ public class MainActivity extends AppCompatActivity {
         return hostName;
     }
 
-    // To check if service is enabled
     private boolean isAccessibilitySettingsOn(Context mContext) {
-        // Thank you, https://stackoverflow.com/questions/18094982/detect-if-my-accessibility-service-is-enabled
+        // https://stackoverflow.com/questions/18094982/detect-if-my-accessibility-service-is-enabled
         int accessibilityEnabled = 0;
         final String service = getPackageName() + "/" + MyAccessibilityService.class.getCanonicalName();
 
@@ -284,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
 
         TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
 
-        // TODO ?? this reports as true even when accessibility hasn't been enabled yet
         if (accessibilityEnabled == 1) {
             Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
             String settingValue = Settings.Secure.getString(
@@ -309,8 +287,9 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    // TODO a video demonstrating this wouldn't hurt. basically a clear explanation of how to enable
     private void openAlertDialogForEnablingPorNoService() {
-        // Thank you, https://stackoverflow.com/questions/2115758
+        // https://stackoverflow.com/questions/2115758
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
@@ -331,15 +310,15 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void openAlertDialogToConfirmLinkDeletion(String name, int index) {
+    private void openDeleteLinkHandler(String name, int index) {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         builder.setTitle(alert_delete_title)
 //                .setMessage("Name: " + name + "\nLink: " + getItem(name))
-                .setMessage(name + "\n" + getItem(name))
+                .setMessage(name + "\n" + getURLFromSharedPreferences(name))
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    deleteItem(name);
+                    deleteLinkFromSharedPreferences(name);
 
                     // Remove the item within array at position
                     items.remove(index);
@@ -354,24 +333,6 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void requestStoragePermissionsForSavingUserUrlData() {
-        // Thank you, https://stackoverflow.com/questions/32635704/android-permission-doesnt-work-even-if-i-have-declared-it
-        int PERMISSION_REQUEST_CODE = 1;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-        }
-    }
-
     // Screen the URL and add it if the URL isn't in our porn map
     public void onAddItemButtonPress(View v) {
         EditText url = findViewById(R.id.et_NewItem);
@@ -380,7 +341,6 @@ public class MainActivity extends AppCompatActivity {
         String urlText = url.getText().toString().trim();
         String nameText = name.getText().toString().trim();
 
-        // Please
         if (urlText.contains(" ")) {
             Toast.makeText(this, toast_validate_url_spaces, Toast.LENGTH_SHORT).show();
             return;
@@ -392,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (urlText.isEmpty()) {
-            // No link? No action
             return;
         }
         else if (nameText.isEmpty()) {
@@ -401,18 +360,16 @@ public class MainActivity extends AppCompatActivity {
 
         if (!urlText.contains("http")) { urlText = "http://" + urlText; }
 
+        // TODO is there a limit to shared preferences? would this ever return an error?
         // Save this link to Shared Preferences
         writeItems(nameText, urlText);
 
         itemsAdapter.add(nameText);
         url.setText("");
         name.setText("");
-
-        UtilitiesKt.updateFile(urlText);
     }
 
     /////// CORRESPONDS TO ACTION BAR MENU
-
     public void openAlertDialogForInstructions(MenuItem item) {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
@@ -427,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    // Read from database, update banList, toast
+    // TODO or POSTPONE Read from database, update banList, toast
     public void updateLinks(MenuItem item) {
 //        readDB();
         Toast.makeText(this, toast_database_off, Toast.LENGTH_LONG).show();
@@ -450,16 +407,16 @@ public class MainActivity extends AppCompatActivity {
         openUrlInBrowser("https://github.com/mrvivacious/PorNo-_Porn_Blocker");
     }
 
-    // sending email button
+    // TODO remove this and replace the option with a google form link to submit problems, questions, etc.
+    public void sendEmail(MenuItem item) {
+        composeEmail("jvnnvt@gmail.com", "PorNo! Porn Blocker (Android)");
+    }
+
     public void composeEmail(String recipient, String subject) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipient});
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         startActivity(intent);
-    }
-
-    public void sendEmail(MenuItem item) {
-        composeEmail("jvnnvt@gmail.com", "PorNo! Porn Blocker (Android)");
     }
 }

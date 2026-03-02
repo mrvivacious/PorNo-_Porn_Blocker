@@ -130,11 +130,9 @@ public class MyAccessibilityService extends AccessibilityService {
                 // If the user is typing in the omnibox,
                 else if (eventType.contains("TYPE_VIEW_TEXT")) {
                     String text = event.getText().toString();
-                    // Nothin 2 do
-                    if (text == null || text.length() < 3) {
-                    }
+
                     // We have some text!
-                    else {
+                    if (text != null && text.length() >= 3) {
                         while (text.contains(" ")) {
                             text = text.replaceAll(" ", "");
                         }
@@ -184,8 +182,12 @@ public class MyAccessibilityService extends AccessibilityService {
 
         List<AccessibilityNodeInfo> findAccessibilityNodeInfosByViewId = source.findAccessibilityNodeInfosByViewId("com.android.chrome:id/url_bar");
 
-        if (findAccessibilityNodeInfosByViewId.size() > 0) {
+        if (!findAccessibilityNodeInfosByViewId.isEmpty()) {
             AccessibilityNodeInfo omniboxView = findAccessibilityNodeInfosByViewId.get(0);
+            if (omniboxView == null) { return; }
+
+            CharSequence omniboxText = omniboxView.getText();
+            if (omniboxText == null) { return; }
 
             String currentURL = omniboxView.getText().toString();
             String hostNameManually = currentURL.replace("https://", "").replace("http://", "").replace("www.", "");
@@ -216,7 +218,7 @@ public class MyAccessibilityService extends AccessibilityService {
 
                 // Attempting direct redirection
                 String randomURL = getRandomURL();
-                currURL = getHostNameNew(randomURL); // todo we dont need this line i believe
+                currURL = getHostNameNew(randomURL); // todo we don't need this line i believe
 
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(randomURL));
                 intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
@@ -228,7 +230,6 @@ public class MyAccessibilityService extends AccessibilityService {
             }
             else if (isUnsafeGoogleSearch(currentURL)) {
                 applySafeModeToUnsafeGoogleSearch(currentURL);
-                return;
             }
             else {
                 Log.d(TAG, "host : currentURL = " + host + " : " + currentURL);
@@ -350,9 +351,9 @@ public class MyAccessibilityService extends AccessibilityService {
 //                }
             }
             else if (isUnsafeGoogleSearch(txt)) {
-                // todo this doesnt work when: (well, no it does seem to work)
+                // todo this doesn't work when: (well, no it does seem to work)
                 // user visits google.com
-                // user searches within that search bar (doesnt throw an event we listen for atm)
+                // user searches within that search bar (doesn't throw an event we listen for atm)
                 // user can see porn sites as search results :(
                 applySafeModeToUnsafeGoogleSearch(txt);
                 return;
@@ -393,17 +394,13 @@ public class MyAccessibilityService extends AccessibilityService {
 
     public String getRandomURL() {
         ArrayList<String> links = MainActivity.URLList;
-        int index = new Random().nextInt(links.size());
 
-        //todo - actually, UtilitiesKt function doesn't work.
-        // but the try block part does. probably should remove
-        //  utilities file? or does it work for older android versions?
-        // i wonder if links.get() works when
-        // Device turned on -> don't open porNo app -> visit link in chrome
-        try {
+        if (links.isEmpty()) {
+            return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
+        }
+        else {
+            int index = new Random().nextInt(links.size());
             return links.get(index);
-        } catch (Exception e) {
-            return UtilitiesKt.getRandomURL();
         }
     }
 
@@ -439,7 +436,7 @@ public class MyAccessibilityService extends AccessibilityService {
             hostName = hostName.substring(2);
         }
 
-        // Fuck you no path allowed
+        // trim
         if (hostName.contains("/")) {
             return hostName.substring(0, hostName.indexOf("/"));
         }
@@ -448,7 +445,7 @@ public class MyAccessibilityService extends AccessibilityService {
         return hostName;
     }
 
-    // Thank you, https://stackoverflow.com/questions/23079197/extract-host-name-domain-name-from-url-string/23079402
+    // https://stackoverflow.com/questions/23079197
     public static String getHostNameNew(String url) {
         URI uri;
 //        Log.d(TAG, "getHostName: url = " + url);

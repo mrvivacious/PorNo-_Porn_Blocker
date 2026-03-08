@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-# ./generateLists.py ; cat lists.js # Feel free to cat lists.java as well
+import sys
+import os
+
+PATH_URLS = "lists/Urls/"
 
 def generateListsInJavaScript():
     # UNTIL MACHINE LEARNING MODEL,
     #  THIS WILL HELP RENEW OUR LISTS
-
     DEV = "testjs.txt"
     PROD = "chromeExtension/lists.js"
 
-    PATH_URLS = "lists/Urls/"
     PATH_KEYWORDS = "lists/Keywords/"
 
     # w = [over]write, a = append
@@ -26,7 +27,7 @@ def generateListsInJavaScript():
         urls = open(name, "r")
 
         for url in urls:
-            urlWithoutNewLine = "\"" + url[:-1] + "\":!0"
+            urlWithoutNewLine = "\"" + url.strip() + "\":!0"
             s += urlWithoutNewLine + ","
 
     s = s[:-1]
@@ -40,7 +41,7 @@ def generateListsInJavaScript():
         urls = open(name, "r")
 
         for url in urls:
-            urlWithoutNewLine = "\"" + url[:-1] + "\""
+            urlWithoutNewLine = "\"" + url.strip() + "\""
             s += urlWithoutNewLine + ","
 
     s = s[:-1]
@@ -53,7 +54,6 @@ def generateListsInJava():
     DEV = "testjava.txt"
     PROD = "androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java"
 
-    PATH_URLS = "lists/Urls/"
     PATH_KEYWORDS = "lists/Keywords/"
 
     # w = [over]write, a = append
@@ -95,7 +95,7 @@ def generateListsInJava():
         urls = open(name, "r")
 
         for url in urls:
-            urlWithoutNewLine = "\"" + url[:-1] + "\""
+            urlWithoutNewLine = "\"" + url.strip() + "\""
             s += urlWithoutNewLine + ","
 
         s = s[:-1]
@@ -112,25 +112,49 @@ def generateListsInJava():
         s = "\tstatic void add"
 
     outputFile.write("}")
-    #outputFile.write(s)
-
-    # s = "let bannedWordsList=["
-    # for c in "abcdefghijklmnopqrstuvwxyz":
-    #     name = PATH_KEYWORDS + c + ".txt"
-    #     urls = open(name, "r")
-    #
-    #     for url in urls:
-    #         urlWithoutNewLine = "\"" + url[:-1] + "\""
-    #         s += urlWithoutNewLine + ","
-    #
-    # s = s[:-1]
-    # s += "];\n"
-
-    # outputFile.write(s)
     outputFile.close()
 
-if (__name__ == "__main__"):
+def add_urls(domains):
+    PATH_URLS = "lists/Urls/"
+
+    for domain in domains:
+        domain = domain.strip().lower()
+        if not domain:
+            continue
+
+        first_char = domain[0]
+
+        if first_char not in "0123456789abcdefghijklmnopqrstuvwxyz":
+            print(f"Skipping invalid domain: {domain}")
+            continue
+
+        file_path = os.path.join(PATH_URLS, f"{first_char}.txt")
+
+        with open(file_path, "a+") as f:
+            f.seek(0, os.SEEK_END)
+
+            if f.tell() > 0:
+                f.seek(f.tell() - 1)
+                if f.read(1) != "\n":
+                    f.write("\n")
+
+            f.write(domain + "\n")
+
+        print(f"Added {domain} -> {file_path}")
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "add":
+        domains = sys.argv[2:]
+
+        if not domains:
+            print("Usage: ./generateLists.py add domain1 domain2 ...")
+            sys.exit(1)
+
+        add_urls(domains)
+
     generateListsInJavaScript()
     generateListsInJava()
-    print("Generated file at chromeExtension/lists.js")
-    print("Generated file at androidApp/app/src/main/java/us/mrvivacio/porno/Domains.java")
+
+    print()
+    print("Updated chromeExtension/lists.js")
+    print("Updated androidApp/.../Domains.java")

@@ -14,11 +14,9 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import androidx.annotation.RequiresApi;
 
@@ -45,7 +43,6 @@ public class MyAccessibilityService extends AccessibilityService {
 
     @Override
     public void onCreate() {
-//        MainActivity.readDB();
         super.onCreate();
 
         // Static shout out mister David Wang pair programming ftw
@@ -109,6 +106,7 @@ public class MyAccessibilityService extends AccessibilityService {
                     //  "Open in incognito" option exists, that I've seen so far, thus we will say this is correct)
                     if (className.equals("org.chromium.chrome.browser.ChromeTabbedActivity")) {
 //                    Log.d(TAG, "onAccessibilityEvent: event = " + event);
+
                         parseNodeForURLViaDFS(event.getSource());
                     }
 
@@ -130,9 +128,11 @@ public class MyAccessibilityService extends AccessibilityService {
                 // If the user is typing in the omnibox,
                 else if (eventType.contains("TYPE_VIEW_TEXT")) {
                     String text = event.getText().toString();
-
+                    // Nothin 2 do
+                    if (text == null || text.length() < 3) {
+                    }
                     // We have some text!
-                    if (text != null && text.length() >= 3) {
+                    else {
                         while (text.contains(" ")) {
                             text = text.replaceAll(" ", "");
                         }
@@ -140,7 +140,7 @@ public class MyAccessibilityService extends AccessibilityService {
                         text = text.substring(1, text.length() - 1);
                         text = getHostName(text);
 
-                    Log.d(TAG, "onAccessibilityEvent: our text is " + text);
+//                        Log.d(TAG, "onAccessibilityEvent: our text is " + text);
 
                         if (PorNo.isPornDomain(text)) {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getRandomURL()));
@@ -150,10 +150,6 @@ public class MyAccessibilityService extends AccessibilityService {
 
 //                        Log.d(TAG, "dfs: Speed = " + (System.currentTimeMillis() - time));
                         }
-
-                        // Don't make safe mode on google searches here
-                        //  because omnibox might pre-fill as the user types
-                        //  and we don't want to hijack the UX for no good reason
 
                         // Save the resourceID for the omnibox to reduce some cycles
                         // cuz omni not needed to evaluate just text
@@ -393,15 +389,7 @@ public class MyAccessibilityService extends AccessibilityService {
     }
 
     public String getRandomURL() {
-        ArrayList<String> links = MainActivity.URLList;
-
-        if (links.isEmpty()) {
-            return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
-        }
-        else {
-            int index = new Random().nextInt(links.size());
-            return links.get(index);
-        }
+        return Utilities.getRandomURL();
     }
 
     // todo rethink the DFS strategy in order to avoid having two getHostName lolol

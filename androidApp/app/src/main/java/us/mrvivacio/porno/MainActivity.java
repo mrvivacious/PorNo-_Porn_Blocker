@@ -23,13 +23,11 @@ import android.widget.Toast;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import static us.mrvivacio.porno.R.string.*;
-import static us.mrvivacio.porno.R.string.alert_instructions_title;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "dawg";
@@ -37,15 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> itemsAdapter;
     private ListView lvItems;
 
-    // This holds the redirect links for MyAccessibilityService to refer to
-    public static ArrayList<String> URLs;
-
-    // This holds the latest porn domains from database
-    public static Map<String, Boolean> realtimeBannedLinks = new HashMap<>();
-
-//    static FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    // Thank you, https://stackoverflow.com/questions/39052127/how-to-add-an-actionbar-in-android-studio-for-beginners
+    // https://stackoverflow.com/questions/39052127
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -59,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         requestStoragePermissionsForSavingUserUrlData();
-
-        // update from firebase db
-        // readDB();
 
         if (!isAccessibilitySettingsOn(this)) {
             openAlertDialogForEnablingPorNoService();
@@ -119,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Open a URL in a new window
     private void openUrlInBrowser(String URL) {
         // Open the url
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
@@ -128,10 +114,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Return the URL of the passed in name key
     private String getURLFromSharedPreferences(String key) {
-        return this.getPreferences(Context.MODE_PRIVATE).getString(key, null); // The url to open
+        return this.getPreferences(Context.MODE_PRIVATE).getString(key, null);
     }
 
-    // Delete name:url from Shared Preferences
     private void deleteLinkFromSharedPreferences(String key) {
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -146,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, getString(toast_delete_link) + " " + key, Toast.LENGTH_LONG).show();
     }
 
-    // Get keys from Shared Preferences and initialize our list
     public void loadLinksFromSharedPreferences() {
         ArrayList<String> names = new ArrayList<>();
         ArrayList<String> URLList = new ArrayList<>(); // todo migration?
@@ -172,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         items = names;
-        URLs = URLList;
         Utilities.saveToFile(URLList);
     }
 
@@ -303,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestStoragePermissionsForSavingUserUrlData() {
-        // Thank you, https://stackoverflow.com/questions/32635704/android-permission-doesnt-work-even-if-i-have-declared-it
+        // https://stackoverflow.com/questions/32635704
         int PERMISSION_REQUEST_CODE = 1;
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -348,7 +331,6 @@ public class MainActivity extends AppCompatActivity {
         if (!urlText.contains("http")) { urlText = "http://" + urlText; }
 
         // TODO is there a limit to shared preferences? would this ever return an error?
-        // Save this link to Shared Preferences
         writeItems(nameText, urlText);
 
         itemsAdapter.add(nameText);
@@ -364,7 +346,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
-        // Build the alert
         builder.setTitle(alert_instructions_title)
                 .setMessage(alert_instructions_body)
                 .setPositiveButton(alert_instructions_thank_you, (dialog, which) -> {
@@ -372,14 +353,6 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-
-
-    // TODO delete this shit bruh
-    //  Read from database, update banList, toast
-    public void updateLinks(MenuItem item) {
-//        readDB();
-        Toast.makeText(this, toast_database_off, Toast.LENGTH_LONG).show();
     }
 
     public void openUrlForChromeExtension(MenuItem item) {
@@ -399,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
         openUrlInBrowser("https://github.com/mrvivacious/PorNo-_Porn_Blocker");
     }
 
-    // TODO remove this and replace the option with a google form link to submit problems, questions, etc.
+    // TODO replace with a google form link to submit problems, questions, etc.
     public void sendEmail(MenuItem item) {
         composeEmail("jvnnvt@gmail.com", "PorNo! Porn Blocker (Android)");
     }

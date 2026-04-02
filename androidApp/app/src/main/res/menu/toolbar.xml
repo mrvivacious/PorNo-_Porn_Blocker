@@ -18,11 +18,6 @@
         android:onClick="openAlertDialogForInstructions" />
 
     <item
-        android:id="@+id/action_refresh"
-        android:title="@string/menu_update"
-        android:onClick="updateLinks"/>
-
-    <item
         android:id="@+id/chrome"
         android:title="@string/menu_chrome_extension"
         android:onClick="openUrlForChromeExtension" />

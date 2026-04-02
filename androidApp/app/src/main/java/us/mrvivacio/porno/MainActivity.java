@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -61,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         requestStoragePermissionsForSavingUserUrlData();
 
-//        Log.d(TAG, "onCreate: db = " + db);
-
         // update from firebase db
         // readDB();
 
@@ -108,11 +105,6 @@ public class MainActivity extends AppCompatActivity {
                     openUrlInBrowser(URLToOpen);
                 }
         );
-    }
-
-    // Update local links with the links from the database
-    public static void readDB() {
-      // todo delete this method safely
     }
 
     // Open all the saved URLs

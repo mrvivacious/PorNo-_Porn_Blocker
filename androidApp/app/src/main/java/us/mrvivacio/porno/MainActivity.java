@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     // This holds the latest porn domains from database
     public static Map<String, Boolean> realtimeBannedLinks = new HashMap<>();
 
-    static FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Thank you, https://stackoverflow.com/questions/39052127/how-to-add-an-actionbar-in-android-studio-for-beginners
     @Override
@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
         );
-        // OpenURL(), essentially
         lvItems.setOnItemClickListener(
                 (adapterView, view, pos, l) -> {
                     // Get the text value of the clicked item and parse the url
@@ -118,32 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Update local links with the links from the database
     public static void readDB() {
-        // Thank you, https://firebase.google.com/docs/firestore/query-data/get-data#list_subcollections_of_a_document
-        DocumentReference docRef = db.collection("links").document("realtimeBannedLinks");
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists() && document.getData() != null) {
-                    String bannedLinks = document.getData().toString();
-                    bannedLinks = bannedLinks.substring(6);
-                    bannedLinks = bannedLinks.substring(0, bannedLinks.length() - 2);
-
-                    // Thank you, https://stackoverflow.com/questions/7347856/how-to-convert-a-string-into-an-arraylist
-                    ArrayList<String> banList = new ArrayList<>(Arrays.asList(bannedLinks.split(", ")));
-
-                    for (String link : banList) {
-                        realtimeBannedLinks.put(link, true);
-                    }
-
-                } else {
-                    // TODO add analytics and report no such document
-//                        Log.d(TAG, "No such document");
-                }
-            } else {
-                // TODO add analytics and report failed to get document
-//                    Log.d(TAG, "get failed with ", task.getException());
-            }
-        });
+      // todo delete this method safely
     }
 
     // Open all the saved URLs
@@ -188,26 +162,25 @@ public class MainActivity extends AppCompatActivity {
     // Get keys from Shared Preferences and initialize our list
     public void initList() {
         ArrayList<String> names = new ArrayList<>();
-        ArrayList<String> URLList = new ArrayList<>();
+        ArrayList<String> URLList = new ArrayList<>(); // todo migration?
 
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         Map<String, ?> allLinks = prefs.getAll();
 
 //        Log.d(TAG, "keys  =  " + allLinks.keySet());
 
-        // Thank you, https://stackoverflow.com/questions/22089411/how-to-get-all-keys-of-sharedpreferences-programmatically-in-android
+        // https://stackoverflow.com/questions/22089411
         for (Map.Entry<String, ?> entry : allLinks.entrySet()) {
             String name = entry.getKey();
             String URL = entry.getValue().toString();
 
             if (PorNo.isPorn(getHostName(URL))) {
-                // Shame on you
                 deleteItem(name);
             }
             // The URL isn't in our porn map, so keep it le mao
             else {
                 names.add(name);
-                URLList.add(URL);      // In order to reference URLs during redirection
+                URLList.add(URL);      // TODO migrate this shit Original:In order to reference URLs during redirection
             }
         }
 
@@ -216,9 +189,7 @@ public class MainActivity extends AppCompatActivity {
         Utilities.saveToFile(URLList);
     }
 
-    // Save name:url to Shared Preferences
     private void writeItems(String name, String URL) {
-        // Get prefs, then save as NAME:URL
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
@@ -301,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openAlertDialogForEnablingPorNoService() {
-        // Thank you, https://stackoverflow.com/questions/2115758
+        // https://stackoverflow.com/questions/2115758
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
@@ -328,11 +299,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openAlertDialogToConfirmLinkDeletion(String name, int index) {
         AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
+        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         builder.setTitle(alert_delete_title)
 //                .setMessage("Name: " + name + "\nLink: " + getItem(name))
@@ -390,16 +357,17 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (urlText.length() < 1) {
+        if (urlText.isEmpty()) {
             // No link? No action
             return;
         }
-        else if (nameText.length() < 1) {
+        else if (nameText.isEmpty()) {
             nameText = urlText; // No name provided? Use the url as the name
         }
 
         if (!urlText.contains("http")) { urlText = "http://" + urlText; }
 
+        // TODO is there a limit to shared preferences? would this ever return an error?
         // Save this link to Shared Preferences
         writeItems(nameText, urlText);
 
@@ -414,11 +382,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openAlertDialogForInstructions(MenuItem item) {
         AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
+        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         // Build the alert
         builder.setTitle(alert_instructions_title)
@@ -430,7 +394,9 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    // Read from database, update banList, toast
+
+    // TODO delete this shit bruh
+    //  Read from database, update banList, toast
     public void updateLinks(MenuItem item) {
 //        readDB();
         Toast.makeText(this, toast_database_off, Toast.LENGTH_LONG).show();
@@ -451,5 +417,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void openUrlForGitHub(MenuItem item) {
         openUrlInBrowser("https://github.com/mrvivacious/PorNo-_Porn_Blocker");
+    }
+
+    // TODO remove this and replace the option with a google form link to submit problems, questions, etc.
+    public void sendEmail(MenuItem item) {
+        composeEmail("jvnnvt@gmail.com", "PorNo! Porn Blocker (Android)");
+    }
+
+    public void composeEmail(String recipient, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipient});
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        startActivity(intent);
     }
 }

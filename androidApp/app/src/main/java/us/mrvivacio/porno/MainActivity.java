@@ -1,10 +1,13 @@
 package us.mrvivacio.porno;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -18,9 +21,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +36,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static us.mrvivacio.porno.R.string.*;
 import static us.mrvivacio.porno.R.string.alert_instructions_title;
-import io.sentry.Sentry;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "dawg";
@@ -37,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvItems;
 
     // This holds the redirect links for MyAccessibilityService to refer to
-    public static ArrayList<String> URLList = new ArrayList<>();
+    public static ArrayList<String> URLs;
 
     // This holds the latest porn domains from database
     public static Map<String, Boolean> realtimeBannedLinks = new HashMap<>();
 
-//    static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Thank you, https://stackoverflow.com/questions/39052127/how-to-add-an-actionbar-in-android-studio-for-beginners
     @Override
@@ -55,95 +62,89 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-// Testing sentry. todo -> safe to delete. note Sentry.captureException
-// sentry waiting for view to draw to better represent a captured error with a screenshot
-//    findViewById(android.R.id.content).getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-//        try {
-//            throw new Exception("This app uses Sentry! :)");
-//        } catch (Exception e) {
-//            Sentry.captureException(e);
-//        }
-//    });
-
         setContentView(R.layout.activity_main);
 
-        // update from firebase db
-        // readDB();
+        requestStoragePermissionsForSavingUserUrlData();
+
+//        Log.d(TAG, "onCreate: db = " + db);
+
+        // update from db
+        readDB();
 
         if (!isAccessibilitySettingsOn(this)) {
             openAlertDialogForEnablingPorNoService();
         }
 
         // Tutorial code
-        // https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
-        lvItems = findViewById(R.id.lv_Items);
+        // Thank you, https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
+        lvItems = (ListView) findViewById(R.id.lv_Items);
         items = new ArrayList<>();
 
         // Populate the listView with the link names saved in sharedPref
-        loadLinksFromSharedPreferences();
+        initList();
 
         itemsAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, items);
 
         lvItems.setAdapter(itemsAdapter);
-        setLongClickToDeleteLink();
-        setShortClickToOpenLink();
+        setupTouchListeners();
     }
 
-    private void setLongClickToDeleteLink() {
+    // Attaches a long click listener
+    private void setupTouchListeners() {
         lvItems.setOnItemLongClickListener(
                 (adapterView, view, pos, l) -> {
-                    String URLName = items.get(pos);
-                    openDeleteLinkHandler(URLName, pos);
+                    // DELETE FROM SHARED PREF
+                    String name = items.get(pos);
+                    openAlertDialogToConfirmLinkDeletion(name, pos);
 
                     // Return true consumes the long click event (marks it handled)
                     return true;
                 }
         );
-    }
-    private void setShortClickToOpenLink() {
+        // OpenURL(), essentially
         lvItems.setOnItemClickListener(
                 (adapterView, view, pos, l) -> {
-                    String URLName = items.get(pos);
-                    String URLToOpen = getURLFromSharedPreferences(URLName);
+                    // Get the text value of the clicked item and parse the url
+                    String text = items.get(pos);
+                    String toOpen = getItem(text);
 
-                    if (URLToOpen == null) { return; } // todo How would this happen...?
+                    if (toOpen == null) { return; } // How would this happen...?
 
-                    openUrlInBrowser(URLToOpen);
+                    openUrlInBrowser(toOpen);
                 }
         );
     }
 
     // Update local links with the links from the database
-//    public static void readDB() {
-//        // Thank you, https://firebase.google.com/docs/firestore/query-data/get-data#list_subcollections_of_a_document
-//        DocumentReference docRef = db.collection("links").document("realtimeBannedLinks");
-//        docRef.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                DocumentSnapshot document = task.getResult();
-//                if (document != null && document.exists() && document.getData() != null) {
-//                    String bannedLinks = document.getData().toString();
-//                    bannedLinks = bannedLinks.substring(6);
-//                    bannedLinks = bannedLinks.substring(0, bannedLinks.length() - 2);
-//
-//                    // Thank you, https://stackoverflow.com/questions/7347856/how-to-convert-a-string-into-an-arraylist
-//                    ArrayList<String> banList = new ArrayList<>(Arrays.asList(bannedLinks.split(", ")));
-//
-//                    for (String link : banList) {
-//                        realtimeBannedLinks.put(link, true);
-//                    }
-//
-//                } else {
-//                    // TODO add analytics and report no such document
-////                        Log.d(TAG, "No such document");
-//                }
-//            } else {
-//                // TODO add analytics and report failed to get document
-////                    Log.d(TAG, "get failed with ", task.getException());
-//            }
-//        });
-//    }
+    public static void readDB() {
+        // Thank you, https://firebase.google.com/docs/firestore/query-data/get-data#list_subcollections_of_a_document
+        DocumentReference docRef = db.collection("links").document("realtimeBannedLinks");
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists() && document.getData() != null) {
+                    String bannedLinks = document.getData().toString();
+                    bannedLinks = bannedLinks.substring(6);
+                    bannedLinks = bannedLinks.substring(0, bannedLinks.length() - 2);
+
+                    // Thank you, https://stackoverflow.com/questions/7347856/how-to-convert-a-string-into-an-arraylist
+                    ArrayList<String> banList = new ArrayList<>(Arrays.asList(bannedLinks.split(", ")));
+
+                    for (String link : banList) {
+                        realtimeBannedLinks.put(link, true);
+                    }
+
+                } else {
+                    // TODO add analytics and report no such document
+//                        Log.d(TAG, "No such document");
+                }
+            } else {
+                // TODO add analytics and report failed to get document
+//                    Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+    }
 
     // Open all the saved URLs
     public void onEmergencyButtonPress(View v) {
@@ -165,39 +166,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Return the URL of the passed in name key
-    private String getURLFromSharedPreferences(String key) {
+    private String getItem(String key) {
         return this.getPreferences(Context.MODE_PRIVATE).getString(key, null); // The url to open
     }
 
     // Delete name:url from Shared Preferences
-    private void deleteLinkFromSharedPreferences(String key) {
+    private void deleteItem(String key) {
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
+
+        String url = getItem(key);
 
         editor.remove(key);
         editor.apply();
 
+        Utilities.removeFromFile(url);
+
         Toast.makeText(this, getString(toast_delete_link) + " " + key, Toast.LENGTH_LONG).show();
     }
 
-    public void loadLinksFromSharedPreferences() {
+    // Get keys from Shared Preferences and initialize our list
+    public void initList() {
         ArrayList<String> names = new ArrayList<>();
+        ArrayList<String> URLList = new ArrayList<>();
 
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         Map<String, ?> allLinks = prefs.getAll();
 
 //        Log.d(TAG, "keys  =  " + allLinks.keySet());
 
-        // thx https://stackoverflow.com/questions/22089411/how-to-get-all-keys-of-sharedpreferences-programmatically-in-android
+        // Thank you, https://stackoverflow.com/questions/22089411/how-to-get-all-keys-of-sharedpreferences-programmatically-in-android
         for (Map.Entry<String, ?> entry : allLinks.entrySet()) {
             String name = entry.getKey();
             String URL = entry.getValue().toString();
 
             if (PorNo.isPorn(getHostName(URL))) {
-                // porn site previously added to redirect list
-                deleteLinkFromSharedPreferences(name);
+                // Shame on you
+                deleteItem(name);
             }
-            // url not in porn map -> keep it
+            // The URL isn't in our porn map, so keep it le mao
             else {
                 names.add(name);
                 URLList.add(URL);      // In order to reference URLs during redirection
@@ -205,9 +212,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         items = names;
+        URLs = URLList;
+        Utilities.saveToFile(URLList);
     }
 
+    // Save name:url to Shared Preferences
     private void writeItems(String name, String URL) {
+        // Get prefs, then save as NAME:URL
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
@@ -221,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            Sentry.captureException(e);
+            e.printStackTrace();
             return url;
         }
 
@@ -246,8 +257,9 @@ public class MainActivity extends AppCompatActivity {
         return hostName;
     }
 
+    // To check if service is enabled
     private boolean isAccessibilitySettingsOn(Context mContext) {
-        // https://stackoverflow.com/questions/18094982/detect-if-my-accessibility-service-is-enabled
+        // Thank you, https://stackoverflow.com/questions/18094982/detect-if-my-accessibility-service-is-enabled
         int accessibilityEnabled = 0;
         final String service = getPackageName() + "/" + MyAccessibilityService.class.getCanonicalName();
 
@@ -263,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
 
+        // TODO ?? this reports as true even when accessibility hasn't been enabled yet
         if (accessibilityEnabled == 1) {
             Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
             String settingValue = Settings.Secure.getString(
@@ -287,11 +300,14 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    // TODO a video demonstrating this wouldn't hurt. basically a clear explanation of how to enable
     private void openAlertDialogForEnablingPorNoService() {
-        // https://stackoverflow.com/questions/2115758
+        // Thank you, https://stackoverflow.com/questions/2115758
         AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
 
         // Build the alert
         builder.setTitle(alert_disabled_title)
@@ -310,15 +326,19 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void openDeleteLinkHandler(String name, int index) {
+    private void openAlertDialogToConfirmLinkDeletion(String name, int index) {
         AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
 
         builder.setTitle(alert_delete_title)
 //                .setMessage("Name: " + name + "\nLink: " + getItem(name))
-                .setMessage(name + "\n" + getURLFromSharedPreferences(name))
+                .setMessage(name + "\n" + getItem(name))
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    deleteLinkFromSharedPreferences(name);
+                    deleteItem(name);
 
                     // Remove the item within array at position
                     items.remove(index);
@@ -333,6 +353,24 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void requestStoragePermissionsForSavingUserUrlData() {
+        // Thank you, https://stackoverflow.com/questions/32635704/android-permission-doesnt-work-even-if-i-have-declared-it
+        int PERMISSION_REQUEST_CODE = 1;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
     // Screen the URL and add it if the URL isn't in our porn map
     public void onAddItemButtonPress(View v) {
         EditText url = findViewById(R.id.et_NewItem);
@@ -341,6 +379,7 @@ public class MainActivity extends AppCompatActivity {
         String urlText = url.getText().toString().trim();
         String nameText = name.getText().toString().trim();
 
+        // Please
         if (urlText.contains(" ")) {
             Toast.makeText(this, toast_validate_url_spaces, Toast.LENGTH_SHORT).show();
             return;
@@ -351,28 +390,35 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (urlText.isEmpty()) {
+        if (urlText.length() < 1) {
+            // No link? No action
             return;
         }
-        else if (nameText.isEmpty()) {
+        else if (nameText.length() < 1) {
             nameText = urlText; // No name provided? Use the url as the name
         }
 
         if (!urlText.contains("http")) { urlText = "http://" + urlText; }
 
-        // TODO is there a limit to shared preferences? would this ever return an error?
         // Save this link to Shared Preferences
         writeItems(nameText, urlText);
 
         itemsAdapter.add(nameText);
         url.setText("");
         name.setText("");
+
+        Utilities.updateFile(urlText);
     }
 
     /////// CORRESPONDS TO ACTION BAR MENU
+
     public void openAlertDialogForInstructions(MenuItem item) {
         AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
 
         // Build the alert
         builder.setTitle(alert_instructions_title)
@@ -384,7 +430,7 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    // TODO or POSTPONE Read from database, update banList, toast
+    // Read from database, update banList, toast
     public void updateLinks(MenuItem item) {
 //        readDB();
         Toast.makeText(this, toast_database_off, Toast.LENGTH_LONG).show();
@@ -405,18 +451,5 @@ public class MainActivity extends AppCompatActivity {
 
     public void openUrlForGitHub(MenuItem item) {
         openUrlInBrowser("https://github.com/mrvivacious/PorNo-_Porn_Blocker");
-    }
-
-    // TODO remove this and replace the option with a google form link to submit problems, questions, etc.
-    public void sendEmail(MenuItem item) {
-        composeEmail("jvnnvt@gmail.com", "PorNo! Porn Blocker (Android)");
-    }
-
-    public void composeEmail(String recipient, String subject) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipient});
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        startActivity(intent);
     }
 }

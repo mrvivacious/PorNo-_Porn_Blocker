@@ -127,7 +127,7 @@ public class MyAccessibilityService extends AccessibilityService {
                 // If the user is typing in the omnibox,
                 else if (eventType.contains("TYPE_VIEW_TEXT")) {
                     String text = event.getText().toString();
-                    // Nothin 2 do
+
                     if (text != null && text.length() >= 3) {
                         while (text.contains(" ")) {
                             text = text.replaceAll(" ", "");

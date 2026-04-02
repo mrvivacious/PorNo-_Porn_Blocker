@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,11 +49,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        requestStoragePermissionsForSavingUserUrlData();
-
         if (!isAccessibilitySettingsOn(this)) {
             openAlertDialogForEnablingPorNoService();
         }
+
+        requestStoragePermissionsForSavingUserUrlData();
+
 
         // Tutorial code
         // https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
@@ -112,6 +114,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(browserIntent);
     }
 
+    private void addLinkToSharedPreferences(String name, String URL) {
+        SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString(name, URL);
+        editor.apply();
+    }
+
     // Return the URL of the passed in name key
     private String getURLFromSharedPreferences(String key) {
         return this.getPreferences(Context.MODE_PRIVATE).getString(key, null);
@@ -138,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         Map<String, ?> allLinks = prefs.getAll();
 
-//        Log.d(TAG, "keys  =  " + allLinks.keySet());
+        // Log.d(TAG, "keys  =  " + allLinks.keySet());
 
         // https://stackoverflow.com/questions/22089411
         for (Map.Entry<String, ?> entry : allLinks.entrySet()) {
@@ -159,21 +169,13 @@ public class MainActivity extends AppCompatActivity {
         Utilities.saveToFile(URLList);
     }
 
-    private void writeItems(String name, String URL) {
-        SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString(name, URL);
-        editor.apply();
-    }
-
     public String getHostName(String url) {
         URI uri;
 
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Log.d(TAG, Objects.requireNonNull(e.getMessage()));
             return url;
         }
 
@@ -187,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             hostName = hostName.substring(4);
         }
 
-        // Fuck you websites that use mobile prefix and break my hashmap
+        // mobile prefixes break my hashmap lol
         if (hostName.contains("mobile.")) {
             return hostName.substring(7);
         }
@@ -331,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         if (!urlText.contains("http")) { urlText = "http://" + urlText; }
 
         // TODO is there a limit to shared preferences? would this ever return an error?
-        writeItems(nameText, urlText);
+        addLinkToSharedPreferences(nameText, urlText);
 
         itemsAdapter.add(nameText);
         url.setText("");

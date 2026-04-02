@@ -45,9 +45,9 @@ public class MyAccessibilityService extends AccessibilityService {
     public void onCreate() {
         super.onCreate();
 
-        // Static shout out mister David Wang pair programming ftw
+        // David pair programming ftw
         dict2 = Domains.init();
-        Log.d(TAG, "onCreate: we saved our dict2 lez see wat hapn " + dict2.size());
+        Log.d(TAG, "onCreate: we saved our dict2 lez see wat happen " + dict2.size());
 //        Log.d("onCreate", "onCreate");
     }
 
@@ -62,7 +62,7 @@ public class MyAccessibilityService extends AccessibilityService {
 
         // Chrome
         if (isChromeEvent(event)) {
-//            if (false) {} // for testing the "old way" (dont use the api 16 pixel device, it doesnt have chrome lol)
+//            if (false) {} // for testing the "old way" (don't use the api 16 pixel device, it doesn't have chrome lol)
             if (deviceSdkIsAtLeast18()) {
 //                Log.d(TAG, "sdk is at least 18 :)");
                 parseNodeForURLViaAPI(event);
@@ -235,7 +235,7 @@ public class MyAccessibilityService extends AccessibilityService {
 //                // If the user is typing in the omnibox, optimization ideas for the future
 ////                    if (eventType.contains("TYPE_VIEW_TEXT")) {
 ////                        String text = event.getText().toString();
-////                        // Nothin 2 do
+////                        // Nothing 2 do
 ////                        if (text == null || text.length() < 3) {
 ////                            // Do nothing
 ////                        }
@@ -275,7 +275,7 @@ public class MyAccessibilityService extends AccessibilityService {
             return;
         }
 
-        if (info.getText() != null && info.getText().toString().trim().length() > 0) {
+        if (info.getText() != null && !info.getText().toString().trim().isEmpty()) {
             String txt = info.getText().toString().trim();
             txt = txt.toLowerCase();
 
@@ -335,9 +335,8 @@ public class MyAccessibilityService extends AccessibilityService {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(randomURL));
 
                 // First, we "stop" the page load of the porn site....
-                // Why is hugesex.tv so fucking fast wtffffff
+                // hugesex.tv loads very fast
                 // NAW FIXEDDDDD: Clicking the back button to visit a porn site completely bypasses our url detection
-                // fuck u stop watching porn >:(
                 intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -369,7 +368,6 @@ public class MyAccessibilityService extends AccessibilityService {
     }
 
     private void applySafeModeToUnsafeGoogleSearch(String url) {
-        Log.d(TAG, "redirecting to safe google search");
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://" + url + "&safe=active"));
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -392,7 +390,7 @@ public class MyAccessibilityService extends AccessibilityService {
         return Utilities.getRandomURL();
     }
 
-    // todo rethink the DFS strategy in order to avoid having two getHostName lolol
+    // todo rethink the DFS strategy in order to avoid having two getHostName
     // Thank you, https://stackoverflow.com/questions/23079197/extract-host-name-domain-name-from-url-string/23079402
     public static String getHostName(String url) {
         URI uri;

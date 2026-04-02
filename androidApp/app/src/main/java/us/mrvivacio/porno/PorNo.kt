@@ -42,8 +42,7 @@ object PorNo {
 
         // O(1)
         val dict2 = MyAccessibilityService.dict2
-        return dict2[processedUrl] != null ||
-                MainActivity.realtimeBannedLinks[processedUrl] != null
+        return dict2[processedUrl] != null
     }
 
     @JvmStatic
@@ -61,7 +60,6 @@ object PorNo {
         val processedUrl = processUrl(url) ?: return false
         val dict2 = MyAccessibilityService.dict2
 
-        return dict2[processedUrl] != null ||
-                MainActivity.realtimeBannedLinks[processedUrl] != null
+        return dict2[processedUrl] != null
     }
 }

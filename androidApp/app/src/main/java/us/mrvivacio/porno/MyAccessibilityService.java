@@ -14,11 +14,9 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import androidx.annotation.RequiresApi;
 
@@ -45,7 +43,6 @@ public class MyAccessibilityService extends AccessibilityService {
 
     @Override
     public void onCreate() {
-//        MainActivity.readDB();
         super.onCreate();
 
         // Static shout out mister David Wang pair programming ftw
@@ -131,7 +128,6 @@ public class MyAccessibilityService extends AccessibilityService {
                 else if (eventType.contains("TYPE_VIEW_TEXT")) {
                     String text = event.getText().toString();
 
-                    // We have some text!
                     if (text != null && text.length() >= 3) {
                         while (text.contains(" ")) {
                             text = text.replaceAll(" ", "");
@@ -393,15 +389,7 @@ public class MyAccessibilityService extends AccessibilityService {
     }
 
     public String getRandomURL() {
-        ArrayList<String> links = MainActivity.URLList;
-
-        if (links.isEmpty()) {
-            return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
-        }
-        else {
-            int index = new Random().nextInt(links.size());
-            return links.get(index);
-        }
+        return Utilities.getRandomURL();
     }
 
     // todo rethink the DFS strategy in order to avoid having two getHostName lolol

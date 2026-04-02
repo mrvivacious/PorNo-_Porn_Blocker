@@ -1,9 +1,11 @@
 package us.mrvivacio.porno;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -28,7 +30,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static us.mrvivacio.porno.R.string.*;
 import static us.mrvivacio.porno.R.string.alert_instructions_title;
-import io.sentry.Sentry;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "dawg";
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvItems;
 
     // This holds the redirect links for MyAccessibilityService to refer to
-    public static ArrayList<String> URLList = new ArrayList<>();
+    public static ArrayList<String> URLs;
 
     // This holds the latest porn domains from database
     public static Map<String, Boolean> realtimeBannedLinks = new HashMap<>();
@@ -55,18 +56,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-// Testing sentry. todo -> safe to delete. note Sentry.captureException
-// sentry waiting for view to draw to better represent a captured error with a screenshot
-//    findViewById(android.R.id.content).getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-//        try {
-//            throw new Exception("This app uses Sentry! :)");
-//        } catch (Exception e) {
-//            Sentry.captureException(e);
-//        }
-//    });
-
         setContentView(R.layout.activity_main);
+
+        requestStoragePermissionsForSavingUserUrlData();
 
         // update from firebase db
         // readDB();
@@ -115,36 +107,6 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    // Update local links with the links from the database
-//    public static void readDB() {
-//        // Thank you, https://firebase.google.com/docs/firestore/query-data/get-data#list_subcollections_of_a_document
-//        DocumentReference docRef = db.collection("links").document("realtimeBannedLinks");
-//        docRef.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                DocumentSnapshot document = task.getResult();
-//                if (document != null && document.exists() && document.getData() != null) {
-//                    String bannedLinks = document.getData().toString();
-//                    bannedLinks = bannedLinks.substring(6);
-//                    bannedLinks = bannedLinks.substring(0, bannedLinks.length() - 2);
-//
-//                    // Thank you, https://stackoverflow.com/questions/7347856/how-to-convert-a-string-into-an-arraylist
-//                    ArrayList<String> banList = new ArrayList<>(Arrays.asList(bannedLinks.split(", ")));
-//
-//                    for (String link : banList) {
-//                        realtimeBannedLinks.put(link, true);
-//                    }
-//
-//                } else {
-//                    // TODO add analytics and report no such document
-////                        Log.d(TAG, "No such document");
-//                }
-//            } else {
-//                // TODO add analytics and report failed to get document
-////                    Log.d(TAG, "get failed with ", task.getException());
-//            }
-//        });
-//    }
-
     // Open all the saved URLs
     public void onEmergencyButtonPress(View v) {
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
@@ -174,37 +136,44 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
+        String url = getURLFromSharedPreferences(key);
+
         editor.remove(key);
         editor.apply();
+
+        Utilities.removeFromFile(url);
 
         Toast.makeText(this, getString(toast_delete_link) + " " + key, Toast.LENGTH_LONG).show();
     }
 
+    // Get keys from Shared Preferences and initialize our list
     public void loadLinksFromSharedPreferences() {
         ArrayList<String> names = new ArrayList<>();
+        ArrayList<String> URLList = new ArrayList<>(); // todo migration?
 
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         Map<String, ?> allLinks = prefs.getAll();
 
 //        Log.d(TAG, "keys  =  " + allLinks.keySet());
 
-        // thx https://stackoverflow.com/questions/22089411/how-to-get-all-keys-of-sharedpreferences-programmatically-in-android
+        // https://stackoverflow.com/questions/22089411
         for (Map.Entry<String, ?> entry : allLinks.entrySet()) {
             String name = entry.getKey();
             String URL = entry.getValue().toString();
 
             if (PorNo.isPorn(getHostName(URL))) {
-                // porn site previously added to redirect list
                 deleteLinkFromSharedPreferences(name);
             }
             // url not in porn map -> keep it
             else {
                 names.add(name);
-                URLList.add(URL);      // In order to reference URLs during redirection
+                URLList.add(URL);      // TODO migrate this shit Original:In order to reference URLs during redirection
             }
         }
 
         items = names;
+        URLs = URLList;
+        Utilities.saveToFile(URLList);
     }
 
     private void writeItems(String name, String URL) {
@@ -221,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            Sentry.captureException(e);
+            e.printStackTrace();
             return url;
         }
 
@@ -247,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isAccessibilitySettingsOn(Context mContext) {
-        // https://stackoverflow.com/questions/18094982/detect-if-my-accessibility-service-is-enabled
+        // https://stackoverflow.com/questions/18094982
         int accessibilityEnabled = 0;
         final String service = getPackageName() + "/" + MyAccessibilityService.class.getCanonicalName();
 
@@ -333,6 +302,24 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void requestStoragePermissionsForSavingUserUrlData() {
+        // Thank you, https://stackoverflow.com/questions/32635704/android-permission-doesnt-work-even-if-i-have-declared-it
+        int PERMISSION_REQUEST_CODE = 1;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
     // Screen the URL and add it if the URL isn't in our porn map
     public void onAddItemButtonPress(View v) {
         EditText url = findViewById(R.id.et_NewItem);
@@ -367,9 +354,12 @@ public class MainActivity extends AppCompatActivity {
         itemsAdapter.add(nameText);
         url.setText("");
         name.setText("");
+
+        Utilities.updateFile(urlText);
     }
 
     /////// CORRESPONDS TO ACTION BAR MENU
+
     public void openAlertDialogForInstructions(MenuItem item) {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
@@ -384,7 +374,9 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    // TODO or POSTPONE Read from database, update banList, toast
+
+    // TODO delete this shit bruh
+    //  Read from database, update banList, toast
     public void updateLinks(MenuItem item) {
 //        readDB();
         Toast.makeText(this, toast_database_off, Toast.LENGTH_LONG).show();

@@ -106,7 +106,6 @@ public class MyAccessibilityService extends AccessibilityService {
                     //  "Open in incognito" option exists, that I've seen so far, thus we will say this is correct)
                     if (className.equals("org.chromium.chrome.browser.ChromeTabbedActivity")) {
 //                    Log.d(TAG, "onAccessibilityEvent: event = " + event);
-
                         parseNodeForURLViaDFS(event.getSource());
                     }
 
@@ -140,7 +139,7 @@ public class MyAccessibilityService extends AccessibilityService {
                         text = text.substring(1, text.length() - 1);
                         text = getHostName(text);
 
-//                        Log.d(TAG, "onAccessibilityEvent: our text is " + text);
+                    Log.d(TAG, "onAccessibilityEvent: our text is " + text);
 
                         if (PorNo.isPornDomain(text)) {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getRandomURL()));
@@ -150,6 +149,10 @@ public class MyAccessibilityService extends AccessibilityService {
 
 //                        Log.d(TAG, "dfs: Speed = " + (System.currentTimeMillis() - time));
                         }
+
+                        // Don't make safe mode on google searches here
+                        //  because omnibox might pre-fill as the user types
+                        //  and we don't want to hijack the UX for no good reason
 
                         // Save the resourceID for the omnibox to reduce some cycles
                         // cuz omni not needed to evaluate just text

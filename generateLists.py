@@ -140,7 +140,8 @@ def add_urls(domains):
 
             f.write(domain + "\n")
 
-        print(f"Added {domain} -> {file_path}")
+        print(f"✅ Added {domain} -> {file_path}")
+        print()
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "add":
@@ -155,6 +156,5 @@ if __name__ == "__main__":
     generateListsInJavaScript()
     generateListsInJava()
 
-    print()
     print("Updated chromeExtension/lists.js")
     print("Updated androidApp/.../Domains.java")

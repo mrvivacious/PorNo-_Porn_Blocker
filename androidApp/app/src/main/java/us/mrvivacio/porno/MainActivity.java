@@ -21,14 +21,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,49 +63,49 @@ public class MainActivity extends AppCompatActivity {
 
 //        Log.d(TAG, "onCreate: db = " + db);
 
-        // update from db
-        readDB();
+        // update from firebase db
+        // readDB();
 
         if (!isAccessibilitySettingsOn(this)) {
             openAlertDialogForEnablingPorNoService();
         }
 
         // Tutorial code
-        // Thank you, https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
-        lvItems = (ListView) findViewById(R.id.lv_Items);
+        // https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
+        lvItems = findViewById(R.id.lv_Items);
         items = new ArrayList<>();
 
         // Populate the listView with the link names saved in sharedPref
-        initList();
+        loadLinksFromSharedPreferences();
 
         itemsAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, items);
 
         lvItems.setAdapter(itemsAdapter);
-        setupTouchListeners();
+        setLongClickToDeleteLink();
+        setShortClickToOpenLink();
     }
 
-    // Attaches a long click listener
-    private void setupTouchListeners() {
+    private void setLongClickToDeleteLink() {
         lvItems.setOnItemLongClickListener(
                 (adapterView, view, pos, l) -> {
-                    // DELETE FROM SHARED PREF
-                    String name = items.get(pos);
-                    openAlertDialogToConfirmLinkDeletion(name, pos);
+                    String URLName = items.get(pos);
+                    openDeleteLinkHandler(URLName, pos);
 
                     // Return true consumes the long click event (marks it handled)
                     return true;
                 }
         );
+    }
+    private void setShortClickToOpenLink() {
         lvItems.setOnItemClickListener(
                 (adapterView, view, pos, l) -> {
-                    // Get the text value of the clicked item and parse the url
-                    String text = items.get(pos);
-                    String toOpen = getItem(text);
+                    String URLName = items.get(pos);
+                    String URLToOpen = getURLFromSharedPreferences(URLName);
 
-                    if (toOpen == null) { return; } // How would this happen...?
+                    if (URLToOpen == null) { return; } // todo How would this happen...?
 
-                    openUrlInBrowser(toOpen);
+                    openUrlInBrowser(URLToOpen);
                 }
         );
     }
@@ -140,16 +135,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Return the URL of the passed in name key
-    private String getItem(String key) {
+    private String getURLFromSharedPreferences(String key) {
         return this.getPreferences(Context.MODE_PRIVATE).getString(key, null); // The url to open
     }
 
     // Delete name:url from Shared Preferences
-    private void deleteItem(String key) {
+    private void deleteLinkFromSharedPreferences(String key) {
         SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        String url = getItem(key);
+        String url = getURLFromSharedPreferences(key);
 
         editor.remove(key);
         editor.apply();
@@ -160,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Get keys from Shared Preferences and initialize our list
-    public void initList() {
+    public void loadLinksFromSharedPreferences() {
         ArrayList<String> names = new ArrayList<>();
         ArrayList<String> URLList = new ArrayList<>(); // todo migration?
 
@@ -175,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
             String URL = entry.getValue().toString();
 
             if (PorNo.isPorn(getHostName(URL))) {
-                deleteItem(name);
+                deleteLinkFromSharedPreferences(name);
             }
-            // The URL isn't in our porn map, so keep it le mao
+            // url not in porn map -> keep it
             else {
                 names.add(name);
                 URLList.add(URL);      // TODO migrate this shit Original:In order to reference URLs during redirection
@@ -228,9 +223,8 @@ public class MainActivity extends AppCompatActivity {
         return hostName;
     }
 
-    // To check if service is enabled
     private boolean isAccessibilitySettingsOn(Context mContext) {
-        // Thank you, https://stackoverflow.com/questions/18094982/detect-if-my-accessibility-service-is-enabled
+        // https://stackoverflow.com/questions/18094982
         int accessibilityEnabled = 0;
         final String service = getPackageName() + "/" + MyAccessibilityService.class.getCanonicalName();
 
@@ -246,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
 
         TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
 
-        // TODO ?? this reports as true even when accessibility hasn't been enabled yet
         if (accessibilityEnabled == 1) {
             Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
             String settingValue = Settings.Secure.getString(
@@ -271,14 +264,11 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    // TODO a video demonstrating this wouldn't hurt. basically a clear explanation of how to enable
     private void openAlertDialogForEnablingPorNoService() {
         // https://stackoverflow.com/questions/2115758
         AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
+        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         // Build the alert
         builder.setTitle(alert_disabled_title)
@@ -297,15 +287,15 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void openAlertDialogToConfirmLinkDeletion(String name, int index) {
+    private void openDeleteLinkHandler(String name, int index) {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         builder.setTitle(alert_delete_title)
 //                .setMessage("Name: " + name + "\nLink: " + getItem(name))
-                .setMessage(name + "\n" + getItem(name))
+                .setMessage(name + "\n" + getURLFromSharedPreferences(name))
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    deleteItem(name);
+                    deleteLinkFromSharedPreferences(name);
 
                     // Remove the item within array at position
                     items.remove(index);
@@ -346,7 +336,6 @@ public class MainActivity extends AppCompatActivity {
         String urlText = url.getText().toString().trim();
         String nameText = name.getText().toString().trim();
 
-        // Please
         if (urlText.contains(" ")) {
             Toast.makeText(this, toast_validate_url_spaces, Toast.LENGTH_SHORT).show();
             return;
@@ -358,7 +347,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (urlText.isEmpty()) {
-            // No link? No action
             return;
         }
         else if (nameText.isEmpty()) {

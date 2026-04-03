@@ -1,11 +1,9 @@
 package us.mrvivacio.porno;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -27,6 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import static us.mrvivacio.porno.R.string.*;
 
@@ -49,12 +48,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Utilities.migrateIfNecessary(this);
+
         if (!isAccessibilitySettingsOn(this)) {
             openAlertDialogForEnablingPorNoService();
         }
-
-        requestStoragePermissionsForSavingUserUrlData();
-
 
         // Tutorial code
         // https://guides.codepath.com/android/Basic-Todo-App-Tutorial#configuring-android-studio
@@ -98,13 +96,14 @@ public class MainActivity extends AppCompatActivity {
 
     // Open all the saved URLs
     public void onEmergencyButtonPress(View v) {
-        SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Map<String, ?> allLinks = prefs.getAll();
 
         for (Map.Entry<String, ?> entry : allLinks.entrySet()) {
-            String URL = entry.getValue().toString();
-
-            openUrlInBrowser(URL);
+            if (entry.getKey().startsWith("url_")) {
+                String URL = entry.getValue().toString();
+                openUrlInBrowser(URL);
+            }
         }
     }
 
@@ -114,59 +113,42 @@ public class MainActivity extends AppCompatActivity {
         startActivity(browserIntent);
     }
 
-    private void addLinkToSharedPreferences(String name, String URL) {
-        SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString(name, URL);
-        editor.apply();
-    }
 
     // Return the URL of the passed in name key
     private String getURLFromSharedPreferences(String key) {
-        return this.getPreferences(Context.MODE_PRIVATE).getString(key, null);
+        return PreferenceManager.getDefaultSharedPreferences(this).getString("url_" + key, null);
     }
 
     private void deleteLinkFromSharedPreferences(String key) {
-        SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        String url = getURLFromSharedPreferences(key);
-
-        editor.remove(key);
-        editor.apply();
-
-        Utilities.removeFromFile(url);
-
+        Utilities.removeUrl(this, key);
         Toast.makeText(this, getString(toast_delete_link) + " " + key, Toast.LENGTH_LONG).show();
     }
 
     public void loadLinksFromSharedPreferences() {
         ArrayList<String> names = new ArrayList<>();
-        ArrayList<String> URLList = new ArrayList<>(); // todo migration?
 
-        SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
-        Map<String, ?> allLinks = prefs.getAll();
-
-        // Log.d(TAG, "keys  =  " + allLinks.keySet());
+        SharedPreferences globalPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Map<String, ?> allLinks = globalPrefs.getAll();
 
         // https://stackoverflow.com/questions/22089411
         for (Map.Entry<String, ?> entry : allLinks.entrySet()) {
-            String name = entry.getKey();
-            String URL = entry.getValue().toString();
+            String key = entry.getKey();
 
-            if (PorNo.isPorn(getHostName(URL))) {
-                deleteLinkFromSharedPreferences(name);
-            }
-            // url not in porn map -> keep it
-            else {
-                names.add(name);
-                URLList.add(URL);      // TODO migrate this shit Original:In order to reference URLs during redirection
+            if (key.startsWith("url_")) {
+                String displayName = key.substring(4); // remove prefix
+                String URL = entry.getValue().toString();
+
+                if (PorNo.isPorn(getHostName(URL))) {
+                    deleteLinkFromSharedPreferences(displayName);
+                }
+                // url not in porn map -> keep it
+                else {
+                    names.add(displayName);
+                }
             }
         }
 
         items = names;
-        Utilities.saveToFile(URLList);
     }
 
     public String getHostName(String url) {
@@ -269,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
         builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
         builder.setTitle(alert_delete_title)
-//                .setMessage("Name: " + name + "\nLink: " + getItem(name))
                 .setMessage(name + "\n" + getURLFromSharedPreferences(name))
                 .setPositiveButton("Yes", (dialog, which) -> {
                     deleteLinkFromSharedPreferences(name);
@@ -287,24 +268,6 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void requestStoragePermissionsForSavingUserUrlData() {
-        // https://stackoverflow.com/questions/32635704
-        int PERMISSION_REQUEST_CODE = 1;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-        }
-    }
-
     // Screen the URL and add it if the URL isn't in our porn map
     public void onAddItemButtonPress(View v) {
         EditText url = findViewById(R.id.et_NewItem);
@@ -313,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         String urlText = url.getText().toString().trim();
         String nameText = name.getText().toString().trim();
 
-        if (urlText.contains(" ")) {
+        if (urlText.contains(" ") || !urlText.contains(".")) {
             Toast.makeText(this, toast_validate_url_spaces, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -326,20 +289,17 @@ public class MainActivity extends AppCompatActivity {
         if (urlText.isEmpty()) {
             return;
         }
-        else if (nameText.isEmpty()) {
-            nameText = urlText; // No name provided? Use the url as the name
-        }
+
+        nameText = !nameText.isEmpty() ? nameText : urlText;
 
         if (!urlText.contains("http")) { urlText = "http://" + urlText; }
 
         // TODO is there a limit to shared preferences? would this ever return an error?
-        addLinkToSharedPreferences(nameText, urlText);
+        Utilities.saveUrl(this, nameText, urlText);
 
         itemsAdapter.add(nameText);
         url.setText("");
         name.setText("");
-
-        Utilities.updateFile(urlText);
     }
 
     /////// CORRESPONDS TO ACTION BAR MENU

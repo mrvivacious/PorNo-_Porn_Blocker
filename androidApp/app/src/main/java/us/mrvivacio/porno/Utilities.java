@@ -1,192 +1,124 @@
 package us.mrvivacio.porno;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
+import android.util.Log;
 
-import java.io.BufferedReader;
+import androidx.preference.PreferenceManager;
+
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Utilities {
-    public static String getRandomURL() {
-        File path = Environment.getExternalStorageDirectory();
-        File dir = new File(path.getAbsolutePath() + "/PorNo_user_data/");
+    public static final String LINKS_MIGRATED = "migration_done_v1";
+    private static final String PREFIX = "url_"; // Our new namespace
 
-        if (!dir.isDirectory()) {
-            dir.mkdir();
-        }
-
-        File file = new File(dir, "links.txt");
-
-        if (!file.exists()) {
-            return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
-        }
-        else {
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new FileReader(file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
-            }
-
-            try {
-                String currLine = reader.readLine();
-                ArrayList<String> currLinks = new ArrayList<>();
-
-                while (currLine != null) {
-                    currLine = currLine.trim();
-                    currLinks.add(currLine);
-                    currLine = reader.readLine();
-                }
-
-                if (currLinks.size() == 0) {
-                    return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
-                }
-                else {
-                    int random = (int) Math.floor(Math.random() * currLinks.size());
-                    return currLinks.get(random);
-                }
-            } catch (IOException ioe) {
-                return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
-            }
-        }
-    }
-
-    public static void saveToFile(ArrayList<String> URLs) {
-        try {
-            File path = Environment.getExternalStorageDirectory();
-            File dir = new File(path.getAbsolutePath() + "/PorNo_user_data/");
-            if (!dir.isDirectory()) {
-                dir.mkdir();
-            }
-
-            File file = new File(dir, "links.txt");
-            if (!file.exists()) {
-                FileOutputStream os = new FileOutputStream(file);
-
-                String urls = "";
-
-                for (String url : URLs) {
-                    urls += url + "\n";
-                }
-
-                os.write(urls.getBytes());
-                os.close();
-            }
-            else {
-                FileOutputStream os = new FileOutputStream(file);
-                String urls = "";
-
-                for (String url : URLs) {
-                    urls += url + "\n";
-                }
-
-                os.write(urls.getBytes());
-                os.close();
-            }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-
-    public static void updateFile(String url) {
-        try {
-            File path = Environment.getExternalStorageDirectory();
-            File dir = new File(path.getAbsolutePath() + "/PorNo_user_data/");
-
-            if (!dir.isDirectory()) {
-                dir.mkdir();
-            }
-
-            File file = new File(dir, "links.txt");
-            if (!file.exists()) {
-                FileOutputStream os = new FileOutputStream(file);
-                url = url + "\n";
-                os.write(url.getBytes());
-                os.close();
-            }
-            else {
-                BufferedReader reader = null;
-                try {
-                    reader = new BufferedReader(new FileReader(file));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                try {
-                    String currLine = reader.readLine();
-                    String currLinks = "";
-
-                    while (currLine != null) {
-                        int idxOfSlash = currLine.indexOf("/");
-                        currLinks +=  currLine + "\n";
-                        currLine = reader.readLine();
-                    }
-
-                    currLinks += url + "\n";
-                    FileOutputStream os = new FileOutputStream(file);
-                    os.write(currLinks.getBytes());
-
-                    os.close();
-                } catch (IOException ioe) {
-                }
-            }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-
-    public static void removeFromFile(String url) {
-        File path = Environment.getExternalStorageDirectory();
-        File dir = new File(path.getAbsolutePath() + "/PorNo_user_data/");
-
-        if (!dir.isDirectory()) {
+    /**
+     * Migrates data from the legacy Text File and Activity-specific SharedPreferences
+     * into the Global DefaultSharedPreferences.
+     */
+    public static void migrateIfNecessary(Context context) {
+        SharedPreferences globalPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (globalPrefs.getBoolean(LINKS_MIGRATED, false)) {
             return;
         }
 
-        File file = new File(dir, "links.txt");
+        SharedPreferences.Editor editor = globalPrefs.edit();
 
-        if (!file.exists()) {
-            return;
-        }
-        else {
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new FileReader(file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return;
+        // Migrate from OLD Activity SharedPreferences (Preserves Name -> URL mapping)
+        // Trivia: previously, used PorNo_user_data/links.txt
+        SharedPreferences oldPrefs = context.getSharedPreferences("MainActivity", Context.MODE_PRIVATE);
+        Map<String, ?> allEntries = oldPrefs.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            if (entry.getValue() instanceof String) {
+                Log.d("PorNo_migration", (entry.getValue()).toString());
+
+                // ADD PREFIX DURING MIGRATION
+                editor.putString(PREFIX + entry.getKey(), (String) entry.getValue());
             }
+        }
 
-            try {
-                String currLine = reader.readLine();
-                String currLinks = "";
+        deleteLegacyFolder(context);
+        oldPrefs.edit().clear().apply();
 
-                // While we still have text to read, add all the links
-                while (currLine != null) {
-                    // Add the links but the one to delete
-                    if (!currLine.contains(url)) {
-                        currLinks += currLine + "\n";
+        editor.putBoolean(LINKS_MIGRATED, true);
+        editor.apply();
+    }
+
+    /**
+     * Returns a random URL from the global SharedPreferences.
+     * Used by MyAccessibilityService.
+     */
+    public static String getRandomURL(Context context) {
+        SharedPreferences globalPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Map<String, ?> allEntries = globalPrefs.getAll();
+
+        ArrayList<String> urlsOnly = new ArrayList<>();
+
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            if (entry.getKey().startsWith(PREFIX) && entry.getValue() instanceof String) { // skips LINKS_MIGRATED flag
+                urlsOnly.add((String) entry.getValue());
+            }
+        }
+
+        if (!urlsOnly.isEmpty()) {
+            int random = (int) (Math.random() * urlsOnly.size());
+            return urlsOnly.get(random);
+        }
+
+        // Fallback if no links are found
+        return "https://medium.com/@vivekbhookya/porno-de97189d82f6";
+    }
+
+    /**
+     * Standard save method for the new SharedPreferences architecture
+     */
+    public static void saveUrl(Context context, String name, String url) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        // ADD PREFIX ON SAVE
+        prefs.edit().putString(PREFIX + name, url).apply();
+    }
+
+    /**
+     * Standard remove method for the new SharedPreferences architecture
+     */
+    public static void removeUrl(Context context, String name) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().remove(PREFIX + name).apply();
+    }
+
+    private static void deleteLegacyFolder(Context context) {
+        try {
+            // Locations to check
+            File[] roots = {
+                    Environment.getExternalStorageDirectory(), // The "Internal Storage" root
+                    context.getExternalFilesDir(null),         // App-specific external
+                    new File("/sdcard")                        // Common alias on older Samsungs
+            };
+
+            for (File root : roots) {
+                if (root == null) continue;
+
+                // Look for the folder in this root
+                File dir = new File(root, "PorNo_user_data");
+
+                if (dir.exists() && dir.isDirectory()) {
+                    // 1. Delete the file inside first
+                    File file = new File(dir, "links.txt");
+                    if (file.exists()) {
+                        boolean fileDeleted = file.delete();
+                        Log.d("PorNo_Cleanup", "File deleted: " + fileDeleted);
                     }
 
-                    currLine = reader.readLine();
+                    // 2. Delete the folder now that it's empty
+                    boolean dirDeleted = dir.delete();
+                    Log.d("PorNo_Cleanup", "Folder deleted: " + dirDeleted + " at " + dir.getAbsolutePath());
                 }
-
-                // Now save all the links
-                FileOutputStream os = new FileOutputStream(file);
-
-                os.write(currLinks.getBytes());
-
-                // Our job here is done
-                os.close();
-            } catch (IOException ioe) {
-                return;
             }
+        } catch (Exception e) {
+            Log.e("PorNo_Cleanup", "Failed cleanup: " + e.getMessage());
         }
     }
 }

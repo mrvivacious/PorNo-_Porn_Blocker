@@ -6,7 +6,6 @@ package us.mrvivacio.porno;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.Browser;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -18,15 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.RequiresApi;
-
 // Todo:
 /*
  o Write tests to screen trimmed URLs
  + Run the trimmed urls thru a length test
  + So, find the shortest porn URL -- our trimmed links
     should not be shorter than this URl or be malformed
- o Remove admob stuff
  o abstract browsers into their own classes?
  */
 
@@ -37,18 +33,24 @@ public class MyAccessibilityService extends AccessibilityService {
     static String currURL = "zz";
 
     static String TAG = "dawgAccessibility";
-    private String omnibox = "zz";
+    private final String omniboxViewID = "com.android.chrome:id/url_bar";
 
-    private long start = 0;
+    // private long start = 0;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        // David pair programming ftw
-        dict2 = Domains.init();
-        Log.d(TAG, "onCreate: we saved our dict2 lez see wat happen " + dict2.size());
-//        Log.d("onCreate", "onCreate");
+        Utilities.migrateIfNecessary(this);
+
+        dict2 = Domains.init(); // David pair programming ftw
+
+        Log.d(TAG, "onCreate: # of domains recognized: " + dict2.size());
+    }
+
+    public String getRandomURL() {
+        // Service can "see" the MainActivity preferences
+        return Utilities.getRandomURL(this);
     }
 
     // https://stackoverflow.com/questions/38783205
@@ -57,126 +59,20 @@ public class MyAccessibilityService extends AccessibilityService {
     // https://gist.github.com/mrvivacious/1c252b2438bda1c35f234873b508c593
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        start = System.currentTimeMillis();
+        // start = System.currentTimeMillis();
 //        Log.d(TAG, "ACCESSIBILITY EVENT --------");
 
         // Chrome
         if (isChromeEvent(event)) {
-//            if (false) {} // for testing the "old way" (don't use the api 16 pixel device, it doesn't have chrome lol)
-            if (deviceSdkIsAtLeast18()) {
-//                Log.d(TAG, "sdk is at least 18 :)");
-                parseNodeForURLViaAPI(event);
-            }
-            else { // "old way" aka api15,16,17
-                Log.d("hi", "evaluating via old way :)");
-
-                String eventType = AccessibilityEvent.eventTypeToString(event.getEventType());
-
-//                Log.d(TAG, "onAccessibilityEvent: event = " + event);
-//                Log.d(TAG, "onAccessibilityEvent: className = " + event.getClassName());
-
-                // The user opens a URL from a different source (ie hyperlink, URL in SMS message...)
-                if (eventType.contains("WINDOW")) {
-                    String className = event.getClassName().toString();
-
-//                Log.d(TAG, "onAccessibilityEvent: event = " + event);
-//                Log.d(TAG, "onAccessibilityEvent: className = " + className);
-
-                    // No null check cuz event.getClassName() will never return null...thank you Android <3
-
-                    ////////////////////////////////////////////////////
-                    // 6 out of 6 setup
-                    // 4 out of 6 is/are correct
-                    // $$ = detects in regular mode
-                    // ^^ = redirects in regular mode
-                    // ## = detects in incognito
-                    // ** = redirects in incognito
-
-                    // $$ Clicking a hyperlink on a webpage ## **
-                    // $$ ^^ Navigating using Android back button ## ^^ COULD BE FASTER
-                    // $$ ^^ Navigating using Chrome forward navigation button ## ^^ COULD BE FASTER
-                    if (className.equals("android.widget.EditText")) {
-////                    // do nothing
-
-//                    Log.d(TAG, "onAccessibilityEvent: inside ET $$$$$$");
-                        parseNodeForURLViaDFS(event.getSource());
-                    }
-
-                    // $$ ^^ Hyperlink from external source, such as an sms msg (Can't test for incognito -- no
-                    //  "Open in incognito" option exists, that I've seen so far, thus we will say this is correct)
-                    if (className.equals("org.chromium.chrome.browser.ChromeTabbedActivity")) {
-//                    Log.d(TAG, "onAccessibilityEvent: event = " + event);
-                        parseNodeForURLViaDFS(event.getSource());
-                    }
-
-                    // $$ ^^ Typing the URL in ## **
-                    // $$ ^^ Pasting the URL in ## ** (works through TYPE_VIEW_TEXT events)
-                    // We have a source, so we can query
-                    // Omnibox sits in the class android.widget.ListView
-                    // We specify this class because a porn URL embedded in a webpage (even as just plaintext) will trigger
-                    //  the redirect. However! Webpage data is in the class android.widget.FrameLayout, so we can avoid that class
-                    if (className.equals("android.widget.ListView")) {
-                        // Trying to use the nodeID won't work -- the ids keep changing (probably for good reason)
-                        // So much for saving cycles -- just check all window events, sorry phone
-
-                        // Can't use .getText() strategy -- WINDOW event metadata doesn't contain URL info
-                        //  when opened through hyperlinks therefore dfs() we go
-                        parseNodeForURLViaDFS(event.getSource());
-                    }
-                }
-                // If the user is typing in the omnibox,
-                else if (eventType.contains("TYPE_VIEW_TEXT")) {
-                    String text = event.getText().toString();
-
-                    if (text != null && text.length() >= 3) {
-                        while (text.contains(" ")) {
-                            text = text.replaceAll(" ", "");
-                        }
-
-                        text = text.substring(1, text.length() - 1);
-                        text = getHostName(text);
-
-                    Log.d(TAG, "onAccessibilityEvent: our text is " + text);
-
-                        if (PorNo.isPornDomain(text)) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getRandomURL()));
-                            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-
-//                        Log.d(TAG, "dfs: Speed = " + (System.currentTimeMillis() - time));
-                        }
-
-                        // Don't make safe mode on google searches here
-                        //  because omnibox might pre-fill as the user types
-                        //  and we don't want to hijack the UX for no good reason
-
-                        // Save the resourceID for the omnibox to reduce some cycles
-                        // cuz omni not needed to evaluate just text
-                        if (event.getSource() != null) {
-                            String src = event.getSource().toString();
-                            String current = getId(src);
-
-//                        Log.d(TAG, "onAccessibilityEvent: current = " + current);
-
-                            // Save ID of omnibox
-                            if (!omnibox.equals(current)) {
-//                            Log.d(TAG, "onAccessibilityEvent: UPDATE -- " + omnibox);
-                                omnibox = current;
-                            }
-                        }
-                    }
-                }
-            }
+            parseNodeForURLViaAPI(event);
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void parseNodeForURLViaAPI(AccessibilityEvent event) {
         AccessibilityNodeInfo source = event.getSource();
         if (source == null) { return; }
 
-        List<AccessibilityNodeInfo> findAccessibilityNodeInfosByViewId = source.findAccessibilityNodeInfosByViewId("com.android.chrome:id/url_bar");
+        List<AccessibilityNodeInfo> findAccessibilityNodeInfosByViewId = source.findAccessibilityNodeInfosByViewId(omniboxViewID);
 
         if (!findAccessibilityNodeInfosByViewId.isEmpty()) {
             AccessibilityNodeInfo omniboxView = findAccessibilityNodeInfosByViewId.get(0);
@@ -233,20 +129,20 @@ public class MyAccessibilityService extends AccessibilityService {
             }
 
 //                // If the user is typing in the omnibox, optimization ideas for the future
-////                    if (eventType.contains("TYPE_VIEW_TEXT")) {
-////                        String text = event.getText().toString();
-////                        // Nothing 2 do
-////                        if (text == null || text.length() < 3) {
-////                            // Do nothing
-////                        }
-////                        // We have some text!
-////                        else {
-////                            while (text.contains(" ")) {
-////                                text = text.replaceAll(" ", "");
-////                            }
-////
-////                            text = text.substring(1, text.length() - 1);
-////                            text = getHostName(text);
+//                    if (eventType.contains("TYPE_VIEW_TEXT")) {
+//                        String text = event.getText().toString();
+//                        // Nothing 2 do
+//                        if (text == null || text.length() < 3) {
+//                            // Do nothing
+//                        }
+//                        // We have some text!
+//                        else {
+//                            while (text.contains(" ")) {
+//                                text = text.replaceAll(" ", "");
+//                            }
+//
+//                            text = text.substring(1, text.length() - 1);
+//                            text = getHostName(text);
 //            }
         }
     }
@@ -262,112 +158,12 @@ public class MyAccessibilityService extends AccessibilityService {
         return host;
     }
 
-    private boolean deviceSdkIsAtLeast18() {
-        return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
-    }
-
     private boolean isChromeEvent(AccessibilityEvent event) {
         return event.getPackageName() != null && event.getPackageName().toString().contains("com.android.chrome");
     }
 
-    public void parseNodeForURLViaDFS(AccessibilityNodeInfo info){
-        if (info == null) {
-            return;
-        }
-
-        if (info.getText() != null && !info.getText().toString().trim().isEmpty()) {
-            String txt = info.getText().toString().trim();
-            txt = txt.toLowerCase();
-
-//            Log.d(TAG, "dfs: the text is " + txt);
-
-            if (txt.contains(" ")) {
-                return;
-            }
-
-            if (!txt.contains(".")) {
-                return;
-            }
-
-            // If we have a non-zz value for the omnibox AND the current node corresponds to
-            //  the omnibox, then return to prevent rest of dfs -- omnibox gets searched in code more above
-            //
-            // If omnibox is zz, it's uninitialized, so proceed with dfs
-            // Otherwise, we have a value for omnibox, so this evaluates
-            //  to true when we have a node that isn't the omnibox
-            if (!omnibox.equals("zz") && !getId(info.toString()).equals(omnibox)) {
-//                Log.d(TAG, "dfs: rip... info:omnibox = " + getId(info.toString()) + " : " + omnibox);
-                return;
-            }
-
-            // Else, let's check this out
-            String host = getHostName(txt);
-
-            // If we have the redirect url, we can start processing stuff again
-            // Otherwise, check if we are still in the REDIRECTION state
-            Log.d(TAG, "dfs: host : currURL + isFound =  " + host + " : " + currURL + " + " + isFound);
-
-            if (host.contains(currURL)) {
-//                Log.d(TAG, "dfs: host does equal currURL");
-                isFound = false;
-            }
-            if (isFound && !PorNo.isPorn(host)) {
-//                Log.d(TAG, "dfs: isFound evaluated to true: host - currURL = " + host + " - " + currURL);
-                return;
-            }
-
-//            Log.d(TAG, "dfs: the URL is " + txt);
-//            Log.d(TAG, "dfs: the URL, thru URI, is " + host);
-//            Log.d(TAG, "isFound = " + isFound);
-
-            // Is the txt a banned URL?
-            if (PorNo.isPorn(host)) {
-                isFound = true;
-
-//                Log.d(TAG, "dfs: source info =  " + info);
-
-//            if (txt.equals("yahoo.com")) {
-
-                // Attempting direct redirection
-                String randomURL = getRandomURL();
-                currURL = getHostName(randomURL);
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(randomURL));
-
-                // First, we "stop" the page load of the porn site....
-                // hugesex.tv loads very fast
-                // NAW FIXEDDDDD: Clicking the back button to visit a porn site completely bypasses our url detection
-                intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-
-//                    Log.d(TAG, "dfs: Speed = " + (System.currentTimeMillis() - time));
-                return;
-//                }
-            }
-            else if (isUnsafeGoogleSearch(txt)) {
-                // todo this doesn't work when: (well, no it does seem to work)
-                // user visits google.com
-                // user searches within that search bar (doesn't throw an event we listen for atm)
-                // user can see porn sites as search results :(
-                applySafeModeToUnsafeGoogleSearch(txt);
-                return;
-            }
-        }
-
-        for (int i = 0 ; i < info.getChildCount(); i++) {
-//            Log.d(TAG, "onAccessibilityEvent: Iteration " + i + "/" + info.getChildCount());
-
-            AccessibilityNodeInfo child = info.getChild(i);
-            parseNodeForURLViaDFS(child);
-
-            if (child != null) {
-                child.recycle();
-            }
-        }
-    }
-
     private void applySafeModeToUnsafeGoogleSearch(String url) {
+        Log.d("dawg", "applying safe mode");
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://" + url + "&safe=active"));
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -378,20 +174,8 @@ public class MyAccessibilityService extends AccessibilityService {
         return url.contains("google.com/search?") && !url.contains("&safe=active");
     }
 
-    // Get the associated nodeId of the passed in event source
-    public String getId(String src) {
-        int start = src.indexOf("@");
-        int stop = src.indexOf(";");
-
-        return src.substring(start, stop);
-    }
-
-    public String getRandomURL() {
-        return Utilities.getRandomURL();
-    }
-
     // todo rethink the DFS strategy in order to avoid having two getHostName
-    // Thank you, https://stackoverflow.com/questions/23079197/extract-host-name-domain-name-from-url-string/23079402
+    // https://stackoverflow.com/questions/23079197
     public static String getHostName(String url) {
         URI uri;
 //        Log.d(TAG, "getHostName: url = " + url);
@@ -414,7 +198,7 @@ public class MyAccessibilityService extends AccessibilityService {
             hostName = hostName.substring(4);
         }
 
-        // Fuck you websites that use mobile prefix and break my hashmap
+        // websites that use mobile prefix break my hashmap
         if (hostName.contains("mobile.")) {
             hostName = hostName.substring(7);
         }

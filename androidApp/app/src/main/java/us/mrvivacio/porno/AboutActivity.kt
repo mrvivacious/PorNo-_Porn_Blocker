@@ -1,7 +1,10 @@
 package us.mrvivacio.porno
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 
 class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,5 +21,14 @@ class AboutActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return super.onSupportNavigateUp()
+    }
+
+    fun openEmailIntentForChildSafety(view : View) {
+        val intent = Intent(Intent.ACTION_SENDTO)
+
+        intent.data = "mailto:jvnnvt@gmail.com".toUri()
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Child Safety - PorNo!")
+
+        startActivity(intent)
     }
 }

@@ -325,6 +325,11 @@ public class MainActivity extends AppCompatActivity {
         openUrlInBrowser("https://github.com/mrvivacious/PRIVACY_POLICY/blob/master/PorNo_privacy_policy.txt");
     }
 
+    public void openUrlForChildSafetyPolicy(MenuItem item) {
+        openUrlInBrowser("https://www.pornblockeris.me/childsafetypolicy");
+    }
+
+
     public void openActivityForAboutPorNo(MenuItem item) {
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);

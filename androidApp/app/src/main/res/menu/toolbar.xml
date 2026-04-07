@@ -22,6 +22,11 @@
         android:onClick="openUrlForPrivacyPolicy" />
 
     <item
+        android:id="@+id/childSafetyPolicy"
+        android:title="Child Safety Policy"
+        android:onClick="openUrlForChildSafetyPolicy" />
+
+    <item
         android:id="@+id/gitHub"
         android:title="@string/menu_source_code"
         android:onClick="openUrlForGitHub" />

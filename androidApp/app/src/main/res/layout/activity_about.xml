@@ -16,7 +16,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center_horizontal"
-        android:text="The PorNo! Porn Blocker (Beta) Android App maintains a strict zero-tolerance policy toward child sexual abuse and exploitation (CSAE). For any child safety-related concerns, please contact: v.bhookya98@gmail.com.\n\nThis contact is dedicated to addressing inquiries or reports related to child safety, CSAE prevention practices, and compliance with child protection policies."
+        android:text="The PorNo! Porn Blocker (Beta) Android App maintains a strict zero-tolerance policy toward child sexual abuse and exploitation (CSAE). For any child safety-related concerns, please contact: jvnnvt@gmail.com.\n\nThis contact is dedicated to addressing inquiries or reports related to child safety, CSAE prevention practices, and compliance with child protection policies."
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textColorLink="@color/colorAccent"
@@ -26,25 +26,36 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.641" />
 
-    <TextView
-        android:id="@+id/textView7"
+    <!--    <TextView-->
+<!--        android:id="@+id/textView7"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:gravity="center_horizontal"-->
+<!--        android:text="@string/email_prompt"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        android:textColorLink="@color/colorAccent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.841" />-->
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"
-        android:text="@string/email_prompt"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textColorLink="@color/colorAccent"
+        android:onClick="openEmailIntentForChildSafety"
+        android:text="Contact Child Safety team"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.841" />
+        app:layout_constraintVertical_bias="0.816" />
 
     <TextView
         android:id="@+id/textView"

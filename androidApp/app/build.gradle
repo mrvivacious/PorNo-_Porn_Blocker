@@ -21,8 +21,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false // false for dev. true for release builds.
-            // isShrinkResources = true
+            minifyEnabled true // false for dev. true for release builds.
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -49,8 +48,8 @@ dependencies {
     implementation 'io.sentry:sentry-android:8.31.0'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner'
-    androidTestImplementation 'androidx.test.espresso:espresso-core'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 }
 
 sentry {

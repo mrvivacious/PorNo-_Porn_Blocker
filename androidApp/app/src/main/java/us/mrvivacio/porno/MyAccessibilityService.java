@@ -19,22 +19,17 @@ import java.util.Map;
 
 // Todo:
 /*
- o Write tests to screen trimmed URLs
  + Run the trimmed urls thru a length test
  + So, find the shortest porn URL -- our trimmed links
     should not be shorter than this URl or be malformed
- o abstract browsers into their own classes?
  */
 
 public class MyAccessibilityService extends AccessibilityService {
     static Map<String, Boolean> dict2 = new HashMap<>();
-
     static boolean isFound = false;
-    static String currURL = "zz";
-
+    static String previousUrl = "zz";
     static String TAG = "dawgAccessibility";
     private final String omniboxViewID = "com.android.chrome:id/url_bar";
-
     // private long start = 0;
 
     @Override
@@ -42,7 +37,6 @@ public class MyAccessibilityService extends AccessibilityService {
         super.onCreate();
 
         Utilities.migrateIfNecessary(this);
-
         dict2 = Domains.init(); // David pair programming ftw
 
         Log.d(TAG, "onCreate: # of domains recognized: " + dict2.size());
@@ -82,6 +76,11 @@ public class MyAccessibilityService extends AccessibilityService {
             if (omniboxText == null) { return; }
 
             String currentURL = omniboxView.getText().toString();
+            if (currentURL.equals(previousUrl)) {
+                return;
+            }
+            previousUrl = currentURL; // todo are there performance benefits to setting this further down the logic?
+
             String hostNameManually = currentURL.replace("https://", "").replace("http://", "").replace("www.", "");
             String hostNameWithoutPath = "";
             if (hostNameManually.contains("/")) {
@@ -110,23 +109,21 @@ public class MyAccessibilityService extends AccessibilityService {
 
                 // Attempting direct redirection
                 String randomURL = getRandomURL();
-                currURL = getHostNameNew(randomURL); // todo we don't need this line i believe
 
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(randomURL));
                 intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
-                Log.d(TAG, "rdr = " + (System.currentTimeMillis() - start));
+//                Log.d(TAG, "rdr = " + (System.currentTimeMillis() - start));
 //                }
             }
             else if (isUnsafeGoogleSearch(currentURL)) {
+//                Log.d(TAG, "unsafe google search: " + currentURL);
                 applySafeModeToUnsafeGoogleSearch(currentURL);
             }
-            else {
-                Log.d(TAG, "host : currentURL = " + host + " : " + currentURL);
-                Log.d(TAG, "regular site found at " + System.currentTimeMillis());
-            }
+            // else, url is not in banlist
+
 
 //                // If the user is typing in the omnibox, optimization ideas for the future
 //                    if (eventType.contains("TYPE_VIEW_TEXT")) {
@@ -223,8 +220,8 @@ public class MyAccessibilityService extends AccessibilityService {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            Log.d(TAG, "URISyntaxException with url = " + url);
-            e.printStackTrace();
+//            Log.d(TAG, "URISyntaxException: url = " + url);
+//            e.printStackTrace();
             return url;
         }
 

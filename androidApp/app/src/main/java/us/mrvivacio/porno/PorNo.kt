@@ -30,7 +30,7 @@ object PorNo {
      */
     @JvmStatic
     fun isPorn(url: String): Boolean {
-        Log.d(TAG, "input url = $url")
+//        Log.d(TAG, "input url = $url")
 
         val processedUrl = processUrl(url) ?: return false
 

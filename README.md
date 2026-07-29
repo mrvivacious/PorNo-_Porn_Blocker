@@ -30,7 +30,7 @@
     </th>
     <th>
             <a href='https://www.reddit.com/r/ourlastpornblocker/' target="_blank">
-              <img width="220" alt='Subreddit for PorNo!. r-slash-ourlastpornblocker' src='https://1000logos.net/wp-content/uploads/2017/05/Reddit-logo.jpg'/>
+              <img width="220" alt='Subreddit for PorNo!. r-slash-ourlastpornblocker' src='https://cdn.freebiesupply.com/logos/large/2x/reddit-1-logo-png-transparent.png'/>
             </a>
     </th>
     <th>  

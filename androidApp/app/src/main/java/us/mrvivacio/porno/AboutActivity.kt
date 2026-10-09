@@ -27,7 +27,7 @@ class AboutActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SENDTO)
 
         intent.data = "mailto:jvnnvt@gmail.com".toUri()
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Child Safety - PorNo!")
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Child Safety Concerns - PorNo!")
 
         startActivity(intent)
     }

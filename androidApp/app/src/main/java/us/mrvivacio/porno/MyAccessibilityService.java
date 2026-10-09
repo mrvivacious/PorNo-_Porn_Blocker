@@ -54,9 +54,6 @@ public class MyAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         // start = System.currentTimeMillis();
-//        Log.d(TAG, "ACCESSIBILITY EVENT --------");
-
-        // Chrome
         if (isChromeEvent(event)) {
             parseNodeForURLViaAPI(event);
         }
@@ -66,63 +63,61 @@ public class MyAccessibilityService extends AccessibilityService {
         AccessibilityNodeInfo source = event.getSource();
         if (source == null) { return; }
 
-        List<AccessibilityNodeInfo> findAccessibilityNodeInfosByViewId = source.findAccessibilityNodeInfosByViewId(omniboxViewID);
+        List<AccessibilityNodeInfo> nodes = source.findAccessibilityNodeInfosByViewId(omniboxViewID);
+        if (nodes.isEmpty()) { return; }
 
-        if (!findAccessibilityNodeInfosByViewId.isEmpty()) {
-            AccessibilityNodeInfo omniboxView = findAccessibilityNodeInfosByViewId.get(0);
-            if (omniboxView == null) { return; }
+        AccessibilityNodeInfo omniboxView = nodes.get(0);
+        if (omniboxView == null) { return; }
 
-            CharSequence omniboxText = omniboxView.getText();
-            if (omniboxText == null) { return; }
+        CharSequence omniboxText = omniboxView.getText();
+        if (omniboxText == null) { return; }
 
-            String currentURL = omniboxView.getText().toString();
-            if (currentURL.equals(previousUrl)) {
-                return;
-            }
-            previousUrl = currentURL; // todo are there performance benefits to setting this further down the logic?
+        String currentURL = omniboxText.toString();
+        if (currentURL.equals(previousUrl)) { return; }
 
-            String hostNameManually = currentURL.replace("https://", "").replace("http://", "").replace("www.", "");
-            String hostNameWithoutPath = "";
-            if (hostNameManually.contains("/")) {
-                hostNameWithoutPath = hostNameManually.substring(0, hostNameManually.indexOf("/"));
-            }
+        previousUrl = currentURL; // todo are there performance benefits to setting this further down the logic?
 
-            String host = getHostNameNew(currentURL);
+        String hostNameManually = currentURL.replace("https://", "").replace("http://", "").replace("www.", "");
+        String hostNameWithoutPath = "";
+        if (hostNameManually.contains("/")) {
+            hostNameWithoutPath = hostNameManually.substring(0, hostNameManually.indexOf("/"));
+        }
 
-            // todo make following lines into methods
-            host = host.replace("www.", "");
-            host = stripMobilePrefixIfPresent(host);
-            if (host.contains("/")) {
-                host = host.substring(0, host.indexOf("/"));
-            }
+        String host = getHostNameNew(currentURL);
+
+        // todo make following lines into methods
+        host = host.replace("www.", "");
+        host = stripMobilePrefixIfPresent(host);
+        if (host.contains("/")) {
+            host = host.substring(0, host.indexOf("/"));
+        }
 
 //            Log.d(TAG, "\n\n--------------------------------\n\n");
 //            Log.d(TAG, "host : hostNameManually : currentURL = " + host + " : " + hostNameManually + " : " + currentURL);
 
 
-            if (PorNo.isPorn(host) || PorNo.isPorn(hostNameManually) || PorNo.isPorn(hostNameWithoutPath)) {
-                long start = System.currentTimeMillis();
-                isFound = true;
-                Log.d(TAG, "porn site " + host + " found at " + start);
+        if (PorNo.isPorn(host) || PorNo.isPorn(hostNameManually) || PorNo.isPorn(hostNameWithoutPath)) {
+//            long start = System.currentTimeMillis();
+            isFound = true;
+//            Log.d(TAG, "porn site " + host + " found at " + start);
 
 //            if (txt.equals("yahoo.com")) {
 
-                // Attempting direct redirection
-                String randomURL = getRandomURL();
+            // Attempting direct redirection
+            String randomURL = getRandomURL();
 
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(randomURL));
-                intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(randomURL));
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
 
 //                Log.d(TAG, "rdr = " + (System.currentTimeMillis() - start));
 //                }
-            }
-            else if (isUnsafeGoogleSearch(currentURL)) {
-//                Log.d(TAG, "unsafe google search: " + currentURL);
-                applySafeModeToUnsafeGoogleSearch(currentURL);
-            }
-            // else, url is not in banlist
+        }
+        else if (isUnsafeGoogleSearch(currentURL)) {
+            applySafeModeToUnsafeGoogleSearch(currentURL);
+        }
+        // else, url is not in banlist
 
 
 //                // If the user is typing in the omnibox, optimization ideas for the future
@@ -141,7 +136,6 @@ public class MyAccessibilityService extends AccessibilityService {
 //                            text = text.substring(1, text.length() - 1);
 //                            text = getHostName(text);
 //            }
-        }
     }
 
     private String stripMobilePrefixIfPresent(String host) {
@@ -160,8 +154,15 @@ public class MyAccessibilityService extends AccessibilityService {
     }
 
     private void applySafeModeToUnsafeGoogleSearch(String url) {
-        Log.d("dawg", "applying safe mode");
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://" + url + "&safe=active"));
+        String safeUrl = url;
+        if (!safeUrl.startsWith("http")) {
+            safeUrl = "https://" + safeUrl;
+        }
+
+        // Add the flag
+        safeUrl = safeUrl + "&safe=active";
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(safeUrl));
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

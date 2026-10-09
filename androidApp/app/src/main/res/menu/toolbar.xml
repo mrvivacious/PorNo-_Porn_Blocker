@@ -32,10 +32,10 @@
         android:onClick="openUrlForGitHub" />
 
     <!-- https://stackoverflow.com/questions/17311833 -->
-    <item
-        android:id="@+id/email"
-        android:title="@string/action_email_me"
-        android:onClick="sendEmail" />
+<!--    <item-->
+<!--        android:id="@+id/email"-->
+<!--        android:title="@string/action_email_me"-->
+<!--        android:onClick="sendEmail" />-->
 
 </menu>
 

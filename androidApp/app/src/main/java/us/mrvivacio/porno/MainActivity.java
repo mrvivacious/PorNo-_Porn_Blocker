@@ -223,26 +223,32 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    // TODO a video demonstrating this wouldn't hurt. basically a clear explanation of how to enable
+    // TODO a video demonstration
     private void openAlertDialogForEnablingPorNoService() {
         // https://stackoverflow.com/questions/2115758
-        AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        AlertDialog.Builder builder = new AlertDialog.Builder
+                (this, android.R.style.Theme_Material_Dialog_Alert);
 
-        // Build the alert
-        builder.setTitle(alert_disabled_title)
-                .setMessage(alert_disabled_body)
-                .setPositiveButton(R.string.alert_disabled_action, (dialog, which) -> {
+        // Google requires specific phrasing for "Prominent Disclosure"
+        builder.setTitle("Enable PorNo! Filter")
+                .setMessage("PorNo! uses the Accessibility Service API to provide a safer browsing experience.\n\n" +
+                        "Why we need this:\n" +
+                        "• We use this service to identify adult-oriented URLs in the browser's address bar.\n" +
+                        "• If a pornographic site is detected, we automatically redirect you.\n\n" +
+                        "Data Privacy:\n" +
+                        "• We do NOT collect, store, or share your browsing history.\n" +
+                        "• No data is ever transmitted off this device.\n\n" +
+                        "Tap 'Allow' to open Settings and enable the PorNo! service (located in Installed services).")
+                .setCancelable(false) // Don't let them skip without reading
+                .setPositiveButton("Allow", (dialog, which) -> {
                     // Open accessibility screen
                     Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
                     startActivity(intent);
                 })
-//                .setNegativeButton("I'll go there myself", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // Do nothing
-//                    }
-//                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setNegativeButton("Deny", (dialog, which) -> {
+                    Toast.makeText(this, "The filter cannot work without this permission.", Toast.LENGTH_LONG).show();
+                })
+                .setIcon(android.R.drawable.ic_lock_lock)
                 .show();
     }
 
@@ -339,16 +345,5 @@ public class MainActivity extends AppCompatActivity {
         openUrlInBrowser("https://github.com/mrvivacious/PorNo-_Porn_Blocker");
     }
 
-    // TODO replace with a google form link to submit problems, questions, etc.
-    public void sendEmail(MenuItem item) {
-        composeEmail("jvnnvt@gmail.com", "PorNo! Porn Blocker (Android)");
-    }
-
-    public void composeEmail(String recipient, String subject) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipient});
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        startActivity(intent);
-    }
+    // TODO add a google form link to submit problems, questions, etc.
 }

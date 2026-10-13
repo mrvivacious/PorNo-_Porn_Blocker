@@ -6,6 +6,7 @@ package us.mrvivacio.porno;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.Browser;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 // Todo:
 /*
- + Run the trimmed urls thru a length test
+ + Run the trimmed URLs thru a length test
  + So, find the shortest porn URL -- our trimmed links
     should not be shorter than this URl or be malformed
  */
@@ -61,19 +62,29 @@ public class MyAccessibilityService extends AccessibilityService {
 
     private void parseNodeForURLViaAPI(AccessibilityEvent event) {
         AccessibilityNodeInfo source = event.getSource();
-        if (source == null) { return; }
+        if (source == null) {
+            return;
+        }
 
         List<AccessibilityNodeInfo> nodes = source.findAccessibilityNodeInfosByViewId(omniboxViewID);
-        if (nodes.isEmpty()) { return; }
+        if (nodes.isEmpty()) {
+            return;
+        }
 
         AccessibilityNodeInfo omniboxView = nodes.get(0);
-        if (omniboxView == null) { return; }
+        if (omniboxView == null) {
+            return;
+        }
 
         CharSequence omniboxText = omniboxView.getText();
-        if (omniboxText == null) { return; }
+        if (omniboxText == null) {
+            return;
+        }
 
         String currentURL = omniboxText.toString();
-        if (currentURL.equals(previousUrl)) { return; }
+        if (currentURL.equals(previousUrl)) {
+            return;
+        }
 
         previousUrl = currentURL; // todo are there performance benefits to setting this further down the logic?
 
@@ -99,22 +110,28 @@ public class MyAccessibilityService extends AccessibilityService {
         if (PorNo.isPorn(host) || PorNo.isPorn(hostNameManually) || PorNo.isPorn(hostNameWithoutPath)) {
 //            long start = System.currentTimeMillis();
             isFound = true;
-//            Log.d(TAG, "porn site " + host + " found at " + start);
+            Log.d(TAG, "porn site " + host + " found at " + System.currentTimeMillis());
 
-//            if (txt.equals("yahoo.com")) {
+//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getRandomURL()));
+//            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+            redirectInSameTab(omniboxView, getRandomURL());
 
-            // Attempting direct redirection
-            String randomURL = getRandomURL();
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(randomURL));
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            // * notes *
+            // how can a user visit a porn site:
+            // 1. typing directly into the omnibox then pressing enter.
+            // 2. typing into the omnibox and pressing from the popup history/recent links
+            // 3. pressing a link from a website within Google Chrome
+            // 4. pressing a link from a non-chrome app i.e. notes, text messages, instagram.
+            // 1 -> typing into the omnibox -> on Enter press -> somehow cancel page load and load our link
+            // 2 -> omnibox will fill with url (triggers event) -> somehow redirect within that same tab
+            // 3 -> omnibox will fill with url (triggers event) -> redirect within same tab
+            // 4 -> the user can go to hell.
+            // * end notes *
 
 //                Log.d(TAG, "rdr = " + (System.currentTimeMillis() - start));
-//                }
-        }
-        else if (isUnsafeGoogleSearch(currentURL)) {
+        } else if (isUnsafeGoogleSearch(currentURL)) {
             applySafeModeToUnsafeGoogleSearch(currentURL);
         }
         // else, url is not in banlist
@@ -135,7 +152,33 @@ public class MyAccessibilityService extends AccessibilityService {
 //
 //                            text = text.substring(1, text.length() - 1);
 //                            text = getHostName(text);
+   // }
 //            }
+    }
+
+    private void redirectInSameTab(AccessibilityNodeInfo omniboxView, String redirectUrl) {
+        // Step 1: Immediately go back to halt page load/rendering of the porn site
+        performGlobalAction(GLOBAL_ACTION_BACK);
+
+        // Step 2: Focus omnibox and set the redirect URL text
+        omniboxView.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+
+        Bundle arguments = new Bundle();
+        arguments.putCharSequence(
+                AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
+                redirectUrl
+        );
+        omniboxView.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+
+        // Step 3: Trigger IME Enter to submit the redirect URL directly from the omnibox.
+        // We do NOT click the suggestions list (line_1) because Chrome populates suggestions
+        // asynchronously and line_1 still holds the stale porn link from before ACTION_SET_TEXT.
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            boolean submitted = omniboxView.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_IME_ENTER.getId());
+            Log.d(TAG, "ACTION_IME_ENTER executed: " + submitted);
+        } else {
+            omniboxView.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
     }
 
     private String stripMobilePrefixIfPresent(String host) {

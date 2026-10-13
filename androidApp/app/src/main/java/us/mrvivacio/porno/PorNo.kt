@@ -1,6 +1,5 @@
 package us.mrvivacio.porno
 
-import android.util.Log
 import java.util.Locale
 
 object PorNo {

@@ -237,8 +237,8 @@ public class MainActivity extends AppCompatActivity {
                         "• If a pornographic site is detected, we automatically redirect you.\n\n" +
                         "Data Privacy:\n" +
                         "• We do NOT collect, store, or share your browsing history.\n" +
-                        "• No data is ever transmitted off this device.\n\n" +
-                        "Tap 'Allow' to open Settings and enable the PorNo! service (located in Installed services).")
+                        "• Google Play and Sentry are used for app-crash related data.\n\n" +
+                        "Tap 'Allow' to open Settings and enable the PorNo! service.")
                 .setCancelable(false) // Don't let them skip without reading
                 .setPositiveButton("Allow", (dialog, which) -> {
                     // Open accessibility screen

@@ -1,13 +1,26 @@
 // This file handles the reception of Accessibility events
 // We analyze the events related to web-browsing and text-editing for any sign of porn
-
+// * notes *
+// how can a user visit a porn site:
+// 1. typing directly into the omnibox then pressing enter.
+// 2. typing into the omnibox and pressing from the popup history/recent links
+// 3. pressing a link from a website within Google Chrome
+// 4. pressing a link from a non-chrome app i.e. notes, text messages, instagram.
+// 1 -> typing into the omnibox -> on Enter press -> somehow cancel page load and load our link
+// 2 -> omnibox will fill with url (triggers event) -> somehow redirect within that same tab
+// 3 -> omnibox will fill with url (triggers event) -> redirect within same tab
+// 4 -> the user can go to hell.
+// * end notes *
 package us.mrvivacio.porno;
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.GestureDescription;
 import android.content.Intent;
+import android.graphics.Path;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Browser;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -103,36 +116,20 @@ public class MyAccessibilityService extends AccessibilityService {
             host = host.substring(0, host.indexOf("/"));
         }
 
-//            Log.d(TAG, "\n\n--------------------------------\n\n");
 //            Log.d(TAG, "host : hostNameManually : currentURL = " + host + " : " + hostNameManually + " : " + currentURL);
-
 
         if (PorNo.isPorn(host) || PorNo.isPorn(hostNameManually) || PorNo.isPorn(hostNameWithoutPath)) {
 //            long start = System.currentTimeMillis();
+            performGlobalAction(GLOBAL_ACTION_BACK);
             isFound = true;
             Log.d(TAG, "porn site " + host + " found at " + System.currentTimeMillis());
 
-//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getRandomURL()));
-//            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
             redirectInSameTab(omniboxView, getRandomURL());
-
-            // * notes *
-            // how can a user visit a porn site:
-            // 1. typing directly into the omnibox then pressing enter.
-            // 2. typing into the omnibox and pressing from the popup history/recent links
-            // 3. pressing a link from a website within Google Chrome
-            // 4. pressing a link from a non-chrome app i.e. notes, text messages, instagram.
-            // 1 -> typing into the omnibox -> on Enter press -> somehow cancel page load and load our link
-            // 2 -> omnibox will fill with url (triggers event) -> somehow redirect within that same tab
-            // 3 -> omnibox will fill with url (triggers event) -> redirect within same tab
-            // 4 -> the user can go to hell.
-            // * end notes *
 
 //                Log.d(TAG, "rdr = " + (System.currentTimeMillis() - start));
         } else if (isUnsafeGoogleSearch(currentURL)) {
-            applySafeModeToUnsafeGoogleSearch(currentURL);
+            String safeUrl = applySafeModeToUnsafeGoogleSearch(currentURL);
+            redirectInSameTab(omniboxView, safeUrl);
         }
         // else, url is not in banlist
 
@@ -158,26 +155,26 @@ public class MyAccessibilityService extends AccessibilityService {
 
     private void redirectInSameTab(AccessibilityNodeInfo omniboxView, String redirectUrl) {
         // Step 1: Immediately go back to halt page load/rendering of the porn site
-        performGlobalAction(GLOBAL_ACTION_BACK);
-
-        // Step 2: Focus omnibox and set the redirect URL text
-        omniboxView.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
-
-        Bundle arguments = new Bundle();
-        arguments.putCharSequence(
-                AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-                redirectUrl
-        );
-        omniboxView.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
-
-        // Step 3: Trigger IME Enter to submit the redirect URL directly from the omnibox.
-        // We do NOT click the suggestions list (line_1) because Chrome populates suggestions
-        // asynchronously and line_1 still holds the stale porn link from before ACTION_SET_TEXT.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            // Tier 1: Android 11+ (API 30+) - Native IME Enter on omnibox
+            omniboxView.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+
+            Bundle arguments = new Bundle();
+            arguments.putCharSequence(
+                    AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
+                    redirectUrl
+            );
+            omniboxView.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+
             boolean submitted = omniboxView.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_IME_ENTER.getId());
             Log.d(TAG, "ACTION_IME_ENTER executed: " + submitted);
         } else {
-            omniboxView.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            // Legacy Android API 21 - 29
+            // Perform Intent redirection (GLOBAL_ACTION_BACK above already wiped the porn tab)
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl));
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
@@ -196,7 +193,7 @@ public class MyAccessibilityService extends AccessibilityService {
         return event.getPackageName() != null && event.getPackageName().toString().contains("com.android.chrome");
     }
 
-    private void applySafeModeToUnsafeGoogleSearch(String url) {
+    private String applySafeModeToUnsafeGoogleSearch(String url) {
         String safeUrl = url;
         if (!safeUrl.startsWith("http")) {
             safeUrl = "https://" + safeUrl;
@@ -205,10 +202,7 @@ public class MyAccessibilityService extends AccessibilityService {
         // Add the flag
         safeUrl = safeUrl + "&safe=active";
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(safeUrl));
-        intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.chrome");
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        return safeUrl;
     }
 
     public boolean isUnsafeGoogleSearch(String url) {

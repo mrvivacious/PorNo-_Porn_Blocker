@@ -13,8 +13,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 36
 
-        versionCode 21013 // minSDK + 0 + MAJOR version + MINOR version
-        versionName "1.3"
+        versionCode 36013 // minSDK + 0 + major version + minor version
+        versionName "1.31"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -22,7 +22,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true // false for dev. true for release builds.
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 

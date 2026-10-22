@@ -1,5 +1,11 @@
 # releaseNotes
 
+## 0.0.1.906 Chrome Extension
+
+- (Lists) remove yoob.com
+
+***
+
 ## 0.0.1.905 Chrome Extension
 
 - (Fun) Added merch. [Buy a shirt!](https://our-last-porn-blocker.printify.me/products)

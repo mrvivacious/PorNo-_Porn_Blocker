@@ -49,8 +49,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="openEmailIntentForChildSafety"
-        android:text="Contact Child Safety team"
+        android:onClick="openInAppChildSafetyReportDialog"
+        android:text="Submit Child Safety concern"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

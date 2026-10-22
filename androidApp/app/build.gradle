@@ -13,8 +13,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 36
 
-        versionCode 36013 // minSDK + 0 + major version + minor version
-        versionName "1.31"
+        versionCode 36014 // minSDK + 0 + major version + minor version
+        versionName "1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
